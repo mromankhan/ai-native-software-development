@@ -168,17 +168,31 @@ async function injectOGImagesIntoHTML(outDir, siteConfig) {
       // Check if OG image exists for this page
       if (fs.existsSync(ogImagePath)) {
         const imageUrl = `${siteConfig.url}/img/og/${imageFilename}`;
+        // Build canonical page URL for better social parsing
+        let pagePath = '';
+        if (slug === 'home') {
+          pagePath = '/';
+        } else if (relativePath.startsWith('docs/')) {
+          pagePath = `/docs/${slug}`;
+        } else {
+          pagePath = `/${slug}`;
+        }
+        const pageUrl = `${siteConfig.url}${pagePath}`;
         
         // Replace or add OG image meta tags
-        // Remove existing og:image and twitter:image tags
+        // Remove existing og:image, twitter:image, and og:url tags
         html = html.replace(/<meta[^>]*property="og:image"[^>]*>/gi, '');
         html = html.replace(/<meta[^>]*name="twitter:image"[^>]*>/gi, '');
+        html = html.replace(/<meta[^>]*property="og:url"[^>]*>/gi, '');
         
         // Add new OG image tags before </head>
         const ogTags = `
   <meta property="og:image" content="${imageUrl}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:secure_url" content="${imageUrl}">
+  <meta property="og:site_name" content="${siteConfig.title}">
+  <meta property="og:url" content="${pageUrl}">
   <meta name="twitter:image" content="${imageUrl}">
 </head>`;
         
