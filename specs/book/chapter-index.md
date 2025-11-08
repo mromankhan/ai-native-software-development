@@ -5,8 +5,8 @@
 Reference this document when naming and organizing chapter files. Use the chapter number in directory names: `[chapter-number]-[chapter-name]/`
 
 **Implementation Status**:
-- ✅ **Implemented** (16 chapters): Chapters 1-11, 30-33 have content and are ready for review
-- 📋 **Planned** (41 chapters): Chapters 12-29, 34-57 are planned but not yet created
+- ✅ **Implemented** (18 chapters): Chapters 1-13, 30-33 have content and are ready for review
+- 📋 **Planned** (39 chapters): Chapters 14-29, 34-57 are planned but not yet created
 
 ---
 
@@ -23,7 +23,7 @@ Foundation building: orientation, setup, first programs with AI, complete AIDD m
 
 ---
 
-## Part 2: AI Tool Landscape (Chapters 5-7)
+## Part 2: AI Tool Landscape (Chapters 5-8)
 
 Tool literacy and comparison: deep dive into specific platforms
 
@@ -32,39 +32,30 @@ Tool literacy and comparison: deep dive into specific platforms
 | 5 | How It All Started: The Claude Code Phenomenon | `05-claude-code-features-and-workflows/` | ✅ Implemented |
 | 6 | Google Gemini CLI: Open Source and Everywhere | `06-gemini-cli-installation-and-basics/` | ✅ Implemented |
 | 7 | Bash Essentials for AI-Driven Development | `07-bash-essentials/` | ✅ Implemented |
+| 8 | Git and GitHub: Version Control for AI Developers | `08-git-and-github/` | ✅ Implemented |
 
 ---
 
-## Part 3: Markdown, Prompt & Context Engineering (Chapters 8-10)
+## Part 3: Markdown, Prompt & Context Engineering (Chapters 9-11)
 
 Effective AI communication: markdown fundamentals, prompting and context management
 
 | # | Chapter Title | File Name | Status |
 |---|---------------|-----------|--------|
-| 8 | Markdown: The Language of AI Communication | `08-markdown-language-of-ai/` | ✅ Implemented |
-| 9 | Prompt Engineering for AI-Driven Development | `09-prompt-engineering-for-aidd/` | ✅ Implemented |
-| 10 | Context Engineering for AI-Driven Development | `10-context-engineering-for-ai-driven-development/` | ✅ Implemented |
+| 9 | Markdown: The Language of AI Communication | `09-markdown-language-of-ai/` | ✅ Implemented |
+| 10 | Prompt Engineering for AI-Driven Development | `10-prompt-engineering-for-aidd/` | ✅ Implemented |
+| 11 | Context Engineering for AI-Driven Development | `11-context-engineering-for-ai-driven-development/` | ✅ Implemented |
 
 ---
 
-## Part 4: Git & GitHub for AI-Driven Development (Chapter 11)
-
-Version control and collaboration: Git workflows for AI-native teams
-
-| # | Chapter Title | File Name | Status |
-|---|---------------|-----------|--------|
-| 11 | Git & GitHub for AI-Driven Development | `11-git-and-github/` | ✅ Implemented |
-
----
-
-## Part 5: Python: The Language of AI Agents (Chapters 12-29)
+## Part 4: Python Fundamentals (Chapters 12-29)
 
 Core language skills: production-quality Python
 
 | # | Chapter Title | File Name | Status |
 |---|---------------|-----------|--------|
-| 12 | Python UV: Fastest Python Package Manager | `12-python-uv-package-manager/` | 📋 Planned |
-| 13 | Introduction to Python | `13-introduction-to-python/` | 📋 Planned |
+| 12 | Python UV: Fastest Python Package Manager | `12-python-uv-package-manager/` | ✅ Implemented |
+| 13 | Introduction to Python | `13-introduction-to-python/` | ✅ Implemented |
 | 14 | Data Types | `14-data-types/` | 📋 Planned |
 | 15 | Operators, Keywords, and Variables | `15-operators-keywords-variables/` | 📋 Planned |
 | 16 | Strings and Type Casting | `16-strings-type-casting/` | 📋 Planned |
@@ -84,7 +75,7 @@ Core language skills: production-quality Python
 
 ---
 
-## Part 5 Quick Lookup (Chapters 12-29)
+## Part 4 Quick Lookup (Chapters 12-29)
 
 For command reference: `/sp.python-chapter [N]` returns these exact chapter titles:
 
@@ -113,7 +104,7 @@ ch29: "CPython and GIL"
 
 ---
 
-## Part 6: Spec-Driven Development (Chapters 30-34)
+## Part 5: Spec-Driven Development (Chapters 30-34)
 
 Professional development workflow: specifications and planning
 
@@ -127,7 +118,7 @@ Professional development workflow: specifications and planning
 
 ---
 
-## Part 7: AI Native Software Development (Chapters 35-37)
+## Part 6: AI Native Software Development (Chapters 35-37)
 
 Building AI-native applications with agentic architectures
 
@@ -236,10 +227,11 @@ This document provides chapter titles and topics. For exact file paths, naming c
 **Examples** (based on actual structure):
 - Chapter 1: `book-source/docs/01-Introducing-AI-Driven-Development/01-ai-development-revolution/`
 - Chapter 5: `book-source/docs/02-AI-Tool-Landscape/05-claude-code-features-and-workflows/`
-- Chapter 9: `book-source/docs/03-prompt-and-context-engineering/09-markdown-language-of-ai/`
-- Chapter 10: `book-source/docs/03-prompt-and-context-engineering/10-prompt-engineering-for-aidd/`
+- Chapter 8: `book-source/docs/02-AI-Tool-Landscape/08-git-and-github/`
+- Chapter 9: `book-source/docs/03-Markdown-Prompt-Context-Engineering/09-markdown-language-of-ai/`
+- Chapter 11: `book-source/docs/03-Markdown-Prompt-Context-Engineering/11-context-engineering-for-ai-driven-development/`
+- Chapter 13: `book-source/docs/04-Part-4-Python-Fundamentals/13-introduction-to-python/`
 - Chapter 30: `book-source/docs/05-Spec-Driven-Development/30-specification-driven-development-fundamentals/`
-- Chapter 13 (planned): `book-source/docs/04-Python-The-Language-of-AI-Agents/13-introduction-to-python/`
 - Chapter 35 (planned): `book-source/docs/06-AI-Native-Software-Development/35-introduction-ai-native-development/`
 - Chapter 56 (planned): `book-source/docs/13-Stateful-Agents-Dapr/56-durable-workflows-for-long-running-agent-tasks/`
 
@@ -255,4 +247,4 @@ This document provides chapter titles and topics. For exact file paths, naming c
 5. Match the title exactly in frontmatter
 6. Reference `.claude/output-styles/chapters.md` for formatting guidelines
 
-**Version**: Updated for Part 2, 3, 5 redesign: 14-part, 57-chapter structure with AI Orchestration chapter (2025-11-07)
+**Version**: Updated for Part 2, 3, 5 redesign: 14-part, 57-chapter structure with AI Orchestration chapter. Chapter 8 (Git and GitHub) added to Part 2; Chapters 9-11 renumbered in Part 3; Chapters 12-13 marked as implemented (2025-11-08)
