@@ -99,6 +99,23 @@ There are two ways types can change:
 
 This lesson focuses on explicit conversions you control.
 
+### Built-in Functions You'll Use in This Lesson
+
+Throughout this lesson, you'll use Python's **built-in functions**—utility tools that Python provides automatically. These work with many types of data and don't require importing:
+
+**Type Conversion Functions** (new in this lesson):
+- **`int(value)`** - converts to integer
+- **`float(value)`** - converts to decimal number
+- **`str(value)`** - converts to string
+- **`bool(value)`** - converts to boolean (True/False)
+
+**Type Validation Functions** (from Lesson 1):
+- **`isinstance(value, type)`** - checks if a value is a specific type (returns True/False)
+- **`type(value)`** - shows exactly what type a value is
+- **`len(value)`** - counts characters in a string
+
+Think of these as Python's toolbox. You don't need to understand how they work internally—just when to use them and what they return.
+
 ## String to Numbers: int() and float()
 
 The most common conversion is transforming user input (always strings) into numbers for calculations.
