@@ -10,7 +10,7 @@ Test your understanding of the inflection point in AI-driven development, core d
 <Quiz
   title="Chapter 2: The AI Turning Point Assessment"
   questions={[    {
-      question: "What does the ICPC World Finals achievement in April 2025 demonstrate about AI capabilities?",
+      question: "What does the ICPC World Finals achievement in September 2025 demonstrate about AI capabilities?",
       options: [
         "AI can perform code completion tasks faster",
         "AI began replacing human competitive programmers",

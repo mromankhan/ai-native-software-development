@@ -69,7 +69,7 @@ Let's examine the evidence.
 
 ### Academic Benchmarks Show Dramatic Progress
 
-In April 2025, something unprecedented happened at the ICPC World Finals, the most prestigious competitive programming competition in the world. GPT-5 achieved a perfect score, solving all 12 problems correctly within the time limit [ICPC World Finals, 2025]. Gemini 2.5 Deep Think achieved gold-medal level performance, solving 10 of 12 problems and placing second overall [ICPC World Finals, 2025].
+In September 2025, something unprecedented happened at the ICPC World Finals in Baku, Azerbaijan—the most prestigious competitive programming competition in the world. An OpenAI ensemble system achieved a perfect score, solving all 12 problems correctly within the 5-hour time limit using GPT-5 for most problems and an experimental model for the most difficult one [ICPC World Finals, September 4, 2025]. No human team accomplished this. Google DeepMind's Gemini 2.5 Deep Think achieved gold-medal level performance, solving 10 of 12 problems—and was the only system, AI or human, to solve Problem C, a complex optimization task that stumped all 139 human teams [ICPC World Finals, September 2025].
 
 Think about what this means. Competitive programming problems require:
 - Understanding complex problem statements
@@ -85,7 +85,7 @@ To put this in perspective: 18 months ago, the best AI coding models scored belo
 
 ### Leadership Perspectives Confirm the Shift
 
-When Dario Amodei, CEO of Anthropic, stated that AI may eventually write 90% of software code, he wasn't making a prediction about distant future possibilities [Amodei Interview, 2025]. He was describing a trajectory already visible in how his own engineering teams work.
+When Dario Amodei, CEO of Anthropic, predicted in March 2025 that "AI will be writing 90% of the code" within 3-6 months, he wasn't speculating about distant possibilities [Council on Foreign Relations, March 2025]. He was extrapolating from patterns already visible at Anthropic, where developers increasingly orchestrate AI-generated code rather than writing it manually.
 
 Sundar Pichai, Google's CEO, reported that AI tools have increased developer productivity by 10% across Google's engineering organization [Pichai Keynote, 2025]. At Google's scale (with over 80,000 engineers), that's equivalent to adding 8,000 full-time developers overnight.
 
