@@ -20,18 +20,12 @@ importers:
       '@mdx-js/react':
         specifier: ^3.0.0
         version: 3.1.1(@types/react@19.2.2)(react@19.2.0)
-      autoprefixer:
-        specifier: ^10.4.21
-        version: 10.4.21(postcss@8.5.6)
       cheerio:
         specifier: ^1.1.2
         version: 1.1.2
       clsx:
         specifier: ^2.0.0
         version: 2.1.1
-      postcss:
-        specifier: ^8.5.6
-        version: 8.5.6
       prism-react-renderer:
         specifier: ^2.3.0
         version: 2.4.1(react@19.2.0)
@@ -54,6 +48,12 @@ importers:
       '@vercel/og':
         specifier: ^0.8.5
         version: 0.8.5
+      autoprefixer:
+        specifier: ^10.4.21
+        version: 10.4.21(postcss@8.5.6)
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
       satori:
         specifier: ^0.18.3
         version: 0.18.3
