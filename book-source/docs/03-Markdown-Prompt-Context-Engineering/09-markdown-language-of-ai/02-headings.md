@@ -120,6 +120,10 @@ pip install task-tracker
 
 This structure lets anyone (human or AI) scan the document and immediately understand what each section contains.
 
+#### 💬 AI Colearning Prompt
+
+> **Explore with your AI**: "I'm learning about markdown heading hierarchy. Can you explain why skipping heading levels (like going from # directly to ###) creates problems for AI agents parsing specifications? Use an analogy from organizing physical files or folders to help me understand."
+
 ---
 
 ## Concept 2: Following Proper Hierarchy
@@ -188,6 +192,10 @@ This doesn't make sense without a parent section.
 ### Step 1: Install Dependencies
 ```
 
+#### 🎓 Expert Insight
+
+> Proper heading hierarchy isn't just a style preference—it's essential for accessibility and machine parsing. Screen readers use heading levels to help visually impaired users navigate documents. AI agents use the hierarchy to understand document structure and relationships between sections. When you skip levels, both humans using assistive technology and AI parsing tools lose critical structural information. This is why professional documentation standards enforce strict heading hierarchy.
+
 ---
 
 ## Practice Exercise: Task Tracker App (Part 1 - Headings)
@@ -251,6 +259,20 @@ After you write your specification structure, check these:
 - [ ] Each heading describes what its section will contain
 
 **Save this file!** You'll continue building it in Lessons 3, 4, and 5.
+
+#### 🤝 Practice Exercise
+
+**Quick Validation**: After creating your heading structure, ask your AI companion to analyze it:
+
+"Here's my Task Tracker App heading structure:
+[paste your structure]
+
+Can you:
+1. Check if my heading hierarchy is correct (no skipped levels)
+2. Suggest whether any sections need subsections
+3. Tell me if the structure is clear enough to implement from"
+
+**What you're practicing**: Using AI as a validation partner. The AI learns your specification intent, you learn whether your structure communicates clearly.
 
 ---
 
@@ -319,6 +341,10 @@ When you write a specification with clear headings, AI agents can:
 4. **Generate better code** — "The features list tells me what functions to create"
 
 Good headings make your specifications easier for AI to understand, which means better code generation.
+
+#### 🎓 Expert Insight
+
+> When AI agents parse your specification, headings serve as navigation landmarks. The AI can quickly locate "Features," "Installation," or "Expected Output" sections without reading every word. This speeds up processing and improves accuracy. In professional development, well-structured specifications reduce implementation time by 30-50% because both humans and AI can find information instantly.
 
 ---
 
