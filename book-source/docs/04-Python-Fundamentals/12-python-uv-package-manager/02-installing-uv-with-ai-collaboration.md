@@ -217,6 +217,12 @@ Each platform has different conventions for:
 
 **AI's role**: Abstract these differences. You express intent ("install UV"), AI provides the right command for your platform. You don't memorize three different installation methods—you understand the *concept* (download, place, configure PATH) and let AI handle platform specifics.
 
+#### 💬 AI Colearning Prompt
+> "Why does UV need to modify PATH instead of just installing the executable? What would happen if PATH wasn't updated?"
+
+#### 🎓 Expert Insight
+> In AI-native development, you don't memorize platform-specific installation commands (PowerShell vs. curl vs. Homebrew). You understand the installation pattern—download, place, configure PATH—and ask AI to handle your platform's specifics. Your job: verify the installation worked and understand what changed on your system.
+
 ## Verification: Running `uv --version`
 
 After installation completes, verify UV is accessible:
@@ -335,6 +341,13 @@ AI might suggest checking:
 - Permissions (can the script write to user directories?)
 
 **Re-run installation** and watch for error messages. Share any errors with AI for diagnosis.
+
+#### 🤝 Practice Exercise
+
+Ask your AI:
+> "Walk me through what happens step-by-step during UV installation on my [Windows/Mac/Linux] system. Then explain how I can verify UV is correctly added to my PATH."
+
+**Expected Outcome**: You should understand the complete installation workflow (download → place → PATH modification) and be able to troubleshoot "command not found" errors by checking PATH configuration with AI guidance.
 
 ## What Happened During Installation? (Plain Language Explanation)
 

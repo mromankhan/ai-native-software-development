@@ -94,6 +94,9 @@ Think of each project as a recipe:
 - Delete a project's environment without affecting others
 - Reproduce environments exactly (same packages, same versions)
 
+#### 💬 AI Colearning Prompt
+> "Explain what would happen if I had 10 Python projects all sharing the same global environment. How would package version conflicts arise, and why does isolation solve this problem?"
+
 ## UV Auto-Activation: The Magic Behind `uv run`
 
 Traditional Python workflows require **manual activation**:
@@ -123,6 +126,9 @@ uv run script.py              # UV automatically uses .venv/
 5. **Deactivates automatically**: Command finishes, environment deactivation happens automatically
 
 **Key benefit**: You never manually activate/deactivate. UV handles it per command.
+
+#### 🎓 Expert Insight
+> In AI-native development, you don't memorize activation commands (source .venv/bin/activate vs. .venv\Scripts\activate.ps1). You understand that `uv run` automatically activates the correct environment for each command. Your job: focus on what code to run, not how to activate environments. UV handles the mechanical details across all platforms.
 
 ## Running Python Scripts with AI
 
@@ -424,6 +430,13 @@ uv add requests pandas matplotlib
 ```
 
 **Proactive approach**: List imports → Add dependencies → Run script. Avoids ModuleNotFoundError entirely.
+
+#### 🤝 Practice Exercise
+
+Ask your AI:
+> "I want to create a script that fetches weather data from an API, parses JSON responses, and saves results to a file. What dependencies do I need? Then show me how to run this script using UV and explain how UV ensures the script finds all dependencies."
+
+**Expected Outcome**: You should understand the workflow of identifying dependencies from requirements, adding them to your project, and running scripts in isolated environments. You should be able to explain why `uv run` is necessary and what would happen without it.
 
 ## Comparing `uv run` vs. Regular `python`: Side-by-Side
 

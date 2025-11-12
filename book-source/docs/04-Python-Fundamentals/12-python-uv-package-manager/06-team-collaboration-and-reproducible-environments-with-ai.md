@@ -106,6 +106,9 @@ Let's establish why environment reproducibility matters through a real scenario.
 
 **Key concept**: Lockfiles are the "recipe cards" that record exactly what worked, so everyone can reproduce your success.
 
+#### 💬 AI Colearning Prompt
+> "Explain the difference between 'it works on my machine' problems with pip+requirements.txt versus UV+lockfiles. How does UV's lockfile prevent environment drift between teammates?"
+
 ## Lockfiles to the Rescue: How uv.lock Enables Reproducibility
 
 Let's understand what `uv.lock` contains and how it works.
@@ -149,6 +152,9 @@ dependencies = [
 **Why both?**:
 - **pyproject.toml**: Lets you update later (when `requests==2.34.0` comes out, your constraint `>=2.32.3` allows it)
 - **uv.lock**: Guarantees reproducibility *right now* (teammates get 2.33.0, not 2.34.0, until you explicitly update)
+
+#### 🎓 Expert Insight
+> In AI-native development, you don't manually edit lockfiles or memorize version pinning syntax. You understand that pyproject.toml expresses your intent (what you want) and uv.lock records reality (what you got). When you need changes—"Update requests to latest" or "Add new dependency"—you ask AI to run UV commands. UV regenerates the lockfile automatically. Your job: understand why lockfiles guarantee reproducibility, not how to format them.
 
 ### When UV Updates uv.lock
 
@@ -466,6 +472,13 @@ When you add/update/remove dependencies:
    ```
 
 **Never commit one without the other**. They must stay in sync.
+
+#### 🤝 Practice Exercise
+
+Ask your AI:
+> "Simulate a team collaboration workflow: Create a UV project, add dependencies (requests and pytest), commit to git, then simulate a teammate cloning and setting up the environment. Explain how the lockfile ensures both developers have identical environments."
+
+**Expected Outcome**: You should understand the complete git workflow for UV projects (what to commit, what to ignore), how teammates use `uv sync` to recreate environments, and why lockfiles are critical for team collaboration and reproducible builds.
 
 ## Lockfile Maintenance: When to Update
 

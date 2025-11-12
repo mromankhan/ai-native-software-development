@@ -211,6 +211,9 @@ Not all dependencies are equal. Some are needed at runtime (production), others 
 
 **Analogy**: You need kitchen tools (pots, knives) to cook, but you don't deliver the tools with the meal. Your customers get the food (production code + runtime dependencies), not your cookware (testing/linting tools).
 
+#### 🎓 Expert Insight
+> In AI-native development, you don't memorize which packages are "production" vs. "dev." You understand the principle: runtime needs (what the app requires to run) vs. development needs (what you require to build/test). When adding a dependency, ask yourself: "Does this run in production, or is it just for development?" Then let AI handle the `--dev` flag and pyproject.toml structure.
+
 ## Adding Development Dependencies with AI
 
 Let's add testing tools as development dependencies.
@@ -330,6 +333,9 @@ your-project
 ```
 
 **Key concept**: You specified 2 packages (`requests`, `pytest`), but UV installed 13 packages (including transitive dependencies). UV handles this complexity automatically.
+
+#### 💬 AI Colearning Prompt
+> "Why does UV install packages I didn't explicitly request (like certifi and urllib3)? How does it know which transitive dependencies are needed?"
 
 ## Updating Dependencies: Keeping Packages Current
 
@@ -564,6 +570,13 @@ Help me understand what's wrong and how to fix it.
 - **Conflicting ecosystems**: Mixing packages from different communities
 
 **Key concept**: Dependency conflicts are UV's way of preventing runtime errors. The resolver protects you from installing broken combinations. When conflicts arise, investigate with AI—usually one package needs updating.
+
+#### 🤝 Practice Exercise
+
+Ask your AI:
+> "I'm building a data analysis project that needs pandas, matplotlib, and pytest for testing. Add these dependencies to my UV project, separating production and development packages. Then explain how UV resolved their dependencies and what transitive packages were installed."
+
+**Expected Outcome**: You should understand how to categorize dependencies (runtime vs. development), use AI to add them correctly, and interpret UV's dependency resolution output including transitive dependencies.
 
 ## The Lockfile Concept: Reproducibility Through Version Pinning
 

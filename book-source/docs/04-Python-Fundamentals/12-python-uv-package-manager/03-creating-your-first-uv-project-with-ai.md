@@ -270,6 +270,9 @@ build-backend = "hatchling.build"
 
 **What you'll never memorize**: TOML syntax details. When you need to customize, ask AI: "Add pytest to dev dependencies" or "Change project description to X."
 
+#### 🎓 Expert Insight
+> In AI-native development, you don't memorize TOML syntax or pyproject.toml schema. You understand that pyproject.toml is your project's identity (metadata) and dependency contract (what you need). When you need changes—"Add pandas as dependency" or "Update project description"—you ask AI to modify the file. Your job: understand what dependencies mean, not how to format TOML.
+
 ### .python-version: Python Version Pinning
 
 Content:
@@ -361,6 +364,9 @@ uv run python script.py       # Runs in environment automatically
 
 **You never manually activate virtual environments with UV.** UV detects `.venv/` and uses it automatically. This reduces cognitive load—you think about dependencies, not activation mechanics.
 
+#### 💬 AI Colearning Prompt
+> "Explain how virtual environments prevent conflicts between projects. What would happen if I installed all packages globally instead of using isolated environments?"
+
 ## Adding Your First Dependency: How UV Handles Packages
 
 We already added `requests` in our initial project creation. Let's understand what happened.
@@ -396,6 +402,13 @@ A dependency is code someone else wrote that your project needs. `requests` is a
 - You save weeks of development time by reusing it
 
 **Projects need dependencies to avoid reinventing wheels.** Modern software is built by composing reliable libraries, not writing everything from scratch.
+
+#### 🤝 Practice Exercise
+
+Ask your AI:
+> "Create a UV project called 'api-client' that needs to make HTTP requests and parse JSON data. What dependencies should I add? Then explain how UV manages these dependencies differently than the old pip approach."
+
+**Expected Outcome**: You should understand how to identify project needs and translate them into dependencies, and be able to explain UV's automatic dependency resolution compared to manual pip management.
 
 ## Legacy vs. Modern: pyproject.toml vs. requirements.txt
 
