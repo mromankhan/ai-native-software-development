@@ -554,31 +554,3 @@ Debug this for me. What's wrong? How do I fix it?
 ```
 
 **Expected outcome**: Specific debugging steps based on your error.
-
----
-
-## Summary
-
-Custom slash commands let you **codify repetitive workflows** into reusable, shareable commands.
-
-**Three injection patterns**:
-1. `{'{{args}}'}` - Replace with command arguments
-2. `!{command}` - Execute shell command, inject output
-3. `@{filepath}` - Read file, inject contents
-
-**Organization**:
-- Global commands: `~/.gemini/commands/`
-- Project commands: `.gemini/commands/` (in project root)
-- Namespacing: Directories create namespaces (`git/commit.toml` → `/git:commit`)
-
-**Benefits**:
-- Reduce repetition (type less, accomplish more)
-- Team standardization (everyone uses same commands)
-- Automation (commands can combine multiple inputs)
-- Version control (commit commands to repo, share with team)
-
----
-
-## Next Lesson
-
-**Lesson 8: Extensions, Security & IDE Integration** teaches you how to bundle MCP servers into extensions, filter tool access for security, and integrate with your IDE for seamless development.

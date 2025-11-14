@@ -660,39 +660,3 @@ Debug this for me. What's wrong? How do I fix it?
 
 **Expected outcome**: Specific debugging steps for your error.
 
----
-
-## Summary
-
-MCP (Model Context Protocol) is **the bridge between Gemini CLI and the outside world**.
-
-**Three transport types**:
-- **Stdio**: Local tools (Python, Node.js)
-- **HTTP**: Remote APIs
-- **SSE**: Real-time streaming
-
-**Key commands**:
-- `gemini mcp add` - Connect new server
-- `gemini mcp list` - View connected servers
-- `gemini mcp remove` - Disconnect server
-- `/mcp auth` - Handle OAuth authentication
-
-**Real-world benefits**:
-- Competitive research (Playwright)
-- Current documentation (Context7)
-- Database access
-- Custom integrations
-
-**Relationship with Configuration & Settings**:
-- Previous lesson ([Configuration & Settings](./05-configuration-and-settings.md)): How to configure Gemini CLI globally (theme, model, auth, checkpointing)
-- This lesson: How to extend Gemini CLI with external capabilities (MCP servers)
-
-Both lessons work together—Configuration provides the infrastructure, MCP extends it with custom capabilities.
-
----
-
-## Next Lesson
-
-**Lesson 7: Custom Slash Commands** teaches you how to create your own `/` commands to automate repetitive tasks and workflows.
-
-**Lesson 8: Extensions, Security & IDE Integration** teaches you how to bundle MCP servers into extensions, filter tool access for security, and integrate with your IDE for seamless development.

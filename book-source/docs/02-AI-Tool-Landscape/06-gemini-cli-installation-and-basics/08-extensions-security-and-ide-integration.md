@@ -7,25 +7,92 @@ title: Extensions, Security & IDE Integration
 
 **Duration**: 18-20 minutes
 
-In previous lessons, you've learned to install MCP servers individually, configure Gemini CLI, and create custom commands. Now you're ready for the final step: **bundling these capabilities into extensions**, **securing external tool access**, and **integrating with your IDE** for a seamless development experience.
+> **A Word Before We Begin**
+>
+> You've spent hours perfecting your Gemini CLI setup: 3 MCP servers, 5 custom commands, a detailed GEMINI.md file. Now your teammate asks: "How do I get the same setup?" You realize you're about to send them a 15-step instruction document. There has to be a better way. In this lesson, you'll see the team setup problem firsthand, then learn how extensions turn "send 15 instructions" into one command: `gemini extensions install`
+
+---
+
+## The Problem: Sharing Your Setup is Painful
+
+You've built a powerful Gemini CLI setup: MCP servers, custom commands, team context. Now your teammate asks: "How do I get the same setup?"
+
+**The manual way**:
+```
+STEP 1: Install MCP servers (2 commands)
+STEP 2: Configure tool security (edit settings.json)
+STEP 3: Download 3 custom command files
+STEP 4: Create GEMINI.md with team standards
+STEP 5: Set environment variables
+```
+
+**The problems**:
+- ❌ 15+ manual steps per person
+- ❌ Easy to miss steps (wrong directory, missed security config)
+- ❌ Version drift (teammates have different versions)
+- ❌ Update nightmare (re-send everything when you improve something)
+
+---
+
+## The Solution: Extensions Bundle Everything
+
+What if new teammates could get your **entire setup** with **one command**?
+
+```bash
+gemini extensions install https://github.com/myteam/dev-tools-extension
+```
+
+**That's what extensions do.**
+
+### What is an Extension?
+
+An **extension** is a **pre-packaged bundle** containing everything:
+
+**Included automatically**:
+- ✅ MCP servers (pre-configured with security settings)
+- ✅ Custom slash commands (all `.toml` files)
+- ✅ Persistent context (GEMINI.md with team standards)
+- ✅ Configuration templates
+- ✅ Tool filtering rules
+- ✅ Environment variable templates
+- ✅ Documentation
+
+**MCP server alone**: Single capability (e.g., Playwright)
+**Extension (complete package)**: MCP servers + commands + context + security + docs
+
+#### 💬 AI Colearning Prompt
+> "If extensions just bundle MCP servers and commands, couldn't we just share a GitHub repo with install instructions? What's the real advantage of the extension format?"
+>
+> **Hint**: Think about what happens when you update the extension vs. when you update a document with install instructions.
+
+---
+
+## Seeing the Difference: Before and After
+
+**Without Extension**:
+- Follow 15-step document (30 minutes)
+- Miss a step (wrong directory, no tool filtering)
+- Fix issues (another 30 minutes)
+- Update available next week → Re-download and replace files
+
+**With Extension**:
+```bash
+gemini extensions install https://github.com/myteam/dev-tools-extension
+```
+
+**What happens**: Everything installs automatically—MCP servers, commands, context, security settings.
+
+**Update**: `gemini extensions update dev-tools-extension`
+
+**The transformation**: 60 minutes → 2 minutes (30x faster), zero errors, always in sync.
 
 ---
 
 ## Part 1: Extension Development Workflow
 
-### What Are Extensions?
-
-An **extension** is a pre-packaged bundle containing:
-- MCP servers (pre-configured)
-- Custom slash commands
-- Persistent context (GEMINI.md)
-- Configuration templates
-- Documentation
-
-**MCP server**: Single capability (e.g., Playwright for browsing)
-**Extension**: Complete workflow (browsing + analysis + reporting)
-
 ### Creating Extensions
+
+You now understand WHY extensions matter. Let's see HOW to create them.
 
 #### Create from Template
 
@@ -456,50 +523,5 @@ Give me a checklist we can implement together.
 
 **Expected outcome**: Team onboarding strategy with complete setup plan.
 
----
 
-## Summary
-
-**Extensions** bundle MCP servers, commands, and context into sharable packages for team standardization.
-
-**Tool filtering** controls which capabilities MCP servers can access:
-- **Allowlist** (`includeTools`): Only allow safe tools (safer approach)
-- **Blocklist** (`excludeTools`): Block dangerous tools (less safe)
-
-**IDE integration** connects VS Code to Gemini CLI for:
-- Full file context awareness
-- Visual diff review
-- One-click apply changes
-- Seamless code editing workflow
-
-**Three layers of capability**:
-- Layer 1: Core Gemini CLI + built-in tools
-- Layer 2: + MCP servers + custom commands (Lessons 4-7)
-- Layer 3: + IDE integration + bundled extensions (Lesson 8)
-
----
-
-## Chapter Complete: What You've Learned
-
-Across 8 lessons, you've progressed from understanding Gemini CLI to building professional workflows:
-
-1. **Why Gemini CLI Matters** - Positioning and ecosystem
-2. **Installation & Authentication** - Getting started
-3. **Built-In Tools** - File ops, shell, web, search
-4. **Configuration** - Global, project, environment-specific settings
-5. **Memory & Context** - Managing 1M token context and persistent memory
-6. **Custom Commands** - Automating workflows with TOML and injection patterns
-7. **MCP Servers** - Connecting to external tools and APIs
-8. **Extensions & IDE** - Team standardization, security, and IDE integration
-
-**You can now**:
-- Install and configure Gemini CLI securely
-- Create reusable custom commands
-- Connect external MCP servers
-- Manage context efficiently
-- Filter tool access for security
-- Integrate with your development environment
-- Design team workflows
-
-**Next steps**: Apply these skills to your own projects, experiment with extensions, and contribute back to the open source ecosystem.
 
