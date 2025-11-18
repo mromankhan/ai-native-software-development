@@ -189,57 +189,6 @@ Each subagent is designed with three components that activate reasoning (not jus
 
 ---
 
-## The Intelligence You'll Build in This Chapter
-
-Here's what you'll create across Lessons 2-9:
-
-**Lesson 2: Installation** - Install Spec-Kit Plus framework, verify setup
-
-**Lesson 3: Constitution** - Create project quality standards → **Generate your first ADR** (Horizontal Intelligence artifact)
-
-**Lesson 4: Specification** - Write calculator spec → **Watch Specification Subagent work** (Vertical Intelligence in action)
-
-**Lesson 5: Clarify** - Refine spec with `/sp.clarify` → See AI reasoning improve through iteration
-
-**Lesson 6: Plan** - Generate implementation plan → **Document architectural decisions in ADRs**
-
-**Lesson 7: Tasks** - Decompose plan into atomic work units with checkpoints
-
-**Lesson 8: Implement** - AI generates code → **System creates PHRs automatically**
-
-**Lesson 9: Reusable Intelligence** - Extract patterns from Lessons 3-8 → **Create your own Specification Review Skill + Spec Auditor Subagent** using P+Q+P pattern
-
-### By Lesson 9, You'll Have
-
-1. **Working calculator code** (ephemeral - could be rewritten)
-2. **3-5 ADRs** documenting key decisions (permanent - applies to future projects)
-3. **10+ PHRs** showing what prompts work (permanent - teaches your AI)
-4. **1-2 custom skills/subagents** (permanent - reusable across projects)
-
-### The Compounding Effect in Action
-
-**Project 1 (Calculator)**:
-- 5 ADRs (SMART criteria enforcement, error handling patterns, test design principles)
-- 12 PHRs (specification prompts that work, planning prompts that fail)
-- 2 Skills (Specification Review, Spec Auditor)
-
-**Project 2 (E-commerce Cart)**:
-- Start with Project 1's 5 ADRs + 12 PHRs + 2 Skills
-- Create 4 new ADRs (state management decisions, database choices)
-- Create 8 new PHRs (state machine prompts, transaction safety prompts)
-- Create 1 new Skill (State Machine Validator)
-- **Total**: 9 ADRs, 20 PHRs, 3 Skills
-
-**Project 10**:
-- Start with accumulated intelligence from 9 projects
-- Specification phase: 70% faster (reuse existing Spec Auditor + proven prompts)
-- Planning phase: 60% faster (ADRs document recurring patterns)
-- Implementation: 50% faster (PHRs prevent known failure modes)
-
-This is why Reusable Intelligence (not reusable code) is the primary artifact.
-
----
-
 ## Try With AI
 
 Ready to understand how Spec-Kit Plus turns project work into reusable intelligence? Explore these patterns:
