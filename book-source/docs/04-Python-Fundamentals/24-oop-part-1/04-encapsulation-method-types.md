@@ -122,7 +122,7 @@ Now you'll master professional-grade class design through access control and mul
 
 ---
 
-## Part 1: Student Discovers Access Control and Method Types
+## Part 1: Experience Access Control and Method Types
 
 **Your Role**: Code explorer discovering why data protection and method organization matter
 
@@ -260,7 +260,7 @@ Document in `method_type_analysis.md`:
 
 ---
 
-## Part 2: AI Explains Access Control and Method Design
+## Part 2: Learn Access Control and Method Design
 
 **Your Role**: Student receiving instruction from AI Teacher
 
@@ -285,7 +285,7 @@ After AI explains, ask: "Show me how the @property decorator works for protectin
 
 ---
 
-## Part 3: Student Challenges AI with Method Design
+## Part 3: Challenge AI with Method Design
 
 **Your Role**: Student teaching AI by testing design understanding
 
@@ -317,19 +317,18 @@ Document challenges and AI responses with your analysis.
 
 Create `method_types_and_encapsulation_guide.md`:
 
-```markdown
-# Method Types and Encapsulation Guide
+**Template structure:**
 
-## Instance Methods
-Use when: Method operates on specific object's data
+### Method Types and Encapsulation Guide
+
+**Instance Methods** - Use when: Method operates on specific object's data
 
 ```python
 def deposit(self, amount: float):
     self._balance += amount
 ```
 
-## Class Methods (@classmethod)
-Use when: Method operates on class data or creates instances
+**Class Methods (@classmethod)** - Use when: Method operates on class data or creates instances
 
 ```python
 @classmethod
@@ -337,8 +336,7 @@ def from_dict(cls, data: dict):
     return cls(data['name'], data['balance'])
 ```
 
-## Static Methods (@staticmethod)
-Use when: Utility function grouped with class but doesn't need instance or class
+**Static Methods (@staticmethod)** - Use when: Utility function grouped with class but doesn't need instance or class
 
 ```python
 @staticmethod
@@ -346,14 +344,13 @@ def is_valid_account_number(num: str) -> bool:
     return len(num) == 10
 ```
 
-## Access Levels
+**Access Levels:**
 
 - **Public**: `self.name` - Direct access encouraged
 - **Protected**: `self._balance` - Convention, don't access directly
 - **Private**: `self.__ssn` - Name mangled, discourage access
 
-## Properties (@property/@setter)
-Make attributes look like data while using method validation
+**Properties (@property/@setter)** - Make attributes look like data while using method validation
 
 ```python
 @property
@@ -365,7 +362,6 @@ def balance(self, value: float):
     if value < 0:
         raise ValueError("Balance cannot be negative")
     self._balance = value
-```
 ```
 
 **Deliverable**: Complete guide with method type selection criteria.
@@ -383,7 +379,7 @@ Ready to understand encapsulation, master method types, and control attribute ac
 > "Create a MathHelper class. Add three methods: 1) instance method square_value(self, x) using instance state, 2) class method create_with_preset(cls, preset_name) returning new object, 3) static method is_prime(n) with no self or cls. Explain when to use each type."
 
 **🧪 Test Properties for Validation:**
-> "Build a Person class with age property. Use @property for getter, @age.setter for setter that validates (0 <= age <= 150). Try: person.age = -5, person.age = 200, person.age = 25. Show how properties enable validation without breaking the attribute access API. Why is this better than get_age()/set_age()?"
+> "Build a Person class with age property. Use @property for getter, @age.setter for setter that validates (0 to 150 range). Try: person.age = -5, person.age = 200, person.age = 25. Show how properties enable validation without breaking the attribute access API. Why is this better than get_age()/set_age()?"
 
 **🚀 Apply to Data Validation:**
 > "I'm building a Product class. Price must be positive, stock can't be negative, discount must be 0-100%. Design the class with properties that validate on every set. Show validation error messages. How do properties make the API cleaner than validate_and_set_price() methods?"

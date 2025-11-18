@@ -89,15 +89,13 @@ In this lesson, you'll discover why these patterns matter through hands-on exper
 
 ---
 
-## Part 1: Student Discovers Default Parameters and Attribute Types
+## Part 1: Experience Default Parameters and Attribute Types
 
 **Your Role**: Code experimenter discovering initialization patterns and attribute scoping
 
 ### Discovery Exercise 1: Why Default Parameters Matter
 
-**Stage 1: Required parameters only**
-
-Create a file called `attribute_experiments.py`:
+Create `attribute_experiments.py` and run this:
 
 ```python
 class Dog:
@@ -106,23 +104,14 @@ class Dog:
         self.breed = breed
         self.age = age
 
-# This works, but requires every parameter
+# Works fine, but requires ALL parameters
 dog1 = Dog("Max", "Labrador", 5)
-dog2 = Dog("Buddy", "Golden", 3)
 
-# But what if you don't know the age?
-# You're forced to guess or use a placeholder
-dog3 = Dog("Unknown", "Mixed", 0)  # Awkward!
+# What if you don't know the age? Forced to use placeholder
+dog2 = Dog("Unknown", "Mixed", 0)  # Awkward!
 ```
 
-**Your task 1**: Run this and document:
-- Do you have to provide all parameters?
-- What if some info is optional?
-- What design pattern solves this problem?
-
-**Stage 2: Add Default Parameters**
-
-Modify the class:
+Now add a default parameter:
 
 ```python
 class Dog:
@@ -131,107 +120,109 @@ class Dog:
         self.breed = breed
         self.age = age
 
-# Much more flexible!
+# Now flexible!
 dog1 = Dog("Max", "Labrador", 5)
-dog2 = Dog("Buddy", "Golden")  # Uses default age
-dog3 = Dog("Unknown", "Mixed")  # No guessing needed
+dog2 = Dog("Buddy", "Golden")  # Uses default age=0
 ```
 
-**Your task 2**: Run this and answer:
-- How many ways can you now call Dog()?
-- Why is this better than forcing all parameters?
+#### 💬 AI CoLearning Prompt
 
-### Discovery Exercise 2: Class vs Instance Attributes
+> "I added a default parameter age=0 to my Dog class. Now I can create dogs with or without age. But when should parameters be required vs have defaults? Show me 3 examples: 1) user registration (which fields must be required?), 2) database connection (which have sensible defaults?), 3) API client config. Explain the design principle."
 
-**Stage 3: Observe Instance Attributes (we know these)**
-
-```python
-class Dog:
-    def __init__(self, name: str, breed: str):
-        self.name = name      # Each dog has its own name
-        self.breed = breed    # Each dog has its own breed
-
-dog1 = Dog("Max", "Labrador")
-dog2 = Dog("Buddy", "Golden Retriever")
-
-# Modify dog1
-dog1.breed = "Lab Mix"
-
-# Is dog2 affected?
-print(dog2.breed)  # Still "Golden Retriever"
-```
-
-**Your task 3**: Run this and confirm:
-- Each object has its own attribute values (instance attributes)
-- Modifying one doesn't affect the other
-
-**Stage 4: Discover Class Attributes (something new)**
-
-```python
-class Dog:
-    species = "Canis familiaris"  # Class attribute (defined outside __init__)
-
-    def __init__(self, name: str, breed: str):
-        self.name = name      # Instance attribute
-        self.breed = breed    # Instance attribute
-
-dog1 = Dog("Max", "Labrador")
-dog2 = Dog("Buddy", "Golden Retriever")
-
-# Both dogs share the same species
-print(dog1.species)  # Canis familiaris
-print(dog2.species)  # Canis familiaris (same!)
-
-# Change the CLASS attribute
-Dog.species = "Canis lupus familiaris"
-print(dog1.species)  # Now shows the new value!
-print(dog2.species)  # Both are affected!
-```
-
-**Your task 4**: Run this and document:
-- What's a class attribute?
-- Is it shared between objects or independent?
-- If you change it on one object, what happens?
-
-**Stage 5: The Shadowing Problem**
-
-```python
-class Dog:
-    tricks_known = 0  # Class attribute tracking total tricks
-
-    def __init__(self, name: str):
-        self.name = name  # Instance attribute
-
-dog1 = Dog("Max")
-dog2 = Dog("Buddy")
-
-print(dog1.tricks_known)  # 0
-print(dog2.tricks_known)  # 0
-
-# Now something interesting happens
-dog1.tricks_known = 5  # Create an instance attribute that SHADOWS the class attribute
-
-print(dog1.tricks_known)  # 5 (instance attribute)
-print(dog2.tricks_known)  # 0 (still using class attribute)
-print(Dog.tricks_known)   # 0 (class attribute unchanged)
-```
-
-**Your task 5**: Run this and answer:
-- Why did dog2.tricks_known stay 0?
-- What happened in memory?
-- Is this a bug or a feature?
-
-### Your Discoveries
-
-Document your findings in `attribute_types_analysis.md`:
-1. What are instance attributes? When do you use them?
-2. What are class attributes? When do you use them?
-3. Why is the shadowing behavior important to understand?
-4. How would you design a class that uses both types appropriately?
+**Expected Understanding**: AI will explain that **critical data should be required** (no default), **convenience data can have defaults**. You'll see the tradeoff between flexibility and enforced completeness.
 
 ---
 
-## Part 2: AI Explains Advanced Constructor Patterns
+### Discovery Exercise 2: Instance vs Class Attributes
+
+Run this experiment:
+
+```python
+class Dog:
+    species: str = "Canis familiaris"  # Class attribute - ALL dogs share this
+
+    def __init__(self, name: str, breed: str):
+        self.name = name      # Instance attribute - each dog's own
+        self.breed = breed    # Instance attribute - each dog's own
+
+dog1 = Dog("Max", "Labrador")
+dog2 = Dog("Buddy", "Golden")
+
+# Change class attribute
+Dog.species = "Canis lupus familiaris"
+print(dog1.species)  # Changed!
+print(dog2.species)  # Changed! (both see the update)
+
+# Change instance attribute
+dog1.name = "Max Jr."
+print(dog2.name)  # Still "Buddy" (independent)
+```
+
+#### 💬 AI CoLearning Prompt
+
+> "I have Dog class with species (class attribute) and name (instance attribute). When Dog.species changes, ALL dogs see it. When dog1.name changes, only dog1 is affected. Explain:
+> 1. What's stored in memory differently for class vs instance attributes?
+> 2. Give me 3 real-world examples where class attributes make sense (like API base_url, database connection pool, configuration)
+> 3. When should I avoid class attributes?"
+
+**Expected Understanding**: AI will explain that class attributes are shared memory (one copy), instance attributes are per-object memory (N copies). Use class attributes for configuration, constants, shared state. Avoid for mutable data that should be independent.
+
+---
+
+### Discovery Exercise 3: The Shadowing Trap
+
+Run this and observe strange behavior:
+
+```python
+class Counter:
+    count: int = 0  # Class attribute
+
+    def __init__(self, name: str):
+        self.name = name
+
+c1 = Counter("First")
+c2 = Counter("Second")
+
+print(c1.count)  # 0 (reading class attribute)
+print(c2.count)  # 0 (reading class attribute)
+
+# Now the trap:
+c1.count = 5  # Creates INSTANCE attribute (shadowing the class attribute!)
+
+print(c1.count)       # 5 (instance attribute)
+print(c2.count)       # 0 (still class attribute)
+print(Counter.count)  # 0 (class attribute unchanged)
+```
+
+#### 💬 AI CoLearning Prompt
+
+> "I tried to update a class attribute through an instance (c1.count = 5) but it created an INSTANCE attribute instead, shadowing the class attribute. Now c1.count and c2.count are different!
+> 1. Why does Python allow this? Is it a bug or feature?
+> 2. How do I update class attributes correctly? (Hint: use ClassName.attribute)
+> 3. Show me how to detect if an attribute is instance or class using __dict__"
+
+**Expected Understanding**: AI will explain that `obj.attr = value` ALWAYS creates instance attribute. To modify class attributes, use `ClassName.attr = value`. Shadowing is intentional but often confusing. Use `hasattr()` and `__dict__` for inspection.
+
+---
+
+### Your Discovery Summary
+
+Instead of manual files, **use AI to synthesize**:
+
+#### 💬 AI CoLearning Prompt
+
+> "Based on my experiments with default parameters, instance/class attributes, and shadowing, summarize these key insights:
+> 1. When should constructor parameters be required vs have defaults?
+> 2. When should data be instance attributes vs class attributes?
+> 3. What's the shadowing trap and how do I avoid it?
+>
+> Give me 3 bullet points for my reference guide."
+
+**Deliverable**: Save AI's synthesis in your notes. You've discovered constructor design patterns—now you're ready to learn advanced techniques.
+
+---
+
+## Part 2: Learn Advanced Constructor Patterns
 
 **Your Role**: Student receiving instruction from AI Teacher
 
@@ -269,7 +260,7 @@ After AI explains, ask:
 
 ---
 
-## Part 3: Student Challenges AI with Edge Cases
+## Part 3: Challenge AI with Edge Cases
 
 **Your Role**: Student teaching AI by testing edge case understanding
 
@@ -477,7 +468,6 @@ When designing a constructor, ask:
 3. **Should this be a class attribute?** (shared across instances)
 4. **Should this be an instance attribute?** (specific to each object)
 5. **Do I need validation?** (check constraints)
-```
 
 ### Validation with AI
 

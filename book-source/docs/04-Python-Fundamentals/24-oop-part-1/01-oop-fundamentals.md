@@ -88,114 +88,120 @@ version: "1.0.0"
 
 # What is OOP? Why OOP?
 
-In this lesson, you'll discover why Object-Oriented Programming exists by first experiencing the pain of procedural code, then learning how OOP solves real problems, then challenging AI's explanations with edge cases, and finally building your own mental model for when to use OOP.
+Real developers don't memorize OOP definitions—they discover problems that OOP solves. In this lesson, you'll experience the pain of procedural code at scale, learn from AI how OOP fixes these problems, challenge AI with design edge cases, and build your own decision framework for choosing OOP vs procedural approaches.
+
+This is discovery-based learning: you'll encounter the problem before seeing the solution, making OOP concepts stick because you understand WHY they exist.
 
 ---
 
-## Part 1: Student Discovers Procedural Pain Points
+## Part 1: Experience Procedural Pain Points
 
-**Your Role**: Software architect discovering OOP necessity
+**Your Role**: Code explorer discovering why OOP exists through experimentation
 
-Before learning OOP concepts, you'll experience why they exist. Real developers don't memorize definitions—they discover problems that drive design decisions.
+### Discovery Exercise: The Banking System Problem
 
-### Discovery Exercise: Build a Bank System Without OOP
+**Scenario**: You're building a simple banking system. Start with procedural code and watch it break down as you scale.
 
-**Scenario**: You're building a banking application. You decide to use only functions and variables. Let's see what happens.
+**Stage 1: One Account - Seems Fine**
 
-**Stage 1: One Account Works Fine**
+Create `bank_procedural.py` and run this:
 
 ```python
 # Procedural approach: data and functions are separate
-balance_alice = 1000
-account_holder_alice = "Alice"
+balance_alice: float = 1000.0
+account_holder_alice: str = "Alice"
 
-def deposit_alice(amount):
-    global balance_alice
-    balance_alice += amount
-    print(f"Deposited {amount}. New balance: {balance_alice}")
-
-def withdraw_alice(amount):
-    global balance_alice
-    if amount <= balance_alice:
-        balance_alice -= amount
-        print(f"Withdrew {amount}. New balance: {balance_alice}")
-    else:
-        print("Insufficient funds")
-
-deposit_alice(200)
-withdraw_alice(50)
-```
-
-**Your task 1**: Run this code and verify it works. What do you notice?
-- How many variables per account?
-- How many functions per account?
-- How clearly does it show "this function works on this account"?
-- Document your observations in `procedural_analysis.md`
-
-**Stage 2: Add a Second Account**
-
-Now the bank hires you and says: "We need two accounts: Alice and Bob."
-
-```python
-# Add Bob's account
-balance_alice = 1000
-account_holder_alice = "Alice"
-balance_bob = 5000        # ← New variable
-account_holder_bob = "Bob"  # ← New variable
-
-def deposit_alice(amount):
+def deposit_alice(amount: float) -> None:
     global balance_alice
     balance_alice += amount
 
-def withdraw_alice(amount):
+def withdraw_alice(amount: float) -> bool:
     global balance_alice
     if amount <= balance_alice:
         balance_alice -= amount
-    else:
-        print("Insufficient funds")
+        return True
+    return False
 
-# Copy-paste ALL functions with new names for Bob
-def deposit_bob(amount):
-    global balance_bob
-    balance_bob += amount
-
-def withdraw_bob(amount):
-    global balance_bob
-    if amount <= balance_bob:
-        balance_bob -= amount
-    else:
-        print("Insufficient funds")
-
+# Works perfectly for one account
 deposit_alice(200)
-deposit_bob(100)
-withdraw_alice(50)
+print(f"Alice's balance: {balance_alice}")  # 1200.0
 ```
 
-**Your task 2**: Add Bob and notice the problems:
-- How many duplicate function definitions?
-- If you find a bug in `withdraw_alice`, where else do you need to fix it?
-- What if you needed 100,000 accounts?
-- Document the scaling problem in your analysis file.
+#### 💬 AI CoLearning Prompt
 
-**Stage 3: Predict the Enterprise Problem**
+After running this, ask your AI:
 
-**Your task 3**: Before running code, answer these questions:
-- How many variables would you need for 100 accounts?
-- How many functions?
-- If you fix a bug in withdrawal logic, how many function definitions do you change?
-- How easy would it be to accidentally use wrong account's withdraw function?
+> "I have one bank account using global variables and functions. This works, but what will happen when I need 100 accounts? Show me the code explosion problem - how many variables and functions would I need?"
 
-### Your Discoveries
-
-Write a summary called `procedural_problem_statement.md` with:
-1. The core problem: Why does procedural code with accounts become unmaintainable?
-2. The scaling problem: What happens at 100 accounts? 1 million?
-3. The bug-fix problem: Why is fixing one bug potentially risky across all account types?
-4. Your prediction: What programming feature would solve this problem?
+**Expected Understanding**: AI will show you that 100 accounts = 200 variables + 200 functions. You'll SEE the duplication problem before coding it yourself.
 
 ---
 
-## Part 2: AI Explains OOP as a Solution
+**Stage 2: Add a Second Account - Problems Emerge**
+
+Now try adding Bob's account manually:
+
+```python
+# Now we need Bob's account too
+balance_bob: float = 5000.0
+account_holder_bob: str = "Bob"
+
+def deposit_bob(amount: float) -> None:  # Duplicate function!
+    global balance_bob
+    balance_bob += amount
+
+def withdraw_bob(amount: float) -> bool:  # Duplicate function!
+    global balance_bob
+    if amount <= balance_bob:
+        balance_bob -= amount
+        return True
+    return False
+```
+
+#### 💬 AI CoLearning Prompt
+
+> "I just copy-pasted my deposit and withdraw functions for Bob. What's the maintenance problem here? If I find a bug in the withdrawal logic, how many places do I fix it? Show me how OOP would solve this with a single class definition."
+
+**Expected Understanding**: AI will explain that with N accounts, you need N copies of each function. Bug fixes multiply. Then AI will preview the OOP solution (1 class definition, N objects).
+
+---
+
+**Stage 3: The Scaling Question**
+
+Don't write more code. Instead, **ask AI to show you the scaling problem**:
+
+#### 💬 AI CoLearning Prompt
+
+> "Imagine I need 5 accounts (Alice, Bob, Carol, Dave, Eve) with procedural code:
+> 1. How many global variables do I need?
+> 2. How many function definitions?
+> 3. If I find a security bug in withdraw logic, how many places do I fix it?
+> 4. Show me what this code would look like - I want to SEE the duplication problem in full.
+>
+> Then show me the OOP version with a BankAccount class. How does OOP eliminate the duplication?"
+
+**Expected Understanding**: AI will generate code showing 10 variables, 10 functions, and the maintenance nightmare. Then show the OOP version: 1 class, 5 objects. You SEE the dramatic difference.
+
+---
+
+### Your Discovery Summary
+
+Instead of creating manual files, **use AI to synthesize** what you learned:
+
+#### 💬 AI CoLearning Prompt
+
+> "Based on my banking experiments, help me document these insights:
+> 1. What's the core problem with procedural code for multiple similar entities?
+> 2. Why does this problem get exponentially worse as the system scales?
+> 3. What's the OOP solution? (Hint: Define logic once, create many instances)
+>
+> Give me 3 concise bullet points I can reference throughout this chapter."
+
+**Deliverable**: Save AI's 3 bullet points in your notes. You've discovered the problem OOP solves—now you're ready to learn the solution.
+
+---
+
+## Part 2: Learn OOP as a Solution
 
 **Your Role**: Student receiving instruction from AI Teacher
 
@@ -258,7 +264,7 @@ Ask AI: "In your class-based solution, show me how 100 different accounts can co
 
 ---
 
-## Part 3: Student Challenges AI with Design Edge Cases
+## Part 3: Challenge AI with Design Edge Cases
 
 **Your Role**: Student teaching AI by testing its understanding
 
@@ -324,12 +330,13 @@ Now integrate everything into a practical decision framework you'll use througho
 
 ### Your OOP Decision Framework
 
-Create a markdown file called `oop_decision_framework.md` with this structure:
+Create a markdown file called `oop_decision_framework.md` with these sections:
 
-```markdown
-# When Should I Use OOP? Decision Framework
+**Template structure:**
 
-## Core Problem OOP Solves
+### When Should I Use OOP? Decision Framework
+
+**Core Problem OOP Solves:**
 
 OOP solves the **scaling and organization problem**: When you have many entities (accounts, users, game characters) with similar data and behavior, OOP lets you:
 - Define structure once (the class)
@@ -337,100 +344,66 @@ OOP solves the **scaling and organization problem**: When you have many entities
 - Each instance manages its own data independently
 - Changes to logic affect all instances automatically
 
-## Procedural vs OOP Comparison
+**Procedural vs OOP Comparison:**
 
-### When Procedural is Fine
-- Script with <5 variables
+*When Procedural is Fine:*
+- Script with less than 5 variables
 - No repetition of similar logic
 - One-time use, never maintained
+- Example: A script that calculates π to 1000 digits
 
-**Example**: A script that calculates π to 1000 digits
-
-### When OOP is Necessary
+*When OOP is Necessary:*
 - 3+ entities with similar data structure
 - Duplicate functions for similar operations
 - Code will grow over time
 - Multiple instances of same concept
+- Example: Game with Player, Enemy, NPC classes
 
-**Example**: Game with Player, Enemy, NPC classes
-
----
-
-## Real-World Recognition Pattern
+**Real-World Recognition Pattern:**
 
 When building a system, ask:
+1. Are there multiple similar entities? (If NO → Procedural might work)
+2. Does each entity have the same type of data? (If NO → Procedural might work)
+3. Does each entity perform the same type of operations? (If YES → OOP is the right choice)
 
-**Question 1**: Are there multiple similar entities?
-- Yes → Go to Q2
-- No → Procedural might work
+**The Four Pillars (Conceptual Overview):**
 
-**Question 2**: Does each entity have the same type of data?
-- Yes → Go to Q3
-- No → Procedural might work
+1. **Encapsulation**: Bundle data and methods, control access (prevents data corruption)
+2. **Abstraction**: Show only essential interface, hide implementation (reduces complexity)
+3. **Inheritance**: Base class holds shared code, child classes specialize (reuses code)
+4. **Polymorphism**: Different objects respond differently to same method call (flexible interfaces)
 
-**Question 3**: Does each entity perform the same type of operations?
-- Yes → OOP is the right choice
-- No → OOP might still help, but carefully design inheritance
-
----
-
-## The Four Pillars (Conceptual Overview)
-
-### 1. Encapsulation: Bundle and Protect
-**Problem it solves**: Data corruption (external code modifying critical data incorrectly)
-**Solution**: Bind data and methods together, control access
-
-### 2. Abstraction: Hide Complexity
-**Problem it solves**: Overwhelming users with unnecessary detail
-**Solution**: Show only essential interface, hide implementation
-
-### 3. Inheritance: Reuse Code
-**Problem it solves**: Duplicate code across similar classes
-**Solution**: Base class holds shared code, child classes specialize
-
-### 4. Polymorphism: Flexible Interface
-**Problem it solves**: Code that works with only one type is inflexible
-**Solution**: Different objects respond differently to same method call
-
----
-
-## Decision Tree: Procedural or OOP?
-
+**Decision Tree:**
 ```
 START: "Do I have 3+ similar entities?"
 ├─ NO → Stay procedural
-│
 └─ YES: "Will this system grow over time?"
    ├─ NO → Could work either way
-   │
    └─ YES: "Would a bug fix need to happen in multiple places?"
       ├─ NO → Procedural is fine
-      │
       └─ YES: "Use OOP!" → Create a class, instantiate multiple objects
 ```
 
----
-
-## Testing Your Understanding
-
-Ask yourself these questions about a system you're building:
-
-1. What are the entities?
+**Testing Questions:**
+1. What are the entities in my system?
 2. What data does each entity store?
 3. What operations does each entity perform?
-4. Would you ever need 100 of these entities?
-5. If you discovered a bug in an operation, how many places would you fix it?
+4. Would I ever need 100 of these entities?
+5. If I fix a bug in an operation, how many places do I change?
 
 **If answers suggest many similar entities and operations → Use OOP**
-```
+
+---
 
 ### Validation with AI
 
-Once your framework is complete, validate it:
+Once your framework is complete, validate it with AI collaboration:
 
-> "Review my OOP decision framework. Is my 'when to use OOP' advice sound? What common mistakes do students make when deciding between procedural and OOP? Give me 3 real-world examples where procedural is correct (and students wrongly use OOP)."
+> "Review my OOP decision framework. Is my 'when to use OOP' advice sound? What common mistakes do students make when deciding between procedural and OOP? Give me 3 real-world examples where procedural is actually correct (and students wrongly use OOP)."
 
-**Deliverable**: Complete `oop_decision_framework.md` that you'll reference throughout Chapter 24 and beyond.
+### Deliverable
+
+Complete `oop_decision_framework.md` following the template structure above. This framework becomes your reference throughout Chapter 24 and your entire Python career—you'll use it to make architecture decisions in real projects.
 
 ---
 
