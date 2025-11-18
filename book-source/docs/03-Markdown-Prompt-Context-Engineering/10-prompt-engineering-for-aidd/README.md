@@ -15,6 +15,17 @@ You'll learn to structure prompts clearly, iterate through collaboration with AI
 
 This chapter focuses exclusively on **what you SAY** to your AI agent (prompt engineering). Chapter 11 will teach **what your AI agent KNOWS** when you say it (context engineering).
 
+### Informed By Industry Best Practices
+
+This chapter synthesizes prompting guidance from four authoritative sources:
+
+**Anthropic (Claude)**: Progressive prompting (clear → examples → reasoning), specification-first thinking
+**Google (Gemini)**: Structured prompts (instructions → context → examples), context completeness
+**OpenAI (ChatGPT/GPT)**: Iterative refinement, constraint-based improvement, template evolution
+**Zia Kaukab (Google)**: 8-element framework (Command, Context, Logic, Roleplay, Formatting, Constraints, Examples, Iterative Questions)
+
+**Each lesson integrates these frameworks** while maintaining focus on AI-Driven Development (prompting AI to BUILD software, not just explain concepts).
+
 ### Learning Objectives
 
 **LO-001: Distinguish vague from specific prompts**
@@ -169,6 +180,14 @@ This toolkit will grow as you learn Python (Part 4), specification writing (Part
 ## Key Concepts
 
 **Task + Context + Format**: The three-element structure for effective prompts
+
+**Progressive Prompting**: Anthropic's approach (simple → structured → examples → reasoning)
+
+**8-Element Framework**: Zia's systematic prompt components (Command, Context, Logic, Roleplay, Formatting, Constraints, Examples, Iterative Questions)
+
+**Context Completeness**: Google's emphasis on rich environmental context for better AI outputs
+
+**Constraint-Based Iteration**: OpenAI's incremental refinement approach (add constraints one at a time)
 
 **Iterative Refinement**: Working with AI through multiple rounds to improve results
 

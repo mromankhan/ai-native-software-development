@@ -1,320 +1,722 @@
 ---
-title: "Lesson 5: Question-Driven Development"
-sidebar_label: "Question-Driven Development"
-sidebar_position: 5
-description: "Prompt AI to ask clarifying questions before providing solutions"
+title: "Question-Driven Development"
+chapter: 10
+lesson: 5
+part: 3
+duration_minutes: 35
+
+# HIDDEN SKILLS METADATA (Institutional Integration Layer)
+skills:
+  - name: "Question-Driven Development"
+    proficiency_level: "B1"
+    category: "Applied"
+    bloom_level: "Apply"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student prompts AI to ask clarifying questions before implementation"
+
+learning_objectives:
+  - objective: "Prompt AI to identify specification gaps through clarifying questions"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "Generate requirement questions for documentation task"
+
+cognitive_load:
+  new_concepts: 6
+  assessment: "6 concepts (QDD, clarifying questions, specification gaps, assumption discovery, requirement elicitation, iterative refinement) at B1 threshold ✓"
 ---
 
-# Lesson 5: Question-Driven Development
+# Question-Driven Development
 
-In Lesson 4, you learned to refine prompts through iteration. But what if AI could help you write better prompts BEFORE giving you an answer? That's Question-Driven Development (QDD).
+Here's a hidden AI capability most developers never use: **asking AI to ask YOU questions**.
 
-Instead of asking AI to solve your problem immediately, you ask AI to ask YOU questions first. AI's questions reveal gaps in your request and help you provide the context needed for a tailored solution.
+Most developers prompt like this:
 
-Think of it like visiting a technical consultant. A good consultant doesn't immediately give you a solution—they ask about your specific situation, constraints, and goals first. AI can do the same thing, if you prompt it to.
+> "Create documentation for the authentication API."
 
-## The Problem: One-Size-Fits-All Answers
+AI generates something. It's generic. It doesn't match your project. You spend 20 minutes refining it.
 
-When you ask AI a complex question without enough context, you get generic advice:
+**The problem**: AI made assumptions about what you needed. Those assumptions were wrong.
+
+**The fix**: Prompt AI to **ask you clarifying questions BEFORE implementing**.
+
+This lesson teaches Question-Driven Development (QDD): a technique where you explicitly request AI to identify specification gaps and ask questions that expose your hidden requirements.
+
+By the end of this lesson, you'll transform AI from "assumption maker" into "requirements analyst" who helps YOU discover what you actually need before any code gets written.
+
+---
+
+## The Hidden Cost of Assumptions
+
+When you give AI an underspecified prompt, it makes assumptions to fill gaps:
 
 **Your prompt**:
-"Explain git workflows"
-
-**AI's response**:
-"Git workflows are collaboration patterns. The most common are:
-- **Centralized Workflow**: Single main branch, all commits go there
-- **Feature Branch Workflow**: Each feature gets its own branch
-- **Gitflow**: Structured workflow with main, develop, feature, release, and hotfix branches
-- **Forking Workflow**: Each developer has their own remote repository
-
-Choose based on team size, project type, and release cadence."
-
-**What's wrong?**
-- You work alone, not on a team (irrelevant advice)
-- You don't need release management yet (too complex)
-- You wanted something simpler for personal projects
-
-AI gave you accurate information, but it wasn't TAILORED to your needs. If AI had asked about your situation first, it would have given you a different answer.
-
-## Question-Driven Development: Let AI Ask First
-
-Here's the same scenario using QDD:
-
-**Your QDD prompt**:
-"Before explaining git workflows, ask me 5 questions about my experience level and project needs. Use my answers to give me a tailored recommendation."
-
-**AI's questions**:
-1. Are you working solo or with a team?
-2. What type of project are you working on (personal, open-source, production)?
-3. How often do you plan to release updates?
-4. Have you used git branching before, or is this your first time?
-5. What's your main goal: learning git, collaborating with others, or managing releases?
-
-**Your answers**:
-1. Solo developer
-2. Personal scripts and small automation projects
-3. No formal releases—I just commit when features work
-4. I've used branching once or twice but kept it simple
-5. I want to keep my code organized without overcomplicating things
-
-**AI's tailored response**:
-"Based on your answers, I recommend a **simple feature branch workflow**:
-
-- **Main branch**: Stable code that works
-- **Feature branches**: Create a branch when trying something new
-- **No release branches needed**: Merge to main when ready
-
-Example workflow:
-```bash
-# Start new feature
-git checkout -b add-backup-logging
-
-# Work on feature, commit changes
-git add .
-git commit -m "Add logging to backup script"
-
-# Merge when feature works
-git checkout main
-git merge add-backup-logging
+```
+"Create documentation for the authentication API."
 ```
 
-This keeps main clean without the overhead of Gitflow or team collaboration patterns."
+**AI's silent assumptions**:
+- Audience = developers (not end users, not admins)
+- Format = markdown (not OpenAPI, not JSDoc)
+- Depth = complete reference (not quick start, not tutorial)
+- Auth type = JWT (not OAuth, not session-based)
+- Examples = curl commands (not JavaScript, not Python)
 
-**What's different?**
-- AI asked about your situation (solo vs. team)
-- AI tailored complexity to your needs (simple, not Gitflow)
-- AI gave you concrete steps for YOUR use case
-- AI didn't waste time on irrelevant patterns
+**Each assumption has ~60% chance of being wrong.**
 
-## When to Use Question-Driven Development
+If 5 assumptions, probability all correct = 0.6^5 = **7.8% chance AI guesses everything right**.
 
-QDD works best for:
-
-**1. Complex tasks with multiple valid approaches**
-- "How should I structure my git repository?"
-- "What's the best way to automate backups?"
-- "How do I organize documentation for my scripts?"
-
-**2. Tasks where your context changes the answer significantly**
-- Solo vs. team workflows
-- Beginner vs. advanced techniques
-- Personal projects vs. production systems
-
-**3. Tasks where you don't know what information AI needs**
-- You know you need help, but you're not sure what details matter
-- You haven't done this task before
-
-**When NOT to use QDD:**
-- Simple, factual questions ("What does `chmod 755` do?")
-- Tasks with one obvious answer ("How do I create a markdown heading?")
-- When you already know exactly what you need
-
-## How to Prompt for Questions
-
-The basic pattern:
-
-**"Before [doing the task], ask me [number] questions about [what you need to know]. Use my answers to [desired outcome]."**
-
-### Example 1: Bash Script Design
-
-**QDD prompt**:
-"Before writing a backup script for me, ask me 5 questions about what I need to back up, where it should go, and how often I'll run it. Use my answers to create a script that fits my specific needs."
-
-**Why it works**:
-- Specifies the number of questions (5)
-- Identifies what areas AI should ask about (what, where, frequency)
-- States the desired outcome (tailored script)
+**Result**: You spend 10-15 iterations correcting assumptions AI should have asked about.
 
 ---
 
-### Example 2: Git Branch Strategy
+## Question-Driven Development (QDD)
 
-**QDD prompt**:
-"Before recommending a git workflow, ask me 4 questions about my team size, project type, and release process. Use my answers to recommend the simplest workflow that meets my needs."
+**Core principle**: Before AI implements, AI asks questions that expose specification gaps.
 
-**Why it works**:
-- Number of questions (4)
-- Areas to explore (team, project, releases)
-- Desired outcome (simplest that works)
+**QDD workflow**:
 
----
+```
+1. You: Give initial prompt (intentionally underspecified)
+2. AI: Identifies gaps, asks 5-8 clarifying questions
+3. You: Answer questions (reveals your hidden requirements)
+4. AI: Generates specification based on your answers
+5. You: Validate specification, make corrections
+6. AI: Implements against validated specification
+```
 
-### Example 3: Markdown Documentation Structure
-
-**QDD prompt**:
-"Before creating a markdown template for my project documentation, ask me 3 questions about what I'm documenting, who will read it, and what sections I need. Use my answers to create a template I can reuse."
-
-**Why it works**:
-- Number of questions (3)
-- Areas to ask about (content, audience, structure)
-- Desired outcome (reusable template)
-
-## Answering AI's Questions Effectively
-
-When AI asks you questions, your answers shape the final solution. Good answers:
-
-**1. Are specific, not vague**
-- ❌ "Normal team size"
-- ✅ "Solo developer, occasionally one collaborator"
-
-**2. Include your constraints**
-- ❌ "Daily backups"
-- ✅ "Daily backups, but they need to run without manual intervention"
-
-**3. Acknowledge what you don't know**
-- ❌ Guessing at technical details
-- ✅ "I don't know yet—recommend best practices"
-
-**4. Explain your goals**
-- ❌ "Make it work"
-- ✅ "I want to learn the concept, not just copy code"
-
-## Comparing Direct vs. Question-Driven Approaches
-
-Let's see both approaches side-by-side:
-
-### Direct Approach
-
-**Prompt**: "Create a bash script to organize my downloads folder"
-
-**AI's output**: A generic script that:
-- Moves files by extension (.pdf, .jpg, .txt)
-- Creates folders if they don't exist
-- Logs the actions
-
-**Problem**: You wanted to organize by date, not file type.
+**Benefit**: Assumptions made EXPLICIT through questions. Correct first implementation dramatically more likely.
 
 ---
 
-### Question-Driven Approach
+## QDD Prompt Structure
 
-**Prompt**: "Before creating a bash script to organize my downloads folder, ask me 4 questions about how I want files organized. Use my answers to create a script that matches my workflow."
+Here's the meta-prompt that activates Question-Driven Development:
+
+```markdown
+I need [general description of task].
+
+Before implementing, ask me 5-8 clarifying questions about:
+- Audience and use case
+- Technical constraints
+- Output format and structure
+- Success criteria
+- What I don't need (non-goals)
+
+Based on my answers, create a specification document, then implement.
+```
+
+**Key components**:
+
+1. **"Before implementing"** → Prevents AI from jumping to code
+2. **"5-8 clarifying questions"** → Specific count prevents endless questions
+3. **Question categories** → Guides AI toward useful questions (not trivial ones)
+4. **"Create specification"** → Ensures structured requirements capture
+5. **"Then implement"** → Workflow includes implementation after clarification
+
+---
+
+## Example: Documentation Generation with QDD
+
+Let's see QDD in action for API documentation.
+
+### Step 1: Initial Prompt (Intentionally Underspecified)
+
+```markdown
+I need documentation for our authentication API endpoints.
+
+Before implementing, ask me 5-8 clarifying questions about:
+- Audience and use case
+- Technical constraints
+- Output format and structure
+- Success criteria
+- What I don't need (non-goals)
+
+Based on my answers, create a specification document, then generate the documentation.
+```
+
+### Step 2: AI Asks Clarifying Questions
+
+AI responds with:
+
+```markdown
+Before I create the documentation, I need to understand your requirements better:
+
+**Audience & Use Case:**
+1. Who is the primary audience? (frontend developers, backend developers, QA engineers, external API consumers?)
+2. What's their assumed knowledge level? (familiar with REST APIs? with your auth system specifically?)
+
+**Technical Details:**
+3. What authentication method(s) does your API use? (JWT, OAuth 2.0, API keys, session-based?)
+4. Which endpoints should be documented? (login, logout, refresh, register, password reset - all or subset?)
+
+**Format & Structure:**
+5. What format do you prefer? (Markdown, OpenAPI/Swagger, JSDoc, HTML?)
+6. Do you need interactive examples? (code snippets, curl commands, Postman collection?)
+
+**Success Criteria:**
+7. What should a developer be able to do after reading this documentation without asking questions?
+
+**Non-Goals:**
+8. What should I NOT include? (implementation details, security architecture, rate limiting, error handling specifics?)
+```
+
+**Notice**:
+- Questions are **specific** (not "what do you want?")
+- Questions are **categorized** (matches your prompt structure)
+- Questions **expose assumptions** AI would have made (JWT vs OAuth, markdown vs OpenAPI)
+
+### Step 3: You Answer Questions
+
+You respond:
+
+```markdown
+1. Primary audience: Frontend developers integrating our auth into React apps
+2. Knowledge level: Familiar with REST APIs, but first time using our system
+3. Authentication method: JWT with refresh tokens
+4. Endpoints: /login, /logout, /refresh (NOT register/password reset - separate docs)
+5. Format: Markdown with JavaScript fetch() examples
+6. Interactive examples: Yes - copy-pasteable fetch() code for each endpoint
+7. Success criteria: Developer can integrate auth without reading our backend code
+8. Non-goals: Don't document error handling (separate guide), don't explain JWT internals
+```
+
+### Step 4: AI Creates Specification
+
+Based on your answers, AI generates:
+
+```markdown
+SPECIFICATION: Authentication API Documentation
+
+WHAT: Developer guide for integrating JWT authentication into React apps
+
+AUDIENCE:
+  - Frontend developers (React)
+  - Familiar with REST APIs
+  - First-time users of our auth system
+
+SCOPE:
+  - Endpoints: /login, /logout, /refresh
+  - Excluded: registration, password reset (separate docs)
+
+FORMAT:
+  - Markdown document
+  - JavaScript fetch() examples for each endpoint
+  - Copy-pasteable code snippets
+
+STRUCTURE:
+  1. Quick Start (authentication flow overview)
+  2. Endpoint Reference
+     - POST /login (email + password → access token + refresh token)
+     - POST /logout (invalidate tokens)
+     - POST /refresh (refresh token → new access token)
+  3. Common Integration Patterns
+     - Storing tokens in React
+     - Attaching tokens to requests
+     - Handling token expiration
+
+SUCCESS CRITERIA:
+  - Developer can integrate auth without reading backend code
+  - All code examples are copy-pasteable and working
+  - Authentication flow clear from examples
+
+NON-GOALS:
+  - Error handling details (separate guide)
+  - JWT internals explanation
+  - Security best practices (separate guide)
+```
+
+**What just happened**:
+- Your answers → specific requirements
+- AI transformed answers → structured specification
+- Specification ready for validation BEFORE implementation
+
+### Step 5: You Validate Specification
+
+You review and correct:
+
+```markdown
+Specification looks good. One correction:
+
+STRUCTURE section - add:
+  4. Token Refresh Strategy (when to call /refresh, how to handle expired tokens)
+
+Otherwise approved. Proceed with documentation.
+```
+
+### Step 6: AI Implements Against Validated Specification
+
+Now AI generates documentation matching your exact requirements:
+
+```markdown
+# Authentication API Guide
+
+Quick integration guide for adding JWT authentication to your React application.
+
+## Authentication Flow
+
+1. User logs in → Receive access token (15 min expiry) + refresh token (7 day expiry)
+2. Include access token in API requests
+3. When access token expires → Use refresh token to get new access token
+4. When refresh token expires → User must log in again
+
+---
+
+## API Endpoints
+
+### POST /login
+
+**Purpose**: Authenticate user and receive tokens
+
+**Request**:
+```javascript
+const response = await fetch('https://api.example.com/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'userpassword'
+  })
+});
+
+const data = await response.json();
+// data = { accessToken: "...", refreshToken: "...", expiresIn: 900 }
+```
+
+**Response**:
+- `accessToken` (string): JWT token for API requests (15 min expiry)
+- `refreshToken` (string): Token for refreshing access token (7 day expiry)
+- `expiresIn` (number): Seconds until access token expires
+
+**Storage**:
+```javascript
+localStorage.setItem('accessToken', data.accessToken);
+localStorage.setItem('refreshToken', data.refreshToken);
+```
+
+---
+
+### POST /logout
+
+**Purpose**: Invalidate user's tokens
+
+**Request**:
+```javascript
+const response = await fetch('https://api.example.com/auth/logout', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+  }
+});
+
+// Clear local storage
+localStorage.removeItem('accessToken');
+localStorage.removeItem('refreshToken');
+```
+
+---
+
+### POST /refresh
+
+**Purpose**: Get new access token using refresh token
+
+**Request**:
+```javascript
+const response = await fetch('https://api.example.com/auth/refresh', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    refreshToken: localStorage.getItem('refreshToken')
+  })
+});
+
+const data = await response.json();
+// data = { accessToken: "...", expiresIn: 900 }
+
+// Update stored access token
+localStorage.setItem('accessToken', data.accessToken);
+```
+
+---
+
+## Common Integration Patterns
+
+### Attaching Tokens to Requests
+
+```javascript
+async function authenticatedFetch(url, options = {}) {
+  const token = localStorage.getItem('accessToken');
+
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  return response;
+}
+
+// Usage
+const data = await authenticatedFetch('https://api.example.com/user/profile');
+```
+
+### Token Refresh Strategy
+
+**When to refresh**:
+- Proactive: Refresh when access token has \<2 minutes remaining
+- Reactive: Refresh when API returns 401 Unauthorized
+
+**Proactive approach**:
+```javascript
+function isTokenExpiringSoon() {
+  const expiresIn = parseInt(localStorage.getItem('tokenExpiresIn'));
+  return expiresIn < 120; // Less than 2 minutes
+}
+
+// Before important requests
+if (isTokenExpiringSoon()) {
+  await refreshAccessToken();
+}
+```
+
+**Reactive approach**:
+```javascript
+async function authenticatedFetch(url, options = {}) {
+  let response = await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+    }
+  });
+
+  // Token expired - refresh and retry
+  if (response.status === 401) {
+    await refreshAccessToken();
+    response = await fetch(url, options); // Retry with new token
+  }
+
+  return response;
+}
+```
+```
+
+**Result**: Documentation matches your exact requirements. First implementation ~95% correct because specification captured all requirements upfront.
+
+---
+
+## QDD Aligns With Anthropic's Thinking Approach
+
+**Anthropic's Core Principle**: AI should **think through problems step-by-step** rather than jumping to answers.
+
+QDD embodies this principle:
+
+- **Traditional approach** (no thinking): "Create documentation" → AI generates immediately
+- **QDD approach** (thinking enabled): "Ask questions first" → AI pauses to clarify → AI thinks through requirements → AI generates thoughtfully
+
+**Result**: When AI thinks (asks clarifying questions) before implementing, it generates dramatically better solutions because it understands WHAT you actually need before HOW to build it.
+
+---
+
+## The Three Roles in QDD
+
+Notice how Question-Driven Development demonstrates all three AI collaboration roles:
+
+### Role 1: AI as Teacher
+
+AI teaches you **what questions to consider**:
+
+> "What authentication method(s) does your API use? (JWT, OAuth 2.0, API keys, session-based?)"
+
+**You learn**: "Oh, I need to specify auth method—AI can't assume JWT."
+
+### Role 2: AI as Student
+
+AI learns **your project-specific requirements**:
+
+> You: "Audience is React developers, first-time users of our system"
+>
+> AI: *Adjusts documentation depth, includes React-specific storage examples*
+
+**AI adapts**: Documentation level and code examples match your context.
+
+### Role 3: AI as Co-Worker
+
+Neither you nor AI has complete picture initially:
+- **You know**: What exists (endpoints, auth method)
+- **AI knows**: What needs documenting (structure, examples developers expect)
+
+**Together**: Through questions → answers → specification, you converge on complete requirements.
+
+**Result**: Better documentation than either could produce alone.
+
+---
+
+## QDD for Different Development Tasks
+
+QDD works for any underspecified task. Here are meta-prompts for common scenarios.
+
+### QDD for Bug Fixes
+
+```markdown
+I need help debugging [brief description of issue].
+
+Before suggesting solutions, ask me 5-8 diagnostic questions about:
+- Exact error messages or symptoms
+- When the problem occurs (reproducibility)
+- Recent changes to the system
+- What I've already tried
+- Expected vs actual behavior
+
+Based on my answers, create a diagnostic hypothesis, then suggest fixes.
+```
+
+**Example questions AI might ask**:
+1. What's the exact error message? (full stack trace if available)
+2. Does this happen consistently or intermittently?
+3. What was the last working version?
+4. Which components/files were changed recently?
+5. Have you checked logs? What do they show?
+6. Can you reproduce in development environment?
+
+---
+
+### QDD for Code Refactoring
+
+```markdown
+I need to refactor [component/function/module name].
+
+Before proposing changes, ask me 5-8 questions about:
+- What problems exist with current implementation
+- What must stay the same (API, behavior, tests)
+- What can change (structure, algorithm, dependencies)
+- Performance or maintainability goals
+- Constraints (time, backwards compatibility, team knowledge)
+
+Based on my answers, create a refactoring specification, then propose changes.
+```
+
+**Example questions AI might ask**:
+1. What specific problems make this code difficult to maintain?
+2. Must the function signature stay the same? (breaking changes allowed?)
+3. Are existing tests comprehensive? (can we trust them as regression suite?)
+4. Performance-critical code? (can we prioritize readability over speed?)
+5. What patterns does your team prefer? (classes vs functions, etc.)
+
+---
+
+### QDD for New Feature Implementation
+
+```markdown
+I need to implement [feature description].
+
+Before designing the solution, ask me 5-8 questions about:
+- User workflow and use cases
+- Technical constraints (existing architecture, dependencies)
+- Success criteria and acceptance tests
+- Performance/scale requirements
+- What's out of scope for this iteration
+
+Based on my answers, create a feature specification, then propose implementation.
+```
+
+**Example questions AI might ask**:
+1. Who are the users? What problem does this solve for them?
+2. How does this fit into existing user workflows?
+3. What existing systems/components does this interact with?
+4. What's the expected usage volume? (1 user? 1000? 1 million?)
+5. What's the MVP? (minimum viable version for first iteration)
+6. What can wait for v2? (features to explicitly defer)
+
+---
+
+## Common QDD Mistakes
+
+### Mistake 1: Asking AI to Ask Too Many Questions
+
+❌ **Wrong**:
+```markdown
+Ask me questions about everything that might be relevant.
+```
+
+*AI asks 20+ questions. You get exhausted and give shallow answers.*
+
+✅ **Right**:
+```markdown
+Ask me 5-8 clarifying questions about [specific categories].
+```
+
+*Focused questions → thoughtful answers → better requirements.*
+
+---
+
+### Mistake 2: Not Providing Question Categories
+
+❌ **Wrong**:
+```markdown
+Ask me clarifying questions before implementing.
+```
+
+*AI asks obvious or trivial questions ("What language?" when obvious from context).*
+
+✅ **Right**:
+```markdown
+Ask me clarifying questions about:
+- Audience and use case
+- Technical constraints
+- Output format
+- Success criteria
+- Non-goals
+```
+
+*Structured categories → relevant questions → useful answers.*
+
+---
+
+### Mistake 3: Skipping Specification Validation
+
+❌ **Wrong workflow**:
+```
+AI asks questions → You answer → AI implements immediately
+```
+
+*If AI misinterpreted your answers, you discover problems AFTER implementation.*
+
+✅ **Right workflow**:
+```
+AI asks questions → You answer → AI creates specification → You validate → AI implements
+```
+
+*Specification checkpoint catches misinterpretations BEFORE wasted implementation effort.*
+
+---
+
+### Mistake 4: Answering Questions Too Vaguely
 
 **AI asks**:
-1. How do you want to organize files—by type, by date, by project, or something else?
-2. Should the script move or copy files?
-3. Should the script run automatically or manually?
-4. What should happen if a file already exists in the destination?
+> "What's the primary audience for this documentation?"
 
-**Your answers**:
-1. By month (YYYY-MM folders)
-2. Move files
-3. Manually for now
-4. Skip duplicates, don't overwrite
+❌ **Vague answer**:
+> "Developers"
 
-**AI's tailored output**: A script that:
-- Creates YYYY-MM folders based on file modification dates
-- Moves (not copies) files
-- Skips files that already exist in destination
-- Includes a dry-run option for testing
+*Too broad. AI still has to assume (frontend? backend? junior? senior?).*
 
-**Result**: You got exactly what you needed without multiple iterations.
+✅ **Specific answer**:
+> "Frontend developers with React experience, integrating our API for the first time. They understand REST but don't know our authentication system."
 
-## Practice: Write Question-Driven Prompts
-
-For each scenario below, write a QDD prompt. Do this WITHOUT AI first.
-
-### Scenario 1: Git Commit Message Style
-
-You want AI to help you write better commit messages, but you're not sure what style to follow.
-
-**Your QDD prompt** (write it):
-
-**What questions should AI ask you?** (predict 3-4):
-1.
-2.
-3.
-4.
+*Specific audience → AI can match documentation depth and examples appropriately.*
 
 ---
 
-### Scenario 2: Bash Error Handling
+## QDD Meta-Prompt Template
 
-You want to add error handling to your scripts, but you don't know where to start.
+Use this template to activate Question-Driven Development for any task:
 
-**Your QDD prompt** (write it):
+```markdown
+I need [one-sentence description of task].
 
-**What questions should AI ask you?** (predict 3-4):
-1.
-2.
-3.
-4.
+Before [implementing/designing/creating], ask me 5-8 clarifying questions about:
+- [Question category 1]
+- [Question category 2]
+- [Question category 3]
+- [Question category 4]
+- [Question category 5]
 
----
+Based on my answers, create a [specification/plan/design document], then [implement/build/generate].
+```
 
-### Scenario 3: Markdown Documentation Template
-
-You need a documentation template for your collection of scripts.
-
-**Your QDD prompt** (write it):
-
-**What questions should AI ask you?** (predict 3-4):
-1.
-2.
-3.
-4.
+**Fill in**:
+- **Task description**: What you're building
+- **Question categories**: What aspects AI should clarify (audience, constraints, format, success criteria, non-goals)
+- **Output type**: specification, plan, design document
+- **Final action**: implement, build, generate
 
 ---
 
-**After you've written your prompts**, review them:
-- Did you specify how many questions AI should ask?
-- Did you identify what areas AI should explore?
-- Did you state what you want as the final outcome?
+## Practice Exercise: Bash Script Requirements
+
+**Scenario**: You need a script that monitors log files for errors.
+
+**Your Task**: Write a QDD meta-prompt that gets AI to ask YOU the right questions.
+
+**Fill in this template**:
+
+```markdown
+I need a Bash script that monitors log files for errors.
+
+Before implementing, ask me 5-8 clarifying questions about:
+- [Category 1]
+- [Category 2]
+- [Category 3]
+- [Category 4]
+- [Category 5]
+
+Based on my answers, create a specification document, then implement the script.
+```
+
+**What categories should AI ask about?** (Spend 3 minutes thinking)
+
+---
+
+**Solution** (Compare yours):
+
+```markdown
+I need a Bash script that monitors log files for errors.
+
+Before implementing, ask me 5-8 clarifying questions about:
+- Which log files to monitor (paths, file patterns)
+- What constitutes an "error" (error keywords, patterns, severity levels)
+- What action to take when errors found (alert, log, execute command)
+- How often to check (continuous, interval-based, one-time scan)
+- Output format and notifications (stdout, file, email, Slack)
+
+Based on my answers, create a specification document, then implement the script.
+```
+
+**Did your categories cover**:
+- ✅ Input (which logs?)
+- ✅ Detection criteria (what's an error?)
+- ✅ Action (what to do when found?)
+- ✅ Timing (when to check?)
+- ✅ Output (where to report?)
+
+If yes → your QDD prompt will elicit useful requirements.
+
+---
+
+## What You've Learned
+
+You've learned Question-Driven Development: how to transform AI from "assumption maker" into "requirements analyst."
+
+**Core concepts**:
+
+1. **QDD workflow** — AI asks questions → You answer → AI creates spec → You validate → AI implements
+2. **Meta-prompt structure** — "Before implementing, ask 5-8 questions about [categories]"
+3. **Question categories** — Audience, constraints, format, success criteria, non-goals
+4. **Specification checkpoint** — Validate AI's understanding BEFORE implementation
+5. **Three Roles in QDD** — AI teaches (questions you didn't consider), AI learns (your answers), AI co-creates (converges on complete spec)
+
+**Key principle**: Spend 5 minutes answering AI's questions to save 30 minutes correcting AI's assumptions.
+
+In the next lesson, you'll learn how to create **reusable prompt templates** for tasks you perform repeatedly—capturing question-driven workflows into templates you can invoke instantly.
+
+---
 
 ## Try With AI
 
-Now test Question-Driven Development with real prompts. Use Claude Code or Gemini CLI:
+Ready to transform AI from assumption-maker into requirements analyst through Question-Driven Development?
 
-### Exercise 1: Git Workflow Recommendation
+**🔍 Explore QDD vs. Direct Implementation:**
+> "Show me the difference between direct implementation and QDD. For a 'user authentication system' feature: (1) generate code immediately with zero questions, (2) ask me 10 clarifying questions first (auth method, storage, session handling, security), then generate from my answers. Compare quality and fit."
 
-**Use this QDD prompt**:
-"Before recommending a git workflow for me, ask me 5 questions about my experience, team size, project type, and goals. Use my answers to recommend the simplest workflow that meets my needs."
+**🎯 Practice Specification Through Questions:**
+> "I need [describe your feature]. Before implementing, ask me 8-10 targeted questions about: audience/use case, technical constraints, output format, success criteria, and non-goals. Based on my answers, create a specification document showing you captured my requirements accurately."
 
-**Answer AI's questions honestly**
+**🧪 Test Hidden Assumption Discovery:**
+> "I want API documentation for authentication endpoints. First, list assumptions you'd make if I gave NO guidance. Then ask clarifying questions to replace those assumptions with my actual requirements. Show me how questions prevent wrong implementations."
 
-**Evaluate the tailored response**:
-- Did AI's questions reveal assumptions you didn't state?
-- Did the final answer match your actual needs?
-- Compare this to what you'd get from "Explain git workflows"—which was more useful?
-
----
-
-### Exercise 2: Bash Script Design (Your Choice)
-
-Think of a bash script you actually need. Use QDD:
-
-**Your QDD prompt**:
-"Before writing a bash script to [your task], ask me 5 questions about [relevant areas]. Use my answers to create a script that [desired outcome]."
-
-**Answer AI's questions**
-
-**Evaluate the result**:
-- Did AI ask about things you hadn't considered?
-- Did answering the questions clarify your own requirements?
-- Was the final script closer to what you needed than a direct "create script" prompt?
+**🚀 Apply to Your Real Project:**
+> "Help me build [your actual development task]. Use QDD: ask me detailed questions about architecture, data model, error handling, performance requirements, and testing strategy. Create a spec from my answers, let me validate it, then implement."
 
 ---
-
-### Exercise 3: Compare Approaches
-
-Pick one task and try BOTH approaches:
-
-**Direct prompt**: "Explain [topic]"
-- Note the response
-
-**QDD prompt**: "Before explaining [topic], ask me 3 questions about my experience and what I need to know. Use my answers to tailor the explanation."
-- Answer AI's questions
-- Note the response
-
-**Compare**:
-- Which approach gave you more useful information?
-- Which approach required less iteration?
-- Which approach taught you something unexpected?
-
----
-
-**Reflection questions**:
-- When did AI's questions surprise you (ask about something you hadn't thought of)?
-- When did answering questions help you clarify your own needs?
-- When would you use QDD instead of direct prompting?
-- When would direct prompting be faster and better?
