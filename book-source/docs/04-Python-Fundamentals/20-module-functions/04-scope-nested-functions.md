@@ -345,138 +345,20 @@ When you see the `global` keyword in code, pause and think: **"Is this really ne
 
 ---
 
-## Try With AI: Scope Debugging Workshop
+## Try With AI
 
-### Part 1: Predict Scope Behavior (Your Turn First)
+Understand variable scope through prediction, debugging, and closure exploration.
 
-**Before asking AI**, analyze this nested code and predict the output:
+**🔍 Explore LEGB Scope Resolution:**
+> "Create nested functions with variable 'counter' at global, enclosing, and local scopes. Explain Python's LEGB lookup order (Local, Enclosing, Global, Built-in) and demonstrate which 'counter' gets accessed at each level."
 
-```python
-# Scope prediction challenge
-counter = 0  # Global
+**🎯 Practice Scope Prediction:**
+> "Analyze this code: `counter = 0` (global), `def outer(): counter = 10`, `def inner(): counter = 20`. Predict output without running. Then show three versions: using global, using nonlocal, and redesigned with parameters/returns."
 
-def process_batch():
-    counter = 10  # Local or global?
+**🧪 Test Closure Behavior:**
+> "Debug this closure bug: `def create_multipliers()` with `for i in range(3): multipliers.append(lambda x: x * i)`. Why do all functions return the same value? Show three fixes: default argument, closure factory, list comprehension."
 
-    def process_item():
-        counter = 20  # Which scope?
-        print(f"Item: {counter}")
-
-    process_item()
-    print(f"Batch: {counter}")
-
-process_batch()
-print(f"Global: {counter}")
-```
-
-**Your task**: Write predictions
-- What prints for "Item:", "Batch:", "Global:"?
-- Draw a scope diagram showing which `counter` variable exists where
-- Identify: Which `counter` is shadowing which?
-- Predict: How would you modify the global counter from inside `process_item()`?
-
-Write your predictions with reasoning before Part 2.
+**🚀 Apply Scope Debugging:**
+> "Build a scope debugging toolkit: `inspect_scope()` showing locals() vs globals(), and `debug_closure(func)` displaying captured variables via __closure__. Apply it to a buggy score tracker where assignment shadows global instead of modifying it."
 
 ---
-
-### Part 2: AI Explains LEGB Rule (Discovery)
-
-Share your predictions with AI:
-
-> "Here are my scope predictions for the nested code: [paste your predictions]
->
-> Teach me the LEGB rule (Local, Enclosing, Global, Built-in):
-> 1. Run my code and show the actual output - were my predictions correct?
-> 2. Draw a scope chain diagram showing the LEGB lookup order for each `print()` statement
-> 3. Explain variable shadowing: why does `counter = 10` create a new local variable instead of modifying global?
-> 4. Show me three versions: one using `global`, one using `nonlocal`, one redesigned without either keyword"
-
-**Your evaluation**:
-- Run each version AI creates - trace the variable values
-- Add `print(locals())` in each function - what do you see?
-- Which version is easiest to understand and debug?
-
----
-
-### Part 3: Student Teaches AI (Closure Edge Cases)
-
-Challenge AI with closure debugging:
-
-> "I wrote this closure that's behaving strangely:
-> ```python
-> def create_multipliers():
->     multipliers = []
->     for i in range(3):
->         multipliers.append(lambda x: x * i)
->     return multipliers
->
-> funcs = create_multipliers()
-> print(funcs[0](10))  # Expected: 0, Actual: ?
-> print(funcs[1](10))  # Expected: 10, Actual: ?
-> print(funcs[2](10))  # Expected: 20, Actual: ?
-> ```
->
-> Debug this step-by-step:
-> 1. What's the ACTUAL output? Why doesn't it match expectations?
-> 2. Explain the closure capture problem: when does `i` get evaluated?
-> 3. Show me THREE ways to fix this: default argument, closure factory, list comprehension
-> 4. Which fix is most Pythonic and why?"
-
-**Your debugging**:
-- Create this bug yourself and run it - verify the broken behavior
-- Implement all three fixes AI suggests - do they all work?
-- Add print statements to trace when variables are captured vs evaluated
-
----
-
-### Part 4: Build Scope Debugging Workflow (Convergence)
-
-Create a practical scope debugging toolkit:
-
-> "Build me a comprehensive scope debugging workflow:
->
-> 1. **Scope Inspector**: Write a function `inspect_scope()` that:
->    - Prints local variables using `locals()`
->    - Prints global variables using `globals()`
->    - Shows the difference between the two
->    - Demonstrates calling it from nested functions
->
-> 2. **Closure Debugger**: Create `debug_closure(func)` that:
->    - Takes a closure function as input
->    - Prints the closure's captured variables using `func.__closure__`
->    - Shows the values stored in the closure
->
-> 3. **Scope Test Suite**: Write test cases demonstrating:
->    - Local variable shadowing global
->    - Closure capturing outer scope
->    - LEGB resolution order with all four scopes
->    - Common scope bugs (accessing before assignment, closure loop problem)"
-
-**Refinement**:
-> "Apply this toolkit to a real debugging scenario:
->
-> You have a game with score tracking that's buggy. The score resets unexpectedly. Here's simplified code:
-> ```python
-> score = 0
->
-> def play_round():
->     score = 100  # Bug: creates local instead of modifying global
->     return score
->
-> def get_score():
->     return score
->
-> play_round()
-> print(get_score())  # Prints 0, not 100!
-> ```
->
-> Use your debugging tools to:
-> 1. Diagnose WHY the score isn't updating
-> 2. Show me the scope state before/after `play_round()`
-> 3. Provide THREE solutions: using `global`, using return values, using a class
-> 4. Explain which solution is best for production code and why"
-
----
-
-**Time**: 30 minutes
-**Outcome**: You can predict scope behavior using LEGB rules, debug closure capture problems, identify shadowing bugs, and choose appropriate scope patterns (parameters/returns vs global/nonlocal) for production code.

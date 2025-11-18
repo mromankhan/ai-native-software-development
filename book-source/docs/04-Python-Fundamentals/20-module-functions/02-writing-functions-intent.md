@@ -345,126 +345,20 @@ Better specifications → better AI output. This is how AI-native developers wor
 
 ---
 
-## Try With AI: Function Design Workshop
+## Try With AI
 
-### Part 1: Refactor Repetitive Code (Your Turn First)
+Learn function design through specification-first development with type hints and docstrings.
 
-**Before asking AI**, you have this repetitive script:
+**🔍 Explore Function Signatures:**
+> "I need a function that validates user registration (email must contain @, username at least 3 chars). Design just the function signature with type hints and docstring—no implementation yet. Explain how the signature communicates intent."
 
-```python
-# User registration system with duplicate code
-email1 = "alice@test.com"
-username1 = "alice"
-if "@" not in email1 or len(username1) < 3:
-    print("Invalid user data")
-else:
-    print(f"User {username1} registered: {email1}")
+**🎯 Practice Refactoring to Functions:**
+> "I have repetitive user validation code for 50 users in one script. Help me design 2-3 functions to eliminate duplication. Show me how type hints guide AI implementation, then validate email@test.com with username 'alice'."
 
-email2 = "bob@test.com"
-username2 = "bob"
-if "@" not in email2 or len(username2) < 3:
-    print("Invalid user data")
-else:
-    print(f"User {username2} registered: {email2}")
+**🧪 Test Single Responsibility:**
+> "Analyze this function: `def process_user(email, username)` that validates, registers, sends email, and logs. Critique it using single responsibility principle, then refactor into separate functions showing clear naming and focused responsibilities."
 
-email3 = "charlie@test.com"
-username3 = "charlie"
-if "@" not in email3 or len(username3) < 3:
-    print("Invalid user data")
-else:
-    print(f"User {username3} registered: {email3}")
-
-# ... imagine 50 more users like this
-```
-
-**Your task**: Design function signatures (NO implementation yet)
-- What function(s) would eliminate this repetition?
-- What parameters do you need? What types?
-- What should each function return? What type?
-- Write ONLY the `def` line + docstring for each function
-
-Document your function signatures before Part 2.
+**🚀 Apply Professional Function Design:**
+> "Design a user authentication system with four functions: validate_password(), hash_password(), authenticate_user(), and create_session(). Write signatures with full type hints and docstrings ONLY, demonstrating how specification clarity makes implementation obvious."
 
 ---
-
-### Part 2: AI Explains Single Responsibility (Discovery)
-
-Share your signatures with AI:
-
-> "Here are my function signatures to refactor repetitive code: [paste your signatures]
->
-> Teach me about function design:
-> 1. Review my signatures - are they following the 'single responsibility principle'? (one function, one job)
-> 2. Show me good vs bad function naming: `process_data()` vs `validate_email()` - which is clearer?
-> 3. Explain when to split one function into two - how do you know when a function is doing too much?
-> 4. Implement my functions and show how they eliminate the repetition"
-
-**Your evaluation**:
-- Compare AI's implementation to what you imagined - same logic?
-- Try calling the functions with edge cases: empty string, None, very long input
-- Does the function name clearly describe what it does? Could you improve it?
-
----
-
-### Part 3: Student Teaches AI (When NOT to Create Functions)
-
-Challenge AI with over-abstraction:
-
-> "I wrote this function to avoid repetition:
-> ```python
-> def add_numbers(a: int, b: int) -> int:
->     '''Add two numbers.'''
->     return a + b
->
-> # Used like this:
-> total = add_numbers(5, 3)
-> ```
->
-> Analyze this decision:
-> 1. Is wrapping `a + b` in a function actually helpful? Why or why not?
-> 2. When does extracting code into a function make things WORSE (over-abstraction)?
-> 3. Give me three examples where creating a function is wrong: too simple, too specific, too unclear
-> 4. Create a decision checklist: 'Should I extract this into a function?' with yes/no criteria"
-
-**Your debugging**:
-- Find a place in your code where you created an unnecessary function
-- What's the cost? (More code, more indirection, harder to read?)
-- Refactor it back to inline code - is it actually simpler?
-
----
-
-### Part 4: Build Function Design Checklist (Convergence)
-
-Create a practical function design guide:
-
-> "Build a comprehensive function design toolkit for me:
->
-> 1. **Naming Convention Guide**: Show me 10 function names (5 good, 5 bad) with explanations
->    - Good: `validate_email()`, `calculate_tax()`, `format_date()`
->    - Bad: `do_stuff()`, `process()`, `handle()`
->
-> 2. **Parameter Design Patterns**: Create functions demonstrating:
->    - Required parameters only
->    - Mix of required + optional with defaults
->    - When to use `bool` flags vs separate functions
->
-> 3. **Return Value Patterns**: Show me these scenarios:
->    - Function that returns a single value
->    - Function that returns multiple values as tuple
->    - Function that might fail: `Type | None` pattern
->
-> 4. **Docstring Template**: Give me a reusable template with Parameters, Returns, Raises sections"
-
-**Refinement**:
-> "Apply this toolkit to a real scenario: design a user authentication system with these functions:
-> - `validate_password()` - check password strength
-> - `hash_password()` - secure password storage
-> - `authenticate_user()` - login verification
-> - `create_session()` - session management
->
-> For EACH function: write signature + docstring ONLY (no implementation). Show me how good design makes the implementation obvious."
-
----
-
-**Time**: 30 minutes
-**Outcome**: You can identify when to extract functions vs keep code inline, apply single responsibility principle, design clear function signatures that make implementation obvious, and create professional naming conventions and documentation patterns.

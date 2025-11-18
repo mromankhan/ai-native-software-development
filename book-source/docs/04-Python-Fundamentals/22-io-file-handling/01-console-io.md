@@ -459,79 +459,21 @@ Create a function `get_positive_float()` that:
 - Input: "-2.5", then "5.0" → Rejects negative, accepts positive
 - Input: "abc", "12.5" → Rejects non-numeric, accepts valid number
 
-## Try With AI: The Interactive CLI Builder
+## Try With AI
 
-### Part 1: Design a Menu System (Your Turn First)
+Build an interactive CLI calculator with comprehensive input validation and user-friendly error handling.
 
-**Before asking AI**, design a simple calculator CLI with a menu that:
-- Shows the user 4 options: (1) Add, (2) Subtract, (3) Multiply, (4) Exit
-- Gets their choice
-- Gets two numbers
-- Performs the operation
-- Returns to menu
+**🔍 Explore Input Validation:**
+> "Explain input validation strategies for CLI programs. Show the difference between validating menu choices (conditional checks) vs numbers (try/except for ValueError). Demonstrate handling 'abc', empty input, and out-of-range values with specific error messages."
 
-**Your task**: Write pseudocode or a rough outline describing:
-1. How the menu loop starts
-2. What happens after the user selects an option
-3. Where validation should occur (menu choice, number inputs)
-4. How the program exits
+**🎯 Practice Menu System Design:**
+> "Design a calculator CLI: display menu (Add, Subtract, Multiply, Exit), get user choice, validate 1-4 range, get two numbers with float() conversion, perform calculation, show result, loop back to menu. Explain where validation occurs and how to exit gracefully."
 
-Create a file `calculator_design.md` with your design notes.
+**🧪 Test Edge Case Handling:**
+> "Challenge: User types 'abc' for number (ValueError), '5' for 1-4 menu (range check), empty input (strip/check), or 3.5 for integer (float handling). For each, show error type Python raises and user-friendly error message my code should display."
 
-**Deliverable**: A text file showing your planned structure before writing Python code.
-
----
-
-### Part 2: AI Explains Input Validation Patterns (Discovery)
-
-**Share your design with AI:**
-
-> "Here's my calculator CLI design [paste your pseudocode]. Explain the input validation strategy I should use. Show me the difference between validating the menu choice vs validating numbers. What try/except patterns should I use for each?"
-
-**Your evaluation**:
-- Does the AI explain when to use try/except vs when to check conditions?
-- Does it show at least two different validation patterns?
-- Can you understand which pattern to use for each input type?
-
----
-
-### Part 3: Student Teaches AI—Edge Cases (Debugging)
-
-**Challenge the AI with scenarios:**
-
-> "What happens if a user:
-> 1. Types 'abc' when asked for a number?
-> 2. Types 5 when menu shows only options 1-4?
-> 3. Types nothing and just presses Enter?
-> 4. Enters a floating-point number (3.5) when I need an integer?
->
-> Show me specific error messages my code should display for each case, and which error type Python will raise."
-
-**Your debugging**: Test the AI's answers by predicting what your calculator code should do, then verify with actual Python.
-
----
-
-### Part 4: Build an Interactive Calculator (Convergence)
-
-**Build the complete calculator:**
-
-> "Now help me write a complete interactive calculator that:
-> 1. Displays menu (Add, Subtract, Multiply, Exit)
-> 2. Validates menu choice (must be 1-4)
-> 3. Gets two numbers with try/except handling
-> 4. Performs calculation
-> 5. Shows formatted result
-> 6. Returns to menu automatically
->
-> The calculator should handle all the edge cases we discussed. Show me the complete, production-ready code with input validation throughout."
-
-**Refinement**:
-- Extend the calculator to add Division (with zero-division checking)
-- Add input history: show the last 3 calculations before the menu
-- Test with invalid inputs and verify error messages are helpful
-
-**Time**: 25-35 min
-**Outcome**: Working interactive CLI calculator with robust input validation
+**🚀 Apply Production CLI:**
+> "Build complete interactive calculator with: menu display, choice validation (1-4), number input with try/except, operations (add/subtract/multiply/divide with zero check), formatted results, calculation history (last 3 operations), and automatic menu return. Handle all edge cases discussed."
 
 ---
 

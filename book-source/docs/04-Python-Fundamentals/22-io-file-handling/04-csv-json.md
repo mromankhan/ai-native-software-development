@@ -746,97 +746,21 @@ Write error-handling code that:
 
 ---
 
-## Try With AI: The Data Format Migration Workshop
+## Try With AI
 
-### Part 1: Manually Convert Data Formats (Your Turn First)
+Master data format conversion between CSV and JSON with validation and encoding handling.
 
-**Before asking AI**, understand the tradeoffs by converting data manually:
+**🔍 Explore Format Tradeoffs:**
+> "Compare CSV vs JSON for employee data (name, email, department, start_year). Explain: CSV pros (compact, Excel-compatible, simple) vs JSON pros (nested data, type preservation, metadata). Show manual conversion and what's lost in each direction. When to choose each format?"
 
-**Given CSV data**:
-```
-name,email,department,start_year
-Alice Johnson,alice@example.com,Engineering,2020
-Bob Smith,bob@example.com,Sales,2021
-Carol White,carol@example.com,Marketing,2019
-```
+**🎯 Practice Format Handling:**
+> "Demonstrate `csv.DictReader` reading CSV rows as dictionaries and `json.dump()` writing with indentation. Show edge cases: comma in name field ('Alice, Jr.'), newline in description (CSV breaks), emoji encoding (café, José with ensure_ascii=False), and performance for 100K records."
 
-**Your task**: Without using code, manually convert this CSV to JSON by:
-1. Writing out the JSON structure by hand (what keys do you use?)
-2. Documenting what information you **lose** in conversion (formatting, types, metadata)
-3. Writing a document `format_tradeoffs.md` that explains:
-   - Why CSV works well for this data
-   - Why JSON might be better for this data
-   - What happens if you tried to reverse the conversion (JSON back to CSV)?
-   - List 3 reasons to choose CSV and 3 reasons to choose JSON for employee data
+**🧪 Test Special Characters:**
+> "Create test data with problematic characters: CSV with commas ('Johnson, Jr.'), quotes, and newlines. JSON with international characters (café, José) and emojis. Show how CSV quoting handles commas, when parsing breaks, and proper encoding settings (utf-8, ensure_ascii=False) for international data."
 
-**Deliverable**: A markdown file showing your manual conversion and analysis of format tradeoffs.
-
----
-
-### Part 2: AI Explains Format Conversion Patterns (Discovery)
-
-**Share your manual conversion with AI:**
-
-> "I manually converted CSV employee data to JSON [paste your JSON]. Evaluate my structure:
-> 1. Is my JSON structure reasonable for representing employees?
-> 2. What information should I add (created date, modified date, ID)?
-> 3. Show me what `csv.DictReader` and `json.dump()` do, and how they automate what I did manually.
-> 4. When would CSV be better than JSON and vice versa?"
-
-**Your evaluation**:
-- Does the AI approve of your JSON structure or suggest improvements?
-- Did it explain the automated functions clearly?
-- Can you now articulate the decision framework for choosing formats?
-
----
-
-### Part 3: Student Challenges AI—Real-World Edge Cases (Debugging)
-
-**Push the boundaries of both formats:**
-
-> "What happens in these scenarios?
-> 1. A name field contains a comma (Alice, Jr. Johnson) - how does CSV handle this?
-> 2. A description field contains a newline - what breaks?
-> 3. A JSON file has emoji in names (café, José) - what encoding settings matter?
-> 4. You have 100,000 employee records - which format is faster to read?
->
-> Show me the actual data and explain each issue."
-
-**Your debugging**: Create a test file `format_edge_cases.py` that:
-- Creates CSV/JSON with special characters
-- Demonstrates where each format breaks
-- Shows how to handle each edge case properly
-
----
-
-### Part 4: Build a Data Migration Tool (Convergence)
-
-**Build a complete converter:**
-
-> "Help me write a data migration tool that:
-> 1. Reads employee data from CSV (name, email, department, start_year)
-> 2. Validates all required fields are present
-> 3. Converts each row to a Python dictionary
-> 4. Adds metadata: ID (UUID), import_date (timestamp), data_source='csv'
-> 5. Handles international characters (ensure_ascii=False)
-> 6. Converts to JSON with proper indentation
-> 7. Saves to `employees.json`
-> 8. Implements error handling for:
->    - Missing fields (skip with warning)
->    - Invalid email format (report and skip)
->    - File not found (helpful error message)
->    - Corrupted JSON if we load it back (report issue)
->
-> The tool should show: 'Imported 47 employees, skipped 3 with errors'"
-
-**Refinement**:
-- Add reverse conversion: read JSON and export to CSV
-- Implement validation: check email format, start_year is valid, no duplicate IDs
-- Add conflict detection: if an employee already exists, skip with message
-- Create a report: how many records imported, how many skipped, why
-
-**Time**: 30-40 min
-**Outcome**: Complete bi-directional data migration tool with validation and error handling
+**🚀 Apply Migration Tool:**
+> "Build bi-directional converter: CSV to JSON with validation (required fields, email format check, start_year range), add metadata (UUID, timestamp, data_source), handle errors (missing fields skip with warning, invalid email skip with report), save employees.json. Reverse: JSON to CSV. Show 'Imported 47 employees, skipped 3 with errors' report."
 
 ---
 

@@ -717,94 +717,20 @@ source.copy_into(Path("backup/"))  # Creates backup/source.txt
 
 **For this chapter**: We focus on the core pathlib patterns that work in Python 3.4+. When you're ready to use Python 3.14+ exclusively, explore these new methods with your AI tool.
 
-## Try With AI: The Cross-Platform Path Builder
+## Try With AI
 
-### Part 1: Solve a Problem Using String Paths (Your Turn First)
+Master cross-platform path handling with pathlib for portable file operations.
 
-**Before asking AI about pathlib**, try building a file path using string concatenation:
+**🔍 Explore Path Portability:**
+> "Compare string paths (`'backups' + '/' + '2025' + '/' + 'january'`) vs pathlib (`Path('backups') / '2025' / 'january'`). Explain Windows backslash vs Mac/Linux forward slash issues, and why pathlib's `/` operator works on all platforms. Show mkdir error when parent doesn't exist."
 
-**Problem**: You need to organize backup files like this:
-```
-backups/
-├── 2025/
-│   ├── january/
-│   │   └── data.txt
-│   └── february/
-│       └── data.txt
-└── 2024/
-    └── december/
-        └── data.txt
-```
+**🎯 Practice Pathlib Operations:**
+> "Demonstrate pathlib methods: `Path('data') / 'notes' / 'file.txt'` for cross-platform joining, `.name` for filename extraction from `/home/user/documents/notes.txt`, `.resolve()` for absolute path, and `.is_file()` vs `.is_dir()` for type checking. Show why each is better than os.path."
 
-**Your task**: Write a Python script that:
-1. Creates this directory structure using **string paths only** (no pathlib)
-2. Uses something like `os.mkdir()` or string concatenation with `/` or `\`
-3. Document the **problems** you encounter:
-   - What happens if you run it on Windows vs Mac/Linux?
-   - How do you handle the backslash vs forward slash issue?
-   - What if a parent directory doesn't exist?
+**🧪 Test Cross-Platform Features:**
+> "Create nested directory structure `backups/2025/january/data.txt` using pathlib. Show `mkdir(parents=True, exist_ok=True)` handling missing parents, `.glob('*.txt')` finding files, `.suffix` extracting extensions, and why this works identically on Windows/Mac/Linux without platform-specific code."
 
-**Deliverable**: A file `path_comparison.md` describing:
-- The string-based approach you tried
-- All the issues you discovered
-- How many lines of error-handling code you needed
-
----
-
-### Part 2: AI Shows You a Better Way (Discovery)
-
-**Share your string-based approach with AI:**
-
-> "Here's my attempt to create nested directories using string paths [paste your code]. What problems do I have? Now show me how to do the same thing with pathlib. Explain the `/` operator and why `Path.mkdir(parents=True, exist_ok=True)` is better than my approach."
-
-**Your evaluation**:
-- Is the pathlib version shorter and clearer?
-- Does it work the same on Windows, Mac, and Linux?
-- Can you understand why `/` is used instead of string concatenation?
-
----
-
-### Part 3: Student Challenges AI—Cross-Platform Edge Cases (Debugging)
-
-**Test the AI's solution:**
-
-> "Let me make sure I understand pathlib correctly:
-> 1. If I use `Path('data') / 'notes' / 'file.txt'`, will it work on Windows (with backslashes) and Mac (with forward slashes)?
-> 2. How would I get just the filename from a full path like `Path('/home/user/documents/notes.txt')`?
-> 3. What does `.resolve()` do, and when would I use it?
-> 4. How do I check if a path is a file vs a directory?
->
-> Show me code examples for each."
-
-**Your debugging**: Create a test script `pathlib_examples.py` that verifies each concept works as the AI described.
-
----
-
-### Part 4: Build a Cross-Platform File Organizer (Convergence)
-
-**Build a complete utility:**
-
-> "Help me write a file organizer that:
-> 1. Takes a source directory as input
-> 2. Creates a backup directory structure: `backups/YYYY/MONTH/` (example: `backups/2025/november/`)
-> 3. Finds all `.txt` and `.md` files in the source directory
-> 4. Copies them to the backup organized by year/month
-> 5. Uses pathlib exclusively (no os.path)
-> 6. Works identically on Windows, Mac, and Linux
-> 7. Shows helpful output: 'Organized 12 files into 3 directories'
->
-> The code should be production-ready with pathlib methods for:
-> - Creating directories with `mkdir(parents=True, exist_ok=True)`
-> - Finding files with `.glob()` patterns
-> - Extracting filenames with `.name` and `.suffix`
-> - Joining paths with the `/` operator"
-
-**Refinement**:
-- Add recursive search: find files in subdirectories too using `**/*.txt` glob pattern
-- Implement file validation: only copy files under 10MB
-- Add a status report showing how many files were organized by type
-
-**Time**: 30-40 min
-**Outcome**: Working cross-platform file organizer using pathlib exclusively
+**🚀 Apply File Organizer:**
+> "Build file organizer: take source directory, create `backups/YYYY/MONTH/` structure, find .txt/.md files with `.glob()`, copy to organized backup, use recursive `**/*.txt` pattern for subdirectories, validate files under 10MB, show 'Organized 12 files into 3 directories' report. Pure pathlib, no os.path."
 
 ---

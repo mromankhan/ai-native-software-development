@@ -723,91 +723,20 @@ Current config:
 
 ---
 
-## Try With AI: The Safe File Operations Workshop
+## Try With AI
 
-### Part 1: Predict Context Manager Behavior (Your Turn First)
+Master safe file operations with context managers and comprehensive error handling.
 
-**Before asking AI**, predict what happens in these two scenarios:
+**🔍 Explore Context Managers:**
+> "Compare two approaches: `file = open(); content = file.read(); file.close()` vs `with open() as file: content = file.read()`. Explain what happens if code crashes before close() in first approach (resource leak) vs crashes inside with block (automatic cleanup). Show why with is safer."
 
-**Scenario A** (without context manager):
-```python
-file = open("data.txt", "r")
-content = file.read()
-# Some code here might crash...
-file.close()  # Will this always execute?
-```
+**🎯 Practice Error Scenarios:**
+> "Demonstrate file operations with: FileNotFoundError (read non-existent file), PermissionError (write without permissions), write mode on existing file (data loss), and opening same file twice. For each, show Python error message and proper try/except handling with user-friendly messages."
 
-**Scenario B** (with context manager):
-```python
-with open("data.txt", "r") as file:
-    content = file.read()
-    # Some code might crash here...
-# File is automatically closed
-```
+**🧪 Test Resource Management:**
+> "Explain 'resource leak' at OS level—what happens when files aren't closed? Create test showing: file opened but not closed (resource leak), context manager ensuring cleanup even with exceptions, and multiple file operations with proper error handling."
 
-**Your task**: Write a document `context_manager_comparison.md` that:
-1. Explains what happens if code crashes in Scenario A (between read and close)
-2. Explains what happens if code crashes in Scenario B (inside the with block)
-3. Lists 3 reasons why `with` is safer
-4. Predicts what error message you'd see if you try to read a file that doesn't exist
-
-**Deliverable**: A markdown file comparing the two approaches with specific predictions about resource leaks and error handling.
-
----
-
-### Part 2: AI Explains Resource Management (Discovery)
-
-**Share your predictions with AI:**
-
-> "Here's my analysis of context managers [paste your comparison]. Verify my predictions about what happens when code crashes. Explain the term 'resource leak.' Why is it dangerous to open files without automatically closing them? What happens at the operating system level?"
-
-**Your evaluation**:
-- Did the AI confirm your predictions about crashes?
-- Did it explain resource leaks in a way you understand?
-- Can you now explain to someone else why context managers are essential?
-
----
-
-### Part 3: Student Tests Edge Cases (Debugging)
-
-**Challenge the AI with real problems:**
-
-> "Show me what happens when:
-> 1. I open a file that doesn't exist in read mode
-> 2. I try to write to a file in a directory that doesn't exist
-> 3. I use write mode on an existing file (what data is lost?)
-> 4. I open the same file twice simultaneously
->
-> For each case, show the error message AND how to handle it gracefully with try/except."
-
-**Your debugging**: Create a test file `file_operations_test.py` that demonstrates each scenario and handles the errors properly.
-
----
-
-### Part 4: Build a File Backup Utility (Convergence)
-
-**Build a complete utility:**
-
-> "Help me write a file backup program that:
-> 1. Takes a filename as input from the user
-> 2. Reads the original file using a context manager
-> 3. Removes blank lines and trailing whitespace
-> 4. Writes the cleaned content to a backup file named 'original_filename.backup'
-> 5. Uses try/except to handle these errors:
->    - FileNotFoundError (input file doesn't exist)
->    - PermissionError (can't write to directory)
->    - IOError (general disk errors)
-> 6. Shows helpful messages for each error type
-> 7. Displays the number of lines removed
->
-> The program should be production-ready with clear error handling throughout."
-
-**Refinement**:
-- Add a feature to compare file sizes (original vs backup) and show bytes saved
-- Implement a log file that records each backup operation with timestamp
-- Add a restore function that can revert to the original file
-
-**Time**: 30-40 min
-**Outcome**: Complete file backup utility with robust error handling and resource management
+**🚀 Apply File Backup Utility:**
+> "Build backup program: get filename input, read with context manager, remove blank lines/trailing whitespace, write to .backup file, handle FileNotFoundError/PermissionError/IOError with specific messages, display lines removed, add file size comparison, implement backup log with timestamps, and restore function."
 
 ---
