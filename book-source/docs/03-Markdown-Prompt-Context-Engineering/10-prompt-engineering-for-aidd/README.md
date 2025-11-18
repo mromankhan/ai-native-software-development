@@ -212,4 +212,4 @@ You've mastered this chapter when you can:
 
 ---
 
-**Ready to start?** Begin with [Lesson 1: Why Prompting Matters](./01-why-prompting-matters.md)
+**Ready to start?** Begin with [Lesson 1: From Commands to Specifications](./01-prompts-as-specifications.md)
