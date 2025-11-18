@@ -39,89 +39,81 @@ learning_objectives:
 
 # Gemini CLI Extensions
 
-You've built the perfect Gemini CLI setup over the past few weeks: Playwright MCP for web research, Context7 for documentation, three custom learning commands, and a GEMINI.md file with your study approach. Your study partner asks: "Can I get your setup?" You realize you'd need to send them a 15-step installation guide. In this lesson, you'll learn how extensions package everything into a single installable bundle—turning complex setup sharing into one command.
+You've built the perfect Gemini CLI setup over the past few weeks: a security MCP server for vulnerability analysis, custom security analysis commands, and a GEMINI.md file with your security review procedures. Your security team member asks: "Can I get your setup?" You realize you'd need to send them a 15-step installation guide. In this lesson, you'll learn how extensions package everything into a single installable bundle—turning complex setup sharing into one command.
 
 ---
 
 ## The Problem: Setup Sharing is Complex
 
-Imagine you've crafted an effective Gemini CLI learning environment. You want to share it with your study group (5 people).
+Imagine you've crafted an effective Gemini CLI security analysis environment. You want to share it with your security team (5 people).
 
 ### What Your Setup Contains
 
 ```
 Your Gemini CLI Setup:
 ├── MCP Servers
-│   ├── Playwright (for web research)
-│   └── Context7 (for documentation)
+│   └── securityServer (for vulnerability analysis)
 ├── Custom Commands
-│   ├── /learn (explain topics simply)
-│   ├── /quiz (generate practice questions)
-│   └── /research (structured web searches)
-├── GEMINI.md (learning context and standards)
+│   ├── /security:analyze (analyze code for vulnerabilities)
+│   └── /security:analyze-github-pr (analyze GitHub PRs)
+├── GEMINI.md (security analysis guidelines and procedures)
 └── Settings (configuration preferences)
 ```
 
 ### The Manual Sharing Process
 
-**What you'd need to send your study partner**:
+**What you'd need to send your security team member**:
 
 ```markdown
 SETUP GUIDE - FOLLOW CAREFULLY
 
-Step 1: Install Playwright MCP
-Run: gemini mcp add @playwright/mcp
+Step 1: Install security MCP server
+Run: gemini mcp add securityServer
+[configure MCP server path]
 
-Step 2: Install Context7 MCP
-Run: gemini mcp add context7
+Step 2: Create commands directory
+Create folder: .gemini/commands/security/
 
-Step 3: Create commands directory
-Create folder: .gemini/commands/
+Step 3: Download analyze.toml
+Copy this code → save as .gemini/commands/security/analyze.toml
+[paste 50 lines of TOML]
 
-Step 4: Download learn.toml
-Copy this code → save as .gemini/commands/learn.toml
-[paste 20 lines of TOML]
+Step 4: Download analyze-github-pr.toml
+Copy this code → save as .gemini/commands/security/analyze-github-pr.toml
+[paste 60 lines of TOML]
 
-Step 5: Download quiz.toml
-Copy this code → save as .gemini/commands/quiz.toml
-[paste 25 lines of TOML]
-
-Step 6: Download research.toml
-Copy this code → save as .gemini/commands/research.toml
-[paste 30 lines of TOML]
-
-Step 7: Create GEMINI.md
+Step 5: Create GEMINI.md
 Copy this → save as .gemini/GEMINI.md
-[paste 50 lines of context]
+[paste 200 lines of security analysis context]
 
-Step 8: Restart Gemini CLI
+Step 6: Restart Gemini CLI
 Run: gemini
 ```
 
 ### What Goes Wrong
 
-Reality check for your 5 study partners:
+Reality check for your 5 security team members:
 
-**Person 1**: Misses Step 3 (creates commands in wrong folder) → commands don't work
+**Person 1**: Misses Step 2 (creates commands in wrong folder) → commands don't work
 **Person 2**: Copies TOML with formatting errors → syntax errors
-**Person 3**: Forgets to install Context7 → documentation commands fail
+**Person 3**: Forgets to configure the MCP server → security analysis fails
 **Person 4**: Completes all steps but has older MCP versions → inconsistent behavior
 **Person 5**: Succeeds but it takes 45 minutes → frustrated
 
-**Two weeks later**: You improve the `/research` command. Now you need to send an update guide to all 5 people.
+**Two weeks later**: You improve the `/security:analyze` command. Now you need to send an update guide to all 5 people.
 
 **The problems**:
 - ❌ **Time-consuming**: 15+ manual steps per person
 - ❌ **Error-prone**: Easy to miss steps or make typos
 - ❌ **Version drift**: Everyone ends up with slightly different setups
 - ❌ **Update nightmare**: Sharing improvements requires resending everything
-- ❌ **Lost productivity**: Your group spends time on setup instead of learning
+- ❌ **Lost productivity**: Your team spends time on setup instead of security analysis
 
 ---
 
 ## The Solution: Extensions Package Everything
 
-What if your study partners could get your entire setup with one command?
+What if your security team members could get your entire setup with one command?
 
 ```bash
 gemini extensions install https://github.com/gemini-cli-extensions/security
@@ -162,7 +154,7 @@ gemini extensions install https://github.com/gemini-cli-extensions/security
 ```
 Time: 2 minutes per person
 Errors: Near zero (automated installation)
-Updates: gemini extensions update study-tools
+Updates: gemini extensions update gemini-cli-security
 Result: Everyone has identical, working setup
 ```
 
@@ -191,7 +183,7 @@ gemini extensions install https://github.com/username/extension-name
 4. Loads GEMINI.md context files
 5. Applies settings and configurations
 
-**Example - Installing a enhance your repository's security posture extension**:
+**Example - Installing the Security extension to enhance your repository's security posture**:
 ```bash
 gemini extensions install https://github.com/gemini-cli-extensions/security
 ```
@@ -299,6 +291,12 @@ gemini extensions update gemini-cli-security
 Extension "gemini-cli-security" is already up to date.
 ```
 
+**When to update**:
+- Extension creator announces new features
+- Bug fixes are released
+- MCP servers need updating
+- You see "Update available" message
+
 #### Update All Extensions
 
 ```bash
@@ -306,12 +304,6 @@ gemini extensions update --all
 ```
 
 Updates every installed extension to the latest version.
-
-**When to update**:
-- Extension creator announces new features
-- Bug fixes are released
-- MCP servers need updating
-- You see "Update available" message
 
 ### Disabling Extensions
 
@@ -333,7 +325,7 @@ From inside your project directory:
 gemini extensions disable gemini-cli-security --scope workspace
 ```
 
-**Use case**: "I want the study extension for personal learning, but not when working on client projects."
+**Use case**: "I want the security extension for my personal projects, but not when working on client projects that have their own security review process."
 
 ### Enabling Extensions
 
@@ -478,20 +470,16 @@ Extensions automatically include any `.toml` files in the `commands/` directory.
 **Flat structure**:
 ```
 commands/
-├── learn.toml      → /learn
-├── quiz.toml       → /quiz
-└── research.toml   → /research
+├── analyze.toml           → /analyze
+└── scan.toml              → /scan
 ```
 
-**Nested structure**:
+**Nested structure** (as used in gemini-cli-security):
 ```
 commands/
-├── study/
-│   ├── plan.toml   → /study:plan
-│   └── review.toml → /study:review
-└── code/
-    ├── debug.toml  → /code:debug
-    └── test.toml   → /code:test
+└── security/
+    ├── analyze.toml              → /security:analyze
+    └── analyze-github-pr.toml    → /security:analyze-github-pr
 ```
 
 **Command naming**:
@@ -502,33 +490,32 @@ commands/
 
 Extensions can include a `GEMINI.md` file that provides persistent context to the AI.
 
-**Example - Learning extension context**:
+**Example - Security extension context (from gemini-cli-security)**:
 ```markdown
-# AI Study Tools Context
+# Standard Operating Procedures: Security Analysis Guidelines
 
-You are helping a student learn new topics. When using commands from
-this extension, follow these guidelines:
+This document outlines your standard procedures, principles, and skillsets for conducting security audits. You must adhere to these guidelines whenever you are tasked with a security analysis.
 
-## For /learn command:
-- Explain concepts in simple, beginner-friendly language
-- Use analogies and real-world examples
-- Include 3-4 practical examples
-- Avoid jargon unless you explain it first
+## Persona and Guiding Principles
 
-## For /quiz command:
-- Generate 5 multiple-choice questions
-- Include questions at different difficulty levels
-- Provide explanations for correct answers
-- Encourage learning from mistakes
+You are a highly skilled senior security engineer. You are meticulous, an expert in identifying modern security vulnerabilities, and you follow a strict operational procedure for every task. You MUST adhere to these core principles:
 
-## For /research command:
-- Use Playwright to browse actual documentation
-- Summarize key information clearly
-- Include links to original sources
-- Highlight what's most relevant for beginners
+*   **Assume All External Input is Malicious:** Treat all data from users, APIs, or files as untrusted until validated and sanitized.
+*   **Principle of Least Privilege:** Code should only have the permissions necessary to perform its function.
+*   **Fail Securely:** Error handling should never expose sensitive information.
+
+## Skillset: SAST Vulnerability Analysis
+
+When you need to do a security audit, you will methodically check for:
+- Hardcoded secrets and credentials
+- Broken access control (IDOR, privilege escalation)
+- Insecure data handling (weak crypto, PII violations)
+- Injection vulnerabilities (SQLi, XSS, command injection)
+- Authentication weaknesses
+- LLM safety issues (prompt injection, unsafe output handling)
 ```
 
-**When this loads**: The AI will follow these guidelines automatically when you use extension commands.
+**When this loads**: The AI will follow these guidelines automatically when you use extension commands like `/security:analyze`.
 
 ### Extension Settings
 
@@ -574,7 +561,7 @@ Now that you understand extensions, let's create one. Gemini CLI includes templa
 Gemini CLI provides example templates to start from:
 
 ```bash
-gemini extensions new /path/to/my-extension [template]
+gemini extensions new <extension-name> [template]
 ```
 
 **Available templates**:
@@ -583,25 +570,28 @@ gemini extensions new /path/to/my-extension [template]
 - `mcp-server`: Extension with an MCP server
 - `exclude-tools`: Extension that restricts tool access
 
-### Creating a Simple Learning Extension
+### Creating a Simple Security Extension
 
-Let's create an extension for your personal learning workflow.
+Let's create an extension for security analysis workflow.
 
 **Step 1: Generate the template**
 
 ```bash
-mkdir ~/my-learning-extension
-cd ~/my-learning-extension
-gemini extensions new . custom-commands
+gemini extensions new my-security-extension custom-commands
 ```
 
 **What this creates**:
 ```
-my-learning-extension/
+my-security-extension/
 ├── gemini-extension.json
 ├── commands/
 │   └── example.toml
 └── package.json
+```
+
+**Navigate to the directory**:
+```bash
+cd my-security-extension
 ```
 
 **Step 2: Edit the configuration**
@@ -610,31 +600,47 @@ Open `gemini-extension.json`:
 
 ```json
 {
-  "name": "my-learning-tools",
+  "name": "my-security-tools",
   "version": "1.0.0",
-  "description": "Personal AI learning commands"
+  "description": "Personal security analysis commands"
 }
 ```
 
 **Step 3: Create your first command**
 
-Create `commands/explain.toml`:
+Create the commands directory structure:
+
+```bash
+mkdir -p commands/security
+```
+
+Create `commands/security/check-secrets.toml`:
 
 ```toml
-description = "Explain a topic in simple terms with examples"
+description = "Check for hardcoded secrets in code"
 
 prompt = """
-Explain {{args}} in simple, beginner-friendly language.
+Analyze the codebase for hardcoded secrets and credentials.
 
-Include:
-1. What it is (one sentence)
-2. Why it matters (practical benefits)
-3. How it's used (3-4 real examples)
-4. Common misconceptions (what beginners often misunderstand)
+Search Results:
+!{grep -r "API_KEY\|_SECRET\|password\|PRIVATE_KEY" . --include="*.js" --include="*.ts" --include="*.py" || echo "No matches found"}
 
-Use analogies and avoid jargon. If you must use technical terms, define them first.
+Please summarize the findings for the pattern above.
+Look for:
+1. API keys (patterns like API_KEY, _SECRET)
+2. Passwords and private keys
+3. Database connection strings
+4. Base64-encoded credentials
+
+For each finding, provide:
+- File path and line number
+- Type of secret detected
+- Severity (Critical/High/Medium/Low)
+- Recommendation for remediation
 """
 ```
+
+**Note**: The `!{command}` syntax in the prompt executes shell commands and pipes the results into the prompt. This allows you to dynamically gather information before the model processes it.
 
 **Step 4: Test locally**
 
@@ -651,30 +657,59 @@ gemini
 
 Try your new command:
 ```
-/explain APIs
+/security:check-secrets
 ```
 
 **Step 5: Add more commands**
 
-Create `commands/summarize.toml`:
+Create `commands/security/scan-injection.toml`:
 
 ```toml
-description = "Summarize documentation clearly"
+description = "Scan for injection vulnerabilities"
 
 prompt = """
-I'm reading about {{args}}.
+Scan the codebase for injection vulnerabilities including:
+1. SQL injection (unparameterized queries)
+2. XSS (unsanitized user input in HTML)
+3. Command injection (user input in shell commands)
+4. Path traversal (unsanitized file paths)
 
-Please:
-1. Summarize the key concepts (3-5 bullet points)
-2. Identify what's most important for beginners
-3. Note any prerequisites I should learn first
-4. Suggest 2-3 hands-on ways to practice
-
-Keep it concise and actionable.
+For each vulnerability:
+- Identify the source (where user input enters)
+- Trace to the sink (where it's executed/rendered)
+- Check for sanitization/validation
+- Provide remediation guidance
 """
 ```
 
-**Step 6: Share with others**
+**Step 6: Add a GEMINI.md context file**
+
+You can provide persistent context to the model by adding a `GEMINI.md` file to your extension. This is useful for giving the model instructions on how to behave or information about your extension's tools.
+
+Create a file named `GEMINI.md` in the root of your extension directory:
+
+```markdown
+# Security Extension Instructions
+
+You are a security analysis assistant. When the user asks you to check for secrets
+or scan for vulnerabilities, use the appropriate security commands. Be thorough
+and provide actionable recommendations.
+```
+
+Update your `gemini-extension.json` to tell the CLI to load this file:
+
+```json
+{
+  "name": "my-security-tools",
+  "version": "1.0.0",
+  "description": "Personal security analysis commands",
+  "contextFileName": "GEMINI.md"
+}
+```
+
+Restart the CLI again. The model will now have the context from your `GEMINI.md` file in every session where the extension is active.
+
+**Step 7: Share with others**
 
 Once you're happy with your extension:
 
@@ -682,7 +717,7 @@ Once you're happy with your extension:
 2. Push your extension files
 3. Share the install command:
    ```bash
-   gemini extensions install https://github.com/yourname/my-learning-tools
+   gemini extensions install https://github.com/yourname/my-security-tools
    ```
 
 ### Creating an Extension with MCP Server
@@ -692,16 +727,21 @@ Let's create a more advanced extension that includes an MCP server.
 **Step 1: Generate MCP template**
 
 ```bash
-gemini extensions new ~/research-extension mcp-server
+gemini extensions new my-security-extension mcp-server
 ```
 
 **What you get**:
 ```
-research-extension/
+my-security-extension/
 ├── gemini-extension.json
 ├── example.ts              ← TypeScript MCP server code
 ├── package.json
 └── tsconfig.json
+```
+
+**Navigate to the directory**:
+```bash
+cd my-security-extension
 ```
 
 **Step 2: Review the configuration**
@@ -709,7 +749,7 @@ research-extension/
 `gemini-extension.json`:
 ```json
 {
-  "name": "research-extension",
+  "name": "my-security-extension",
   "version": "1.0.0",
   "mcpServers": {
     "nodeServer": {
@@ -723,9 +763,13 @@ research-extension/
 
 **Step 3: Build the server**
 
+Install dependencies:
 ```bash
-cd ~/research-extension
 npm install
+```
+
+Build the server:
+```bash
 npm run build
 ```
 
@@ -733,11 +777,48 @@ This compiles `example.ts` → `dist/example.js`
 
 **Step 4: Link and test**
 
+Link the extension:
 ```bash
 gemini extensions link .
 ```
 
-Restart Gemini CLI and the MCP server will be available.
+Restart Gemini CLI and the MCP server will be available. You can test it by asking the model to use the tools provided by your MCP server.
+
+**Step 5: Add a GEMINI.md context file (optional)**
+
+You can provide persistent context to the model by adding a `GEMINI.md` file to your extension.
+
+Create a file named `GEMINI.md` in the root of your extension directory:
+
+```markdown
+# Security Extension Instructions
+
+You are a security analysis assistant. When using the security tools from this
+extension, follow these guidelines:
+
+- Be thorough in your analysis
+- Provide actionable recommendations
+- Classify vulnerabilities by severity (Critical/High/Medium/Low)
+```
+
+Update your `gemini-extension.json` to include the context file:
+
+```json
+{
+  "name": "my-security-extension",
+  "version": "1.0.0",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "nodeServer": {
+      "command": "node",
+      "args": ["${extensionPath}${/}dist${/}example.js"],
+      "cwd": "${extensionPath}"
+    }
+  }
+}
+```
+
+Restart the CLI again. The model will now have the context from your `GEMINI.md` file in every session where the extension is active.
 
 ### Updating Your Extension
 
@@ -752,7 +833,7 @@ gemini
 
 **Option 2: Installed (not linked)**
 ```bash
-gemini extensions update my-learning-tools
+gemini extensions update my-security-tools
 ```
 
 ---
@@ -764,12 +845,12 @@ Extensions are powerful, but not always necessary. Here's when they make sense.
 ### ✅ Use Extensions When:
 
 **Sharing with multiple people**:
-- Study group needs same setup (5+ people)
-- Course providing standard environment for students
-- Team wants consistent tooling
-- Open source project recommending configurations
+- Security team needs same analysis tools (5+ people)
+- Organization providing standard security environment for developers
+- Team wants consistent security tooling
+- Open source project recommending security configurations
 
-**Example**: "Our Python course uses 3 MCP servers and 8 custom commands. Instead of a 20-step setup guide, students run one install command."
+**Example**: "Our security team uses the gemini-cli-security extension with custom security commands. Instead of a 20-step setup guide, team members run one install command."
 
 **Complex setup with many components**:
 - 3+ MCP servers
@@ -777,7 +858,7 @@ Extensions are powerful, but not always necessary. Here's when they make sense.
 - Specific context requirements
 - Environment settings needed
 
-**Example**: "My web development setup has Playwright MCP, browser tools, 10 HTML/CSS commands, and framework-specific context. Extension packages it all."
+**Example**: "My security analysis setup has the securityServer MCP, multiple security scanning commands, and security analysis guidelines in GEMINI.md. Extension packages it all."
 
 **Need version control and updates**:
 - Setup will improve over time
@@ -785,7 +866,7 @@ Extensions are powerful, but not always necessary. Here's when they make sense.
 - Want to track changes
 - Need rollback capability
 
-**Example**: "I improve my learning commands every week. Extension users get updates with one command instead of re-downloading files."
+**Example**: "I improve my security analysis commands every week. Extension users get updates with one command instead of re-downloading files."
 
 **Collaboration with specific context**:
 - AI needs domain-specific instructions
@@ -793,7 +874,7 @@ Extensions are powerful, but not always necessary. Here's when they make sense.
 - Consistent behavior across team
 - Shared knowledge base
 
-**Example**: "Our research team needs AI to follow specific citation formats and source evaluation criteria. The extension's GEMINI.md ensures consistency."
+**Example**: "Our security team needs AI to follow specific vulnerability assessment procedures and severity classification. The extension's GEMINI.md ensures consistency across all security reviews."
 
 ### ❌ Don't Use Extensions When:
 
@@ -803,7 +884,7 @@ Extensions are powerful, but not always necessary. Here's when they make sense.
 - Experimenting with configurations
 - Personal, changing workflow
 
-**Example**: "I'm trying different MCP servers to see which I like. I'll install them individually for now."
+**Example**: "I'm trying different security MCP servers to see which I like. I'll install them individually for now."
 
 **Solo user, no sharing**:
 - Only you will use it
@@ -811,7 +892,7 @@ Extensions are powerful, but not always necessary. Here's when they make sense.
 - Setup rarely changes
 - Don't need version control
 
-**Example**: "These commands are just for me and I change them frequently based on my current projects."
+**Example**: "These security commands are just for me and I change them frequently based on my current security analysis needs."
 
 **Temporary/one-time use**:
 - One-off project
@@ -819,7 +900,7 @@ Extensions are powerful, but not always necessary. Here's when they make sense.
 - Testing before committing
 - No maintenance needed
 
-**Example**: "I need Playwright MCP for this one research project. I'll install it directly."
+**Example**: "I need the security extension for this one security audit project. I'll install it directly."
 
 ---
 
@@ -830,8 +911,8 @@ Extensions are powerful, but not always necessary. Here's when they make sense.
 Yes! Extensions compose nicely:
 
 ```bash
-gemini extensions install https://github.com/user/study-tools
-gemini extensions install https://github.com/team/code-helpers
+gemini extensions install https://github.com/gemini-cli-extensions/security
+gemini extensions install https://github.com/user/code-helpers
 gemini extensions install https://github.com/org/research-kit
 ```
 
@@ -843,10 +924,10 @@ All three work simultaneously, combining:
 ### What if extensions conflict?
 
 **Command name conflicts**:
-If two extensions define `/learn`, the second one wins. You can:
+If two extensions define `/security:analyze`, the second one wins. You can:
 - Disable one extension
 - Ask extension creator to rename command
-- Access first extension's command via: `/extension-name.learn`
+- Access first extension's command via: `/extension-name.analyze`
 
 **MCP server conflicts**:
 If two extensions configure the same MCP server name, your `settings.json` wins (takes precedence over extensions).
@@ -952,9 +1033,9 @@ gemini extensions install <url> --consent
 
 3. Are you typing the command correctly?
    ```bash
-   /learn Python    ← Correct
-   /learn python    ← Might work (case insensitive)
-   learn Python     ← Won't work (missing /)
+   /security:analyze    ← Correct
+   /security:analyze Analyze all files in src/    ← With arguments
+   security:analyze     ← Won't work (missing /)
    ```
 
 4. Check available commands:
