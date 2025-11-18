@@ -164,6 +164,8 @@ Result: Everyone has identical, working setup
 
 ## Part 1: Working with Extensions
 
+**Important**: All extension management commands (install, uninstall, update, enable, disable) will only be reflected in active CLI sessions after you restart Gemini CLI.
+
 ### Installing Extensions
 
 Extensions can be installed from GitHub repositories or local directories.
@@ -207,7 +209,7 @@ If you're developing an extension or have it downloaded locally:
 gemini extensions install /path/to/extension-directory
 ```
 
-This creates a copy in your extensions directory.
+**Note**: This creates a copy in your extensions directory. If you make changes to the original directory, you'll need to run `gemini extensions update <name>` to pull in those changes.
 
 #### Advanced Installation Options
 
@@ -272,6 +274,8 @@ gemini extensions list
 
 This shows the same information in your active session.
 
+**Note**: Extension management commands (install, uninstall, update, enable, disable) are not supported from within the CLI. You must use them from your terminal. Only the `/extensions list` command is available inside the CLI.
+
 ### Updating Extensions
 
 #### Update Single Extension
@@ -325,6 +329,8 @@ From inside your project directory:
 gemini extensions disable gemini-cli-security --scope workspace
 ```
 
+**Scope options**: `user` (default, disables everywhere) or `workspace` (disables only in current workspace)
+
 **Use case**: "I want the security extension for my personal projects, but not when working on client projects that have their own security review process."
 
 ### Enabling Extensions
@@ -340,6 +346,8 @@ Or enable just for current workspace:
 ```bash
 gemini extensions enable gemini-cli-security --scope workspace
 ```
+
+**Scope options**: `user` (default, enables everywhere) or `workspace` (enables only in current workspace)
 
 ### Uninstalling Extensions
 
@@ -405,6 +413,7 @@ This is the heart of every extension. It tells Gemini CLI what to install and ho
 **`name`** (required): The extension's unique identifier
 - Must be lowercase with dashes (not spaces or underscores)
 - How users refer to the extension
+- **Important**: This name should match the extension directory name
 - Example: `"gemini-cli-security"` not `"Gemini Cli Security"`
 
 **`version`** (required): Current version number
@@ -425,6 +434,12 @@ This is the heart of every extension. It tells Gemini CLI what to install and ho
 
 **`contextFileName`** (optional): Context file to load
 - Defaults to `GEMINI.md` if present
+- If this property is not used but a `GEMINI.md` file is present in your extension directory, that file will be loaded automatically
+
+**`excludeTools`** (optional): Array of tool names to exclude from the model
+- You can specify command-specific restrictions for tools that support it
+- Example: `"excludeTools": ["run_shell_command(rm -rf)"]` will block the `rm -rf` command
+- Note: This differs from MCP server `excludeTools` functionality, which can be listed in the MCP server config
 
 ### MCP Server Configuration
 
@@ -451,9 +466,9 @@ Extensions can include multiple MCP servers:
 ```
 
 **Using variables**:
-- `${extensionPath}`: Full path to the extension directory
-- `${workspacePath}`: Full path to current workspace
-- `${/}` or `${pathSeparator}`: Path separator (/ on Mac/Linux, \ on Windows)
+- `${extensionPath}`: The fully-qualified path of the extension in the user's filesystem (e.g., `/Users/username/.gemini/extensions/example-extension`). This will not unwrap symlinks.
+- `${workspacePath}`: The fully-qualified path of the current workspace
+- `${/}` or `${pathSeparator}`: The path separator (differs per OS: `/` on Mac/Linux, `\` on Windows)
 
 **Example variable usage**:
 ```json
@@ -518,6 +533,8 @@ When you need to do a security audit, you will methodically check for:
 **When this loads**: The AI will follow these guidelines automatically when you use extension commands like `/security:analyze`.
 
 ### Extension Settings
+
+**Note**: This is an experimental feature. We do not yet recommend extension authors introduce settings as part of their core flows.
 
 Extensions can request settings from users during installation.
 
@@ -924,10 +941,18 @@ All three work simultaneously, combining:
 ### What if extensions conflict?
 
 **Command name conflicts**:
-If two extensions define `/security:analyze`, the second one wins. You can:
+Extension commands have the lowest precedence. When a conflict occurs with user or project commands:
+
+- **No conflict**: Extension command uses its natural name (e.g., `/security:analyze`)
+- **With conflict**: Extension command is renamed with the extension prefix (e.g., `/gemini-cli-security.analyze`)
+
+For example, if both a user and the `gemini-cli-security` extension define an `analyze` command:
+- `/analyze` - Executes the user's analyze command
+- `/gemini-cli-security.analyze` - Executes the extension's analyze command (marked with `[gemini-cli-security]` tag in help)
+
+You can also:
 - Disable one extension
 - Ask extension creator to rename command
-- Access first extension's command via: `/extension-name.analyze`
 
 **MCP server conflicts**:
 If two extensions configure the same MCP server name, your `settings.json` wins (takes precedence over extensions).
