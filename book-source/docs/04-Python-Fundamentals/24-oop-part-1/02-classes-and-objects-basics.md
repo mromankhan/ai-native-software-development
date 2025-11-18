@@ -136,6 +136,14 @@ print(dir(my_dog))  # What attributes/methods does it have?
 - What does `print(my_dog)` show you? (Pay attention to the memory address)
 - What's in `dir(my_dog)`? What default methods does Python give every object?
 
+#### 💬 AI CoLearning Prompt
+
+> "I created an empty class with just `pass`. When I inspect `dir(my_dog)`, I see lots of methods like `__init__`, `__str__`, `__dict__`. Where do these come from? What's the relationship between a class and an object? Explain using a cookie-cutter analogy."
+
+**Expected Understanding**: AI will explain that classes are blueprints/templates (cookie cutter), objects are instances created from them (cookies). Python gives every object default methods automatically. You'll understand the class-object relationship before coding more.
+
+---
+
 **Stage 2: Add Data to Objects**
 
 **Pedagogical Note**: In this stage, we'll show you a way to add data to objects that WORKS but isn't the professional pattern. We're doing this deliberately so you understand WHY the proper pattern (constructors with `__init__`) exists. Discovery through contrast is powerful.
@@ -174,6 +182,14 @@ print(f"Second dog name: {other_dog.name}")
 - Are the objects independent? Prove it.
 - What happens if you inspect `my_dog.__dict__`? (This shows all attributes)
 
+#### 💬 AI CoLearning Prompt
+
+> "I'm adding attributes to objects using `my_dog.name = 'Max'`. This works, but I have to repeat this for EVERY dog I create. For 100 dogs, that's 300+ lines of attribute assignment! How do professional developers avoid this repetition? What Python feature lets me initialize attributes automatically when creating an object? Give me a preview of the solution before I learn the syntax."
+
+**Expected Understanding**: AI will preview the `__init__` method (constructor) that automatically runs when you create an object. You'll see WHY constructors exist before learning HOW they work. This motivates the learning in Part 2.
+
+---
+
 **Stage 3: Notice the Problem with Manual Attributes**
 
 You've seen that adding attributes manually works. Now let's see why it's problematic at scale.
@@ -205,14 +221,23 @@ dog2.age = 3
 
 **Answer Preview**: The solution is the constructor (`__init__` method) with type hints. You'll learn this in the next section. This discovery exercise showed you the PAIN that constructors solve.
 
-### Your Discoveries
+---
 
-Document your findings in `object_discovery.md`:
-1. What is an object really? (In your own words)
-2. How do you create an object in Python?
-3. How do you add attributes to an object?
-4. Are objects independent or shared?
-5. What's the problem with manually setting attributes each time?
+### Your Discovery Summary
+
+Instead of manual documentation, **use AI to synthesize** what you learned:
+
+#### 💬 AI CoLearning Prompt
+
+> "Based on my experiments with creating classes and adding attributes manually, summarize these key insights:
+> 1. What's the relationship between classes and objects? (blueprint vs instance)
+> 2. How are objects independent? (each has its own memory)
+> 3. What's the pain point with manual attribute assignment? (repetition, no enforcement)
+> 4. What's the solution I'm about to learn? (constructors with __init__)
+>
+> Give me 3 concise bullet points I can reference in Part 2."
+
+**Deliverable**: Save AI's synthesis in your notes. You've discovered the problem—now you're ready to learn the solution (`__init__` method) in Part 2.
 
 ---
 
