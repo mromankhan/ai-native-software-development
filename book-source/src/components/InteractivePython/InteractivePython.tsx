@@ -19,7 +19,7 @@
  * />
  */
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import Editor from '@monaco-editor/react';
 import { RotateCcw, Copy, Zap } from 'lucide-react';
 import { usePyodide } from '@/contexts/PyodideContext';
@@ -27,13 +27,11 @@ import styles from './styles.module.css';
 
 export interface InteractivePythonProps {
   initialCode?: string;
-  language?: string;
   showLineNumbers?: boolean;
 }
 
 export const InteractivePython: React.FC<InteractivePythonProps> = ({
   initialCode = 'print("Hello, World!")',
-  language = 'python',
   showLineNumbers = true,
 }) => {
   const [code, setCode] = useState(initialCode);
@@ -57,15 +55,17 @@ export const InteractivePython: React.FC<InteractivePythonProps> = ({
   }, [isRunning]);
 
   // Calculate dynamic editor height based on code lines
-  const lineCount = code.split('\n').length;
-  const lineHeight = 19; // Monaco default line height in pixels
-  const padding = 32; // Top + bottom padding
-  const minHeight = 51;
-  const maxHeight = 400;
-  const editorHeight = Math.min(
-    Math.max(lineCount * lineHeight + padding, minHeight),
-    maxHeight
-  );
+  const editorHeight = useMemo(() => {
+    const lineCount = code.split('\n').length;
+    const lineHeight = 19; // Monaco default line height in pixels
+    const padding = 32; // Top + bottom padding
+    const minHeight = 51;
+    const maxHeight = 400;
+    return Math.min(
+      Math.max(lineCount * lineHeight + padding, minHeight),
+      maxHeight
+    );
+  }, [code]);
 
   // Auto-scroll output to bottom when new content is added
   useEffect(() => {
