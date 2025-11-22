@@ -204,18 +204,22 @@ export const InteractivePython: React.FC<InteractivePythonProps> = ({
             suggestOnTriggerCharacters: false,
             acceptSuggestionOnCommitCharacter: false,
           }}
-          onMount={(editor) => {
+          onMount={(editor, monaco) => {
             // Add keyboard shortcut: Shift+Enter to run code
+            // Use addAction() API - recommended approach for custom keyboard shortcuts
             // Use refs to avoid stale closure capturing initial state values
-            // Access monaco from the editor's internal reference
-            const monaco = (window as any).monaco;
-            if (monaco) {
-              editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+            editor.addAction({
+              id: 'run-python-code',
+              label: 'Run Python Code',
+              keybindings: [
+                monaco.KeyMod.Shift | monaco.KeyCode.Enter
+              ],
+              run: () => {
                 if (!isLoadingRef.current && !isRunningRef.current) {
                   handleRunRef.current?.();
                 }
-              });
-            }
+              }
+            });
           }}
           loading={<div />}
         />
