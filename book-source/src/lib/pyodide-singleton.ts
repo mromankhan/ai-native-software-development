@@ -132,6 +132,25 @@ export class PyodideRunner {
         }
       });
 
+      // Override Python's built-in input() to use browser dialog
+      // This prevents input prompts from appearing in stdout
+      const setupInputCode = `
+import builtins
+_original_input = builtins.input
+
+def _custom_input(prompt=''):
+    # Use browser's prompt dialog to get user input
+    # The prompt message is shown in the dialog, not in stdout
+    from js import window
+    result = window.prompt(prompt)
+    return result if result is not None else ''
+
+builtins.input = _custom_input
+`;
+
+      // Run the input override setup first
+      await this.pyodide.runPythonAsync(setupInputCode);
+
       // Use runPythonAsync to support both sync and async code
       const result = await this.pyodide.runPythonAsync(code);
 
