@@ -440,7 +440,7 @@ except TypeError as e:
 import time
 
 # Create test data
-sizes: list[int] = [10_000, 100_000, 1_000_000]
+sizes: list[int] = [1_000, 10_000, 50_000]
 
 for size in sizes:
     test_list: list[int] = list(range(size))
@@ -460,7 +460,10 @@ for size in sizes:
         _ = target in test_set
     set_time = time.perf_counter() - start
 
-    print(f"Size {size:,}: Set is {list_time/set_time:.0f}x faster")
+    if set_time > 0:
+        print(f"Size {size:,}: Set is {list_time/set_time:.0f}x faster")
+    else:
+        print(f"Size {size:,}: Set is extremely fast")
 
 # Question: Does the speedup increase as size grows?
 ```
