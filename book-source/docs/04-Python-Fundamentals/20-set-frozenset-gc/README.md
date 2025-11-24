@@ -15,6 +15,18 @@ By the end of this chapter, you'll build a **Memory Profiler tool** that tracks 
 
 ---
 
+import PDFViewer from '@site/src/components/PDFViewer';
+
+## 🎯 Before You Begin
+
+<PDFViewer
+  src="slides/chapter-20-slides.pdf"
+  title="Chapter 20 Slides"
+  height={700}
+/>
+
+---
+
 ## What You'll Learn
 
 This chapter teaches hash-based data structures and memory management through 6 progressive lessons:

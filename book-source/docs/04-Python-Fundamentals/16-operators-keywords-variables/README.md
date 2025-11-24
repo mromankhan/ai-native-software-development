@@ -9,6 +9,18 @@ In Chapter 16, you learned about Python's core data types and how to store data 
 
 Operators are the verbs of programming. In Chapter 16, you learned the nouns (data types). Now you learn the verbs (operators). In Chapter 19, you'll combine them into sentences (control flow).
 
+import PDFViewer from '@site/src/components/PDFViewer';
+
+## 🎯 Before You Begin
+
+<PDFViewer
+  src="slides/chapter-16-slides.pdf"
+  title="Chapter 16 Slides"
+  height={700}
+/>
+
+---
+
 ## What You'll Learn
 
 By the end of this chapter, you will:

@@ -11,6 +11,18 @@ This chapter isn't about memorizing Python syntax—it's about understanding Pyt
 
 This chapter applies the AI-Native Learning methodology throughout: you'll explore concepts with your AI companion (Claude Code or Gemini CLI), validate your understanding through hands-on practice, and learn from errors with AI's help.
 
+import PDFViewer from '@site/src/components/PDFViewer';
+
+## 🎯 Before You Begin
+
+<PDFViewer
+  src="slides/chapter-14-slides.pdf"
+  title="Chapter 14 Slides"
+  height={700}
+/>
+
+---
+
 ## What You'll Learn
 
 By the end of this chapter, you will be able to:

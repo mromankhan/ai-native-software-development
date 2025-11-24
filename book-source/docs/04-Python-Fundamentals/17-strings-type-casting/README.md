@@ -11,6 +11,18 @@ You'll also learn **type casting**—how to safely convert between different dat
 
 By the end of this chapter, you'll be able to process text confidently and convert between types safely—two essential skills for building interactive programs.
 
+import PDFViewer from '@site/src/components/PDFViewer';
+
+## 🎯 Before You Begin
+
+<PDFViewer
+  src="slides/chapter-17-slides.pdf"
+  title="Chapter 17 Slides"
+  height={700}
+/>
+
+---
+
 ## What You'll Learn
 
 In this chapter, you'll master:

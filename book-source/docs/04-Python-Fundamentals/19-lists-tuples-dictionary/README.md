@@ -11,6 +11,18 @@ You'll learn when to use each structure, how to manipulate them effectively, and
 
 ---
 
+import PDFViewer from '@site/src/components/PDFViewer';
+
+## 🎯 Before You Begin
+
+<PDFViewer
+  src="slides/chapter-19-slides.pdf"
+  title="Chapter 19 Slides"
+  height={700}
+/>
+
+---
+
 ## What You'll Learn
 
 ### Core Concepts (46+ unique concepts across 11 lessons)

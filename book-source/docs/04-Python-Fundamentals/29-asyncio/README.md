@@ -11,6 +11,19 @@ This chapter teaches you to build production-ready asynchronous systems using Py
 
 By the end of this chapter, you'll design hybrid systems that fetch data concurrently from multiple sources and process it in parallel—the exact pattern used in modern AI agents. You'll build a complete multi-service AI agent that demonstrates 2.5x+ speedup vs sequential approaches.
 
+
+import PDFViewer from '@site/src/components/PDFViewer';
+
+## 🎯 Before You Begin
+
+<PDFViewer
+  src="slides/chapter-29-slides.pdf"
+  title="Chapter 29: Asyncio — Concurrent I/O and CPU-Parallel Workloads"
+  height={700}
+/>
+
+---
+
 ## What You'll Learn
 
 By the end of this chapter, you will be able to:

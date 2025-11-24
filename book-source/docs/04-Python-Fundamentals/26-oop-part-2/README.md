@@ -11,6 +11,19 @@ This chapter builds on Chapter 26 foundations to teach advanced OOP patterns: in
 
 This chapter is foundational for AI-native software development—real multi-agent systems rely on these concepts. Understanding these patterns prepares you for professional AI engineering in Parts 5-13.
 
+
+import PDFViewer from '@site/src/components/PDFViewer';
+
+## 🎯 Before You Begin
+
+<PDFViewer
+  src="slides/chapter-26-slides.pdf"
+  title="Chapter 26: Object-Oriented Programming Part II"
+  height={700}
+/>
+
+---
+
 ## What You'll Learn
 
 By completing this chapter, you will be able to:

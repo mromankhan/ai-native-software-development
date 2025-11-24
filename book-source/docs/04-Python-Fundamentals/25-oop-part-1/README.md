@@ -13,6 +13,19 @@ Starting from the limitations of procedural programming, you'll discover how OOP
 
 The chapter culminates in a **Game Character Capstone Project** where you'll design and implement a multi-class system, integrating all the concepts learned into a cohesive, working application.
 
+
+import PDFViewer from '@site/src/components/PDFViewer';
+
+## 🎯 Before You Begin
+
+<PDFViewer
+  src="slides/chapter-25-slides.pdf"
+  title="Chapter 25: Object-Oriented Programming - Part 1"
+  height={700}
+/>
+
+---
+
 ## What You'll Learn
 
 By the end of this chapter, you will be able to:
