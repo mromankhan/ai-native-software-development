@@ -229,13 +229,18 @@ class OpenDALMigrator:
             # Filesystem - use configured CDN or empty
             return self.storage_config.cdn_base_url or ""
 
-    def rewrite_image_urls(self, content: str) -> tuple[str, int]:
-        """Rewrite local image URLs to CDN URLs.
+    def rewrite_asset_urls(self, content: str) -> tuple[str, int]:
+        """Rewrite local asset URLs to CDN URLs.
 
-        Transforms these patterns:
-        - /img/part-1/... → {cdn}/books/{book_id}/static/images/part-1/...
-        - /slides/... → {cdn}/books/{book_id}/static/slides/...
-        - ./images/... → {cdn}/books/{book_id}/static/images/...
+        Handles TWO patterns:
+
+        1. Markdown image syntax:
+           - ![alt](/img/...) → ![alt]({cdn}/books/{book_id}/static/images/...)
+           - ![alt](/slides/...) → ![alt]({cdn}/books/{book_id}/static/slides/...)
+
+        2. YAML frontmatter slides:
+           - source: "slides/chapter-05-slides.pdf"
+           → source: "{cdn}/books/{book_id}/static/slides/chapter-05-slides.pdf"
 
         Skips external URLs (http://, https://).
 
@@ -248,7 +253,8 @@ class OpenDALMigrator:
         if not cdn_base:
             return content, 0
 
-        def replace_url(match):
+        # Pattern 1: Markdown images ![alt](url)
+        def replace_markdown_image(match):
             nonlocal count
             alt_text = match.group(1)
             url = match.group(2)
@@ -276,8 +282,31 @@ class OpenDALMigrator:
 
             return match.group(0)
 
-        pattern = r'!\[([^\]]*)\]\(([^)]+)\)'
-        new_content = re.sub(pattern, replace_url, content)
+        # Pattern 2: YAML frontmatter source: "slides/..."
+        def replace_frontmatter_slides(match):
+            nonlocal count
+            prefix = match.group(1)  # 'source: "' or "source: '"
+            path = match.group(2)    # slides/chapter-05-slides.pdf
+            suffix = match.group(3)  # closing quote
+
+            if path.startswith('http://') or path.startswith('https://'):
+                return match.group(0)
+
+            if path.startswith('slides/'):
+                new_url = f"{cdn_base}/books/{self.config.book_id}/static/{path}"
+                count += 1
+                return f'{prefix}{new_url}{suffix}'
+
+            return match.group(0)
+
+        # Apply markdown image rewriting
+        md_pattern = r'!\[([^\]]*)\]\(([^)]+)\)'
+        new_content = re.sub(md_pattern, replace_markdown_image, content)
+
+        # Apply frontmatter slides rewriting
+        # Matches: source: "slides/..." or source: 'slides/...'
+        fm_pattern = r'(source:\s*["\'])([^"\']+)(["\'])'
+        new_content = re.sub(fm_pattern, replace_frontmatter_slides, new_content)
 
         return new_content, count
 
@@ -297,7 +326,7 @@ class OpenDALMigrator:
                 content = local_path.read_text(encoding='utf-8')
 
                 if self.config.rewrite_urls:
-                    content, url_count = self.rewrite_image_urls(content)
+                    content, url_count = self.rewrite_asset_urls(content)
                     self.stats.urls_rewritten += url_count
                     if url_count > 0 and self.config.verbose:
                         print(f"    Rewrote {url_count} URLs in {local_path.name}")
