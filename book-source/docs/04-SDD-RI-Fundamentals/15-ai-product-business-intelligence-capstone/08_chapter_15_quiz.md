@@ -1,6 +1,74 @@
 ---
 sidebar_position: 8
 title: "Chapter 15 Quiz"
+chapter: 15
+lesson: 8
+duration_minutes: 20
+
+# PEDAGOGICAL LAYER METADATA
+primary_layer: "Layer 4"
+layer_progression: "L4 capstone assessment"
+layer_4_capstone: "Assesses SDD-RI workflow, intelligence accumulation, and skill creation mastery"
+
+# HIDDEN SKILLS METADATA (Institutional Integration Layer)
+skills:
+  - name: "SDD-RI Workflow Understanding"
+    proficiency_level: "B1"
+    category: "Conceptual"
+    bloom_level: "Understand"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can identify correct SDD-RI workflow sequence and explain rationale"
+
+  - name: "Intelligence Accumulation Comprehension"
+    proficiency_level: "B1"
+    category: "Conceptual"
+    bloom_level: "Understand"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can explain why Feature 4 builds faster than Feature 1 and what causes acceleration"
+
+  - name: "P+Q+P Framework Application"
+    proficiency_level: "B1"
+    category: "Conceptual"
+    bloom_level: "Apply"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can identify when patterns should be formalized into skills using P+Q+P framework"
+
+  - name: "Pipeline Architecture Understanding"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Understand"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can explain how feature outputs feed into downstream feature inputs"
+
+learning_objectives:
+  - objective: "Demonstrate understanding of SDD-RI workflow sequence"
+    proficiency_level: "B1"
+    bloom_level: "Understand"
+    assessment_method: "Multiple choice questions on workflow sequence"
+
+  - objective: "Explain intelligence accumulation and its measurable effects"
+    proficiency_level: "B1"
+    bloom_level: "Understand"
+    assessment_method: "Questions on 50% target and acceleration causes"
+
+  - objective: "Apply P+Q+P framework criteria for skill formalization"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "Questions on when and how to create reusable skills"
+
+cognitive_load:
+  new_concepts: 0
+  reused_concepts: 12
+  assessment: "Quiz assesses 12 concepts from Lessons 1-7; no new concepts introduced ✓"
+
+# Generation metadata
+generated_by: "content-implementer v3.0.0"
+source_spec: "specs/001-013-chapter-capstone/spec.md"
+created: "2025-11-25"
+last_modified: "2025-11-25"
+git_author: "Claude Code"
+workflow: "/sp.loopflow.v2"
+version: "2.0.0"
 ---
 
 # Chapter 15 Quiz

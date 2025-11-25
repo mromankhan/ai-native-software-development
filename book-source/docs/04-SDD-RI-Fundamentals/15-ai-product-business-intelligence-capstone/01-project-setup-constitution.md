@@ -1,6 +1,70 @@
 ---
 sidebar_position: 1
 title: "Project Setup + Constitution"
+chapter: 15
+lesson: 1
+duration_minutes: 30
+
+# PEDAGOGICAL LAYER METADATA
+primary_layer: "Layer 4"
+layer_progression: "L4 capstone foundation"
+layer_4_capstone: "Constitution as decision framework for F1-F4"
+
+# HIDDEN SKILLS METADATA (Institutional Integration Layer)
+skills:
+  - name: "Creating Project Constitutions"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Create"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can create a constitution document that defines quality standards, constraints, and non-goals for a multi-feature project"
+
+  - name: "Establishing Quality Gates"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can define measurable quality gates for each feature in a project specification"
+
+  - name: "Project Structure Design"
+    proficiency_level: "A2"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can initialize and verify a Spec-Kit Plus project structure with correct directory layout"
+
+learning_objectives:
+  - objective: "Create a project constitution that defines quality standards for multi-feature development"
+    proficiency_level: "B1"
+    bloom_level: "Create"
+    assessment_method: "Constitution document includes vision, principles, feature specs, non-goals, and quality standards"
+
+  - objective: "Initialize a Spec-Kit Plus project with correct directory structure"
+    proficiency_level: "A2"
+    bloom_level: "Apply"
+    assessment_method: "Project contains .specify/ directory with memory/, templates/ subdirectories"
+
+  - objective: "Set up a time tracker for measuring intelligence accumulation"
+    proficiency_level: "A2"
+    bloom_level: "Apply"
+    assessment_method: "TIME_TRACKER.md file created with correct template structure"
+
+cognitive_load:
+  new_concepts: 5
+  assessment: "5 new concepts (constitution, quality gates, non-goals, time tracking, decision framework) within B1 limit of 10 ✓"
+
+differentiation:
+  extension_for_advanced: "Add additional quality constraints for error handling, logging, and API design patterns"
+  remedial_for_struggling: "Focus on constitution template; copy and modify rather than write from scratch"
+
+# Generation metadata
+generated_by: "content-implementer v3.0.0"
+source_spec: "specs/001-013-chapter-capstone/spec.md"
+created: "2025-11-25"
+last_modified: "2025-11-25"
+git_author: "Claude Code"
+workflow: "/sp.loopflow.v2"
+version: "2.0.0"
 ---
 
 # Project Setup + Constitution

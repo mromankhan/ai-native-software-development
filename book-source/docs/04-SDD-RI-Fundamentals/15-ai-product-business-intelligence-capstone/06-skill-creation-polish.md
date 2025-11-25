@@ -1,15 +1,78 @@
 ---
 sidebar_position: 6
 title: "Skill Creation + Polish"
-proficiency_level: "B1"
-estimated_time: "90 minutes"
+chapter: 15
+lesson: 6
+duration_minutes: 90
+
+# PEDAGOGICAL LAYER METADATA
+primary_layer: "Layer 3"
+layer_progression: "L3 intelligence design - skill formalization"
+layer_3_intelligence: "P+Q+P skill creation from recurring patterns"
+
+# HIDDEN SKILLS METADATA (Institutional Integration Layer)
+skills:
+  - name: "Pattern Recognition for Skill Creation"
+    proficiency_level: "B1"
+    category: "Conceptual"
+    bloom_level: "Analyze"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can identify patterns that appear 2+ times with 5+ decision points"
+
+  - name: "P+Q+P Skill File Design"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Create"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can write a complete skill file with Persona, Questions (5+), Principles (5+), and Example Application"
+
+  - name: "Skill Application and Testing"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can apply skill Questions and Principles to new problem (Feature 5) and evaluate completeness"
+
+  - name: "Skill Refinement"
+    proficiency_level: "B1"
+    category: "Conceptual"
+    bloom_level: "Evaluate"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can identify gaps in skill coverage and add missing Questions or Principles"
+
 learning_objectives:
-  - "Identify recurring patterns across completed features"
-  - "Create Persona + Questions + Principles skill files"
-  - "Apply skills to new problems (Feature 5)"
-  - "Validate skill completeness and reusability"
+  - objective: "Identify recurring patterns from Features 1-4 worth formalizing as skills"
+    proficiency_level: "B1"
+    bloom_level: "Analyze"
+    assessment_method: "Student lists 2-3 patterns with occurrence count and decision points"
+
+  - objective: "Create complete P+Q+P skill files following the framework"
+    proficiency_level: "B1"
+    bloom_level: "Create"
+    assessment_method: "Skill file includes Persona, 5+ Questions, 5+ Principles, Example Application"
+
+  - objective: "Apply skills to Feature 5 scenario and evaluate completeness"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "Student answers skill Questions for Feature 5 and identifies any gaps"
+
+cognitive_load:
+  new_concepts: 5
+  reused_concepts: 6
+  assessment: "5 new concepts (P+Q+P framework, Persona definition, skill Questions, skill Principles, skill testing) + 6 reused from F1-F4 (pattern recognition, JSON schema, pipeline, specification) within B1 limit ✓"
+
+differentiation:
+  extension_for_advanced: "Create third skill; add cross-domain applicability analysis"
+  remedial_for_struggling: "Focus on one skill; use provided JSON Data Transformer example as template"
+
+# Generation metadata
+generated_by: "content-implementer v3.0.0"
+source_spec: "specs/001-013-chapter-capstone/spec.md"
 created: "2025-11-25"
-version: "1.0.0"
+last_modified: "2025-11-25"
+git_author: "Claude Code"
+workflow: "/sp.loopflow.v2"
+version: "2.0.0"
 ---
 
 # Skill Creation + Polish

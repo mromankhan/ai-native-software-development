@@ -1,6 +1,78 @@
 ---
 sidebar_position: 4
 title: "Feature 3: Outreach Generator"
+chapter: 15
+lesson: 4
+duration_minutes: 60
+
+# PEDAGOGICAL LAYER METADATA
+primary_layer: "Layer 4"
+layer_progression: "L4 capstone - pattern mastery"
+layer_4_capstone: "Three-feature pipeline (F1→F2→F3) with template-based generation"
+
+# HIDDEN SKILLS METADATA (Institutional Integration Layer)
+skills:
+  - name: "Template-Based Content Generation"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can design template system with placeholders and implement field substitution"
+
+  - name: "Multi-Input Feature Composition"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can build features that consume outputs from multiple upstream features"
+
+  - name: "Personalization Logic Implementation"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can extract fields from source data and fill template placeholders with graceful fallbacks"
+
+  - name: "Confidence Scoring Design"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Analyze"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can implement confidence metrics based on data completeness and field coverage"
+
+learning_objectives:
+  - objective: "Build a feature that consumes outputs from two upstream features (F1 profile + F2 score)"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "Outreach Generator accepts profile.json and score.json, produces message.json"
+
+  - objective: "Implement template selection logic based on ICP category"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "Correct template (hot/warm/cold) selected based on ICP score category"
+
+  - objective: "Execute full three-feature pipeline and verify data flow"
+    proficiency_level: "B1"
+    bloom_level: "Analyze"
+    assessment_method: "F1→F2→F3 pipeline produces valid output with no data loss"
+
+cognitive_load:
+  new_concepts: 5
+  reused_concepts: 7
+  assessment: "5 new concepts (template design, field extraction, personalization, confidence scoring, template selection) + 7 reused from F1-F2 (JSON schema, pipeline, specification, verification, scoring, category) within B1 limit ✓"
+
+differentiation:
+  extension_for_advanced: "Add multiple template variants per category; implement A/B testing support"
+  remedial_for_struggling: "Use provided outreach_templates.json verbatim; focus on field extraction and substitution"
+
+# Generation metadata
+generated_by: "content-implementer v3.0.0"
+source_spec: "specs/001-013-chapter-capstone/spec.md"
+created: "2025-11-25"
+last_modified: "2025-11-25"
+git_author: "Claude Code"
+workflow: "/sp.loopflow.v2"
+version: "2.0.0"
 ---
 
 # Feature 3: Outreach Generator

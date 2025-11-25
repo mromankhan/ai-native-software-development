@@ -1,6 +1,78 @@
 ---
 sidebar_position: 5
 title: "Feature 4: Campaign Dashboard"
+chapter: 15
+lesson: 5
+duration_minutes: 45
+
+# PEDAGOGICAL LAYER METADATA
+primary_layer: "Layer 4"
+layer_progression: "L4 capstone - 50% target proof"
+layer_4_capstone: "Four-feature aggregation proving intelligence accumulation"
+
+# HIDDEN SKILLS METADATA (Institutional Integration Layer)
+skills:
+  - name: "Data Aggregation Design"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can aggregate data from multiple JSON sources into unified view"
+
+  - name: "CLI Table Formatting"
+    proficiency_level: "A2"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can format structured data as readable CLI table with columns and alignment"
+
+  - name: "Summary Statistics Calculation"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can calculate aggregate metrics (counts, averages, distributions) from data sets"
+
+  - name: "Intelligence Accumulation Measurement"
+    proficiency_level: "B1"
+    category: "Conceptual"
+    bloom_level: "Evaluate"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can measure and analyze acceleration from F1 baseline to F4 completion"
+
+learning_objectives:
+  - objective: "Build a dashboard that aggregates outputs from all upstream features (F1-F3)"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "Dashboard displays all leads with profiles, scores, and outreach previews"
+
+  - objective: "Complete Feature 4 in less than 50% of Feature 1 time"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "TIME_TRACKER.md shows F4 time < 50% of F1 time"
+
+  - objective: "Calculate and interpret acceleration metrics"
+    proficiency_level: "B1"
+    bloom_level: "Evaluate"
+    assessment_method: "Student can explain why F4 was faster and what patterns transferred"
+
+cognitive_load:
+  new_concepts: 4
+  reused_concepts: 8
+  assessment: "4 new concepts (data aggregation, CLI formatting, summary statistics, acceleration proof) + 8 reused from F1-F3 (JSON parsing, pipeline, specification, verification, scoring, templates, sorting) within B1 limit ✓"
+
+differentiation:
+  extension_for_advanced: "Add HTML output option; implement filtering and sorting by different criteria"
+  remedial_for_struggling: "Use CLI table only; focus on data aggregation and summary statistics"
+
+# Generation metadata
+generated_by: "content-implementer v3.0.0"
+source_spec: "specs/001-013-chapter-capstone/spec.md"
+created: "2025-11-25"
+last_modified: "2025-11-25"
+git_author: "Claude Code"
+workflow: "/sp.loopflow.v2"
+version: "2.0.0"
 ---
 
 # Feature 4: Campaign Dashboard

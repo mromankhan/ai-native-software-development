@@ -1,6 +1,83 @@
 ---
 sidebar_position: 7
 title: "Ship + Retrospective"
+chapter: 15
+lesson: 7
+duration_minutes: 45
+
+# PEDAGOGICAL LAYER METADATA
+primary_layer: "Layer 4"
+layer_progression: "L4 capstone - shipping and reflection"
+layer_4_capstone: "Final verification, retrospective analysis, git commit"
+
+# HIDDEN SKILLS METADATA (Institutional Integration Layer)
+skills:
+  - name: "End-to-End Pipeline Verification"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Analyze"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can run complete pipeline on fresh data and verify all features integrate correctly"
+
+  - name: "Acceleration Analysis"
+    proficiency_level: "B1"
+    category: "Conceptual"
+    bloom_level: "Evaluate"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can calculate acceleration percentages and interpret what patterns caused acceleration"
+
+  - name: "Retrospective Documentation"
+    proficiency_level: "B1"
+    category: "Soft"
+    bloom_level: "Evaluate"
+    digcomp_area: "Communication"
+    measurable_at_this_level: "Student can write honest retrospective capturing what worked, what slowed down, and learnings for future"
+
+  - name: "Git Workflow Execution"
+    proficiency_level: "A2"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can stage, commit, and verify git history for shipped project"
+
+learning_objectives:
+  - objective: "Verify complete pipeline works end-to-end with fresh data"
+    proficiency_level: "B1"
+    bloom_level: "Analyze"
+    assessment_method: "All four features run without errors on new company URL"
+
+  - objective: "Calculate and interpret acceleration metrics from TIME_TRACKER.md"
+    proficiency_level: "B1"
+    bloom_level: "Evaluate"
+    assessment_method: "Student calculates F2-F4 as percentage of F1 and explains acceleration causes"
+
+  - objective: "Write retrospective documenting what accelerated and what slowed development"
+    proficiency_level: "B1"
+    bloom_level: "Evaluate"
+    assessment_method: "RETROSPECTIVE.md includes specific patterns, friction points, and transferable learnings"
+
+  - objective: "Ship project with proper git commits and README documentation"
+    proficiency_level: "A2"
+    bloom_level: "Apply"
+    assessment_method: "Git log shows commits for data, results, and documentation"
+
+cognitive_load:
+  new_concepts: 4
+  reused_concepts: 8
+  assessment: "4 new concepts (retrospective analysis, acceleration interpretation, shipping workflow, README update) + 8 reused from F1-F4 (pipeline, verification, git, documentation) within B1 limit ✓"
+
+differentiation:
+  extension_for_advanced: "Add detailed acceleration analysis by decision type; propose Feature 5 specification"
+  remedial_for_struggling: "Focus on pipeline verification and basic retrospective; use provided templates"
+
+# Generation metadata
+generated_by: "content-implementer v3.0.0"
+source_spec: "specs/001-013-chapter-capstone/spec.md"
+created: "2025-11-25"
+last_modified: "2025-11-25"
+git_author: "Claude Code"
+workflow: "/sp.loopflow.v2"
+version: "2.0.0"
 ---
 
 # Ship + Retrospective

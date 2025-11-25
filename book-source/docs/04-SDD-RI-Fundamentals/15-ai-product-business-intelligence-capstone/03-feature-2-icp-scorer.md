@@ -1,14 +1,78 @@
 ---
 sidebar_position: 3
 title: "Feature 2: ICP Scorer"
-proficiency_level: "B1"
-estimated_time: "30-45 minutes"
+chapter: 15
+lesson: 3
+duration_minutes: 45
+
+# PEDAGOGICAL LAYER METADATA
+primary_layer: "Layer 4"
+layer_progression: "L4 capstone - first acceleration measurement"
+layer_4_capstone: "Pipeline composition (F1→F2) with pattern reuse"
+
+# HIDDEN SKILLS METADATA (Institutional Integration Layer)
+skills:
+  - name: "Pipeline Architecture Design"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can design data flow where output of one feature feeds input of next feature"
+
+  - name: "Scoring Algorithm Implementation"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can implement weighted scoring with criteria matching and category assignment"
+
+  - name: "Pattern Reuse Recognition"
+    proficiency_level: "B1"
+    category: "Conceptual"
+    bloom_level: "Analyze"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can identify which patterns from F1 transfer to F2 and measure acceleration"
+
+  - name: "ICP Criteria Definition"
+    proficiency_level: "A2"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can define weighted ICP criteria with score ranges and category thresholds"
+
+learning_objectives:
+  - objective: "Build a feature that consumes output from a previous feature (pipeline architecture)"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "ICP Scorer accepts Lead Profile JSON and produces Score JSON"
+
+  - objective: "Measure first acceleration by comparing F2 time to F1 baseline"
+    proficiency_level: "B1"
+    bloom_level: "Analyze"
+    assessment_method: "TIME_TRACKER.md shows F2 < F1 with pattern reuse notes"
+
+  - objective: "Define and implement weighted scoring criteria"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "icp_criteria.json with weights, score output with breakdown and reasoning"
+
 cognitive_load:
   new_concepts: 4
   reused_concepts: 6
-generated_by: content-implementer v1.0.0
+  assessment: "4 new concepts (ICP criteria, weighted scoring, category assignment, reasoning generation) + 6 reused from F1 (JSON schema, SDD-RI workflow, specification, verification) within B1 limit ✓"
+
+differentiation:
+  extension_for_advanced: "Add dynamic ICP criteria weighting based on industry or company size"
+  remedial_for_struggling: "Use provided icp_criteria.json verbatim; focus on integration with F1 output"
+
+# Generation metadata
+generated_by: "content-implementer v3.0.0"
+source_spec: "specs/001-013-chapter-capstone/spec.md"
 created: "2025-11-25"
-workflow: "/sp.implement"
+last_modified: "2025-11-25"
+git_author: "Claude Code"
+workflow: "/sp.loopflow.v2"
+version: "2.0.0"
 ---
 
 # Feature 2: ICP Scorer

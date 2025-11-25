@@ -1,9 +1,77 @@
 ---
 sidebar_position: 2
 title: "Feature 1: Lead Profiler"
-proficiency_level: "B1"
-estimated_time: "90 minutes"
-cognitive_load: 9
+chapter: 15
+lesson: 2
+duration_minutes: 90
+
+# PEDAGOGICAL LAYER METADATA
+primary_layer: "Layer 4"
+layer_progression: "L4 capstone - full SDD-RI cycle"
+layer_4_capstone: "Complete spec→plan→tasks→implement workflow establishing baseline"
+
+# HIDDEN SKILLS METADATA (Institutional Integration Layer)
+skills:
+  - name: "Writing Feature Specifications"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Create"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can write a complete specification with intent, inputs, outputs, success criteria, and constraints"
+
+  - name: "Executing SDD-RI Workflow"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can execute /sp.specify → /sp.plan → /sp.tasks → /sp.implement workflow sequentially"
+
+  - name: "JSON Schema Design"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Apply"
+    digcomp_area: "Content Creation"
+    measurable_at_this_level: "Student can define JSON output schemas with field types, constraints, and validation rules"
+
+  - name: "Implementation Verification"
+    proficiency_level: "B1"
+    category: "Technical"
+    bloom_level: "Analyze"
+    digcomp_area: "Problem-Solving"
+    measurable_at_this_level: "Student can verify implementation against specification using systematic checklist"
+
+learning_objectives:
+  - objective: "Execute complete SDD-RI workflow from specification to verified implementation"
+    proficiency_level: "B1"
+    bloom_level: "Apply"
+    assessment_method: "Lead Profiler produces valid JSON matching specification schema"
+
+  - objective: "Write a feature specification with measurable success criteria"
+    proficiency_level: "B1"
+    bloom_level: "Create"
+    assessment_method: "Specification includes intent, input/output schemas, quality gates, constraints"
+
+  - objective: "Establish baseline time measurement for intelligence accumulation tracking"
+    proficiency_level: "A2"
+    bloom_level: "Apply"
+    assessment_method: "TIME_TRACKER.md updated with Feature 1 duration"
+
+cognitive_load:
+  new_concepts: 9
+  assessment: "9 new concepts (specification writing, JSON schema, SDD-RI workflow, plan generation, task breakdown, implementation, verification checklist, baseline measurement, pipeline architecture) at B1 limit ✓"
+
+differentiation:
+  extension_for_advanced: "Add additional profile fields (funding status, recent news, competitive positioning)"
+  remedial_for_struggling: "Use provided specification template verbatim; focus on execution not customization"
+
+# Generation metadata
+generated_by: "content-implementer v3.0.0"
+source_spec: "specs/001-013-chapter-capstone/spec.md"
+created: "2025-11-25"
+last_modified: "2025-11-25"
+git_author: "Claude Code"
+workflow: "/sp.loopflow.v2"
+version: "2.0.0"
 ---
 
 # Feature 1: Lead Profiler
