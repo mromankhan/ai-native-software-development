@@ -20,7 +20,7 @@ Welcome to hands-on specification-driven development. This chapter transforms un
 Before starting this chapter, ensure you have:
 
 - **Chapter 13 Complete**: You understand SDD-RI theory (specification primacy, intelligence accumulation)
-- **Python 3.12+ Installed**: Spec-Kit Plus requires Python. If not installed, complete [Installing Python](/docs/05-Python-Fundamentals/17-introduction-to-python/02-installing-python) first
+- **Python 3.12+ Installed**: Spec-Kit Plus requires Python. If not installed, complete [Installing Python](https://ai-native.panaversity.org/docs/Python-Fundamentals/introduction-to-python/installing-python) first
 - **AI Companion Ready**: Claude Code or Gemini CLI installed and configured
 - **Google Account**: For Gemini.google.com and YouTube access (free tier sufficient)
 - **Node.js Installed**: Required for Playwright MCP browser automation

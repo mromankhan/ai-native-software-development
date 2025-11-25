@@ -111,7 +111,7 @@ python --version
 
 **If you see Python 3.12+ (e.g., `Python 3.12.0`)**: Continue to the next section.
 
-**If you see an error or a version below 3.12**: Follow the installation guide at [Installing Python](/docs/05-Python-Fundamentals/17-introduction-to-python/02-installing-python) and return here when complete.
+**If you see an error or a version below 3.12**: Follow the installation guide at [Installing Python](https://ai-native.panaversity.org/docs/Python-Fundamentals/introduction-to-python/installing-python) and return here when complete.
 :::
 
 ---
