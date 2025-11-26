@@ -1,6 +1,6 @@
 # CoLearning Python & Agentic AI: Chapter Index
 
-**83 chapters across 12 parts** (Updated 2025-11-25)
+**85 chapters across 13 parts** (Updated 2025-11-26)
 
 Reference this document when naming and organizing chapter files. Use the chapter number in directory names: `[chapter-number]-[chapter-name]/`
 
@@ -9,7 +9,7 @@ Reference this document when naming and organizing chapter files. Use the chapte
   - **Parts 1-3**: Complete (11 chapters)
   - **Part 4 (SDD-RI Fundamentals)**: Ch 13, Ch 14 needs pivot, Ch 15 NEW
   - **Part 5 (Python Fundamentals)**: Complete content exists, needs renumbering (18 chapters, 16-33)
-- **Planned** (50 chapters): Chapter 8, Chapters 14-15, 34-83 are planned but not yet created
+- **Planned** (52 chapters): Chapter 8, Chapters 14-15, 34-85 are planned but not yet created
 
 ---
 
@@ -139,7 +139,7 @@ Production deployment, infrastructure, and operational excellence for AI systems
 
 ---
 
-## Part 8: Turing LLMOps — Proprietary Intelligence (Chapters 62-65)
+## Part 8: Turing LLMOps — Proprietary Intelligence (Chapters 62-66)
 
 Custom model training, fine-tuning, and deployment with Turing platform
 
@@ -149,59 +149,85 @@ Custom model training, fine-tuning, and deployment with Turing platform
 | 63 | Turing Customization Workflow: Prepare → Fine-Tune → Evaluate | `63-turing-customization-workflow/` | Planned |
 | 64 | Deploy & Integrate: Endpoints, SDKs, and Agent Backends | `64-deploy-integrate-endpoints-sdks/` | Planned |
 | 65 | Operate in Production: Monitoring, Cost, & Governance | `65-operate-in-production-monitoring/` | Planned |
+| 66 | LLMOps Best Practices & Case Studies | `66-llmops-best-practices/` | Planned |
 
 ---
 
-## Part 9: TypeScript: The Language of Realtime and Interaction (Chapters 66-71)
+## Part 9: TypeScript: The Language of Realtime and Interaction (Chapters 67-72)
 
 Full-stack AI development: TypeScript fundamentals for frontend and realtime systems
 
 | # | Chapter Title | File Name | Status |
 |---|---------------|-----------|--------|
-| 66 | Modern TypeScript Essentials (types, unions, generics, narrowing) | `66-modern-typescript-essentials/` | Planned |
-| 67 | Tooling: tsconfig, esbuild/Vite, pnpm/Bun, project structure | `67-tooling-tsconfig-esbuild-vite/` | Planned |
-| 68 | Async Patterns in TS: Promises, async/await, streams, AbortController | `68-async-patterns-in-ts/` | Planned |
-| 69 | Node & Edge Runtimes (Node, Deno, Edge Functions) | `69-node-edge-runtimes/` | Planned |
-| 70 | HTTP, SSE, and WebSockets in TS (clients & servers) | `70-http-sse-websockets-in-ts/` | Planned |
-| 71 | Testing in TS (Vitest/Jest) and contract tests | `71-testing-in-ts-vitest-jest/` | Planned |
+| 67 | Modern TypeScript Essentials (types, unions, generics, narrowing) | `67-modern-typescript-essentials/` | Planned |
+| 68 | Tooling: tsconfig, esbuild/Vite, pnpm/Bun, project structure | `68-tooling-tsconfig-esbuild-vite/` | Planned |
+| 69 | Async Patterns in TS: Promises, async/await, streams, AbortController | `69-async-patterns-in-ts/` | Planned |
+| 70 | Node & Edge Runtimes (Node, Deno, Edge Functions) | `70-node-edge-runtimes/` | Planned |
+| 71 | HTTP, SSE, and WebSockets in TS (clients & servers) | `71-http-sse-websockets-in-ts/` | Planned |
+| 72 | Testing in TS (Vitest/Jest) and contract tests | `72-testing-in-ts-vitest-jest/` | Planned |
 
 ---
 
-## Part 10: Building Agentic Frontends and Realtime Systems (Chapters 72-80)
+## Part 10: Building Agentic Frontends (Chapters 73-75)
 
-Interactive UI development for AI agents, realtime streaming, and voice processing
+Frontend development for AI agents: chat UIs, streaming responses, deployment
 
 | # | Chapter Title | File Name | Status |
 |---|---------------|-----------|--------|
-| 72 | Building Chat UIs with OpenAI ChatKit | `72-building-chat-uis-openai-chatkit/` | Planned |
-| 73 | React + Next.js Primer for Agents | `73-react-nextjs-primer-for-agents/` | Planned |
-| 74 | Deploy & Preview Environments (Vercel/Netlify) | `74-deploy-preview-environments/` | Planned |
-| 75 | Realtime APIs for Agents (SSE/WebSocket/WebRTC) | `75-realtime-apis-for-agents/` | Planned |
-| 76 | Browser Audio: Capture, VAD, Streaming | `76-browser-audio-capture-vad/` | Planned |
-| 77 | TTS/STT Pipelines (Latency, Duplex Streams) | `77-tts-stt-pipelines/` | Planned |
-| 78 | Multimodal IO (Image/Screen Capture, Tools) | `78-multimodal-io-image-screen/` | Planned |
-| 79 | Mobile & PWA Considerations | `79-mobile-pwa-considerations/` | Planned |
-| 80 | Load, Cost, and QoS for Realtime | `80-load-cost-qos-realtime/` | Planned |
+| 73 | Building Chat UIs (streaming tokens, tool call visualizers) | `73-building-chat-uis/` | Planned |
+| 74 | Frontend Frameworks for Agents (server components, actions) | `74-frontend-frameworks-for-agents/` | Planned |
+| 75 | Deploy & Preview Environments (Vercel/Netlify patterns) | `75-deploy-preview-environments/` | Planned |
 
 ---
 
-## Part 11: Agentic AI is the Future (Chapters 81-83)
+## Part 11: Building Realtime and Voice Agents (Chapters 76-81)
+
+Realtime communication, voice interfaces, and multimodal interactions
+
+| # | Chapter Title | File Name | Status |
+|---|---------------|-----------|--------|
+| 76 | Realtime APIs for Agents (SSE/WebSocket/WebRTC) | `76-realtime-apis-for-agents/` | Planned |
+| 77 | Browser Audio: Capture, VAD, Streaming | `77-browser-audio-capture-vad/` | Planned |
+| 78 | TTS/STT Pipelines (Latency, Duplex Streams) | `78-tts-stt-pipelines/` | Planned |
+| 79 | Multimodal IO (Image/Screen Capture, Tools) | `79-multimodal-io-image-screen/` | Planned |
+| 80 | Mobile & PWA Considerations | `80-mobile-pwa-considerations/` | Planned |
+| 81 | Load, Cost, and QoS for Realtime | `81-load-cost-qos-realtime/` | Planned |
+
+---
+
+## Part 12: Agentic AI is the Future (Chapters 82-84)
 
 Emerging patterns and organizational transformation
 
 | # | Chapter Title | File Name | Status |
 |---|---------------|-----------|--------|
-| 81 | Agentic Web: Open (Nanda and A2A) and Closed Garden (OpenAI App and Apps SDK) | `81-agentic-web-open-closed/` | Planned |
-| 82 | Agentic Organizations | `82-agentic-organizations/` | Planned |
-| 83 | Agentic Commerce | `83-agentic-commerce/` | Planned |
+| 82 | Agentic Web: Open (Nanda and A2A) and Closed Garden (OpenAI App and Apps SDK) | `82-agentic-web-open-closed/` | Planned |
+| 83 | Agentic Organizations | `83-agentic-organizations/` | Planned |
+| 84 | Agentic Commerce | `84-agentic-commerce/` | Planned |
 
 ---
 
-## Part 12: Physical AI & Humanoid Robotics (Chapters TBD)
+## Part 13: Physical AI & Humanoid Robotics (Chapters 85-TBD)
 
 Physical AI systems and humanoid robotics integration
 
 *Content planned - chapter numbers to be assigned*
+
+---
+
+## Part 14: Capstone — Building AI-Native Books (Chapters 86-92)
+
+Build the AI-native book platform you're learning from
+
+| # | Chapter Title | File Name | Status |
+|---|---------------|-----------|--------|
+| 86 | Building on Top of Docusaurus | `86-building-on-docusaurus/` | Planned |
+| 87 | Book Reusable Intelligence Components | `87-book-rii-components/` | Planned |
+| 88 | Storage — File System for Agents (PanaversityFS) | `88-storage-panaversityfs/` | Planned |
+| 89 | Auth — BetterAuth Multi-Tenant SSO | `89-auth-betterauth-sso/` | Planned |
+| 90 | RAG — Using Qdrant | `90-rag-qdrant/` | Planned |
+| 91 | Personalized Content | `91-personalized-content/` | Planned |
+| 92 | Chatbot — ChatKit + Agents SDK | `92-chatbot-chatkit-agents/` | Planned |
 
 ---
 
@@ -235,4 +261,4 @@ This document provides chapter titles and topics. For exact file paths, naming c
 5. Match the title exactly in frontmatter
 6. Reference `.claude/output-styles/chapters.md` for formatting guidelines
 
-**Version**: Updated 2025-11-25 — Removed Part 6 (AI Product Leadership), renumbered Parts 7-12 to Parts 6-11, renumbered chapters accordingly.
+**Version**: Updated 2025-11-26 — Split Part 10 into Part 10 (Frontends) and Part 11 (Realtime/Voice), renumbered Parts 11-12 to Parts 12-13, added Part 13 (Physical AI).
