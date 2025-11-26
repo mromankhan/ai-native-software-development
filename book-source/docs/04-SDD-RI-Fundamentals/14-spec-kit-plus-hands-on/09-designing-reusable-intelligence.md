@@ -22,7 +22,7 @@ created: "2025-11-26"
 last_modified: "2025-11-27"
 git_author: "Claude Code"
 workflow: "/sp.implement"
-version: "3.0.0"
+version: "4.0.0"
 ---
 
 # Designing Reusable Intelligence
@@ -118,29 +118,46 @@ You: "I check:
      - Does it connect to the thesis?"
 ```
 
-### Step 3: AI Builds the Skill
+### Step 3: AI Builds the Skill File
 
-Based on your conversation, AI creates a SKILL.md file with:
-- **Description**: What the skill does and when to use it
-- **Process**: Your workflow, structured as steps
-- **Quality Criteria**: How to know if output is good
-- **Examples**: Concrete illustrations of the approach
+Based on your conversation, AI creates a complete skill file. Ask:
+
+```
+Create the skill file with:
+- Metadata (name, description, when to use)
+- Process steps from our conversation
+- Quality criteria I described
+- A usage example
+- Self-check validation
+
+Format it as a complete .md file I can save.
+```
 
 **AI generates:**
 
 ```markdown
 # Skill: Section Writing for Research Papers
 
+**Name**: section-writer
+**Category**: Research & Academic Writing
+**Complexity**: Medium (6 decision points)
+**Created**: [date]
+**Reusable Across**: Any research paper, thesis, technical documentation
+
 ## Description
+
 Guide for writing clear, evidence-supported research paper sections.
 Use when writing any section that needs to communicate complex ideas
 with proper citations and logical flow.
 
-## When to Use
-- Writing sections for research papers
-- Need consistent quality across multiple sections
-- Want evidence properly integrated (not tacked on)
-- Refining sections through iteration
+## When to Use This Skill
+
+- Apply when: Writing sections for research papers
+- Apply when: Need consistent quality across multiple sections
+- Apply when: Want evidence properly integrated (not tacked on)
+- Apply when: Refining sections through iteration
+- Skip when: Writing is one-off (low reuse value)
+- Skip when: Different context (creative fiction, informal blog)
 
 ## Process
 
@@ -167,43 +184,113 @@ Set up the next section.
 Before considering done, verify:
 - [ ] Every paragraph has clear topic sentence
 - [ ] Every factual claim is cited
-- [ ] Section reads smoothly (read aloud)
+- [ ] Section reads smoothly (read aloud test)
 - [ ] Section connects to thesis
 
 ## Quality Criteria
+
 A section is ready when:
 - Someone unfamiliar with topic can follow the logic
 - All claims supported by evidence
 - No sentences require re-reading to understand
 - Opening hooks interest, closing connects to thesis
+
+A section needs more work when:
+- Claims feel unsupported
+- Reader has to re-read sentences
+- Flow feels choppy between paragraphs
+- Connection to thesis is unclear
+
+## Usage Example
+
+**Scenario**: Writing Literature Review section on AI in K-12 education
+
+**Invocation**:
 ```
-
-### Step 4: Save and Test the Skill
-
-Save the skill file to your skills directory:
-
-```
-Save this skill to .claude/skills/section-writer.md
-```
-
-**Then test it:**
-
-```
-I need to write the Literature Review section for my paper.
-Use the section-writer skill to guide me.
+Use the section-writer skill to write my Literature Review.
 
 Key points to cover:
 1. Current state of AI in K-12 education
 2. Research on teacher workload reduction
 3. Studies on student outcome improvements
+
+Thesis: AI tools can measurably improve K-12 classroom efficiency.
+```
+
+**Expected Output**: A structured section with clear opening establishing
+context, 3 body segments each with topic sentence + evidence + significance,
+smooth transitions, and closing that connects findings to thesis.
+
+## Self-Check Validation
+
+Before considering skill application complete, verify:
+- [ ] Opening paragraph hooks interest and establishes context
+- [ ] Each key point has topic sentence, evidence, significance
+- [ ] Transitions connect paragraphs smoothly
+- [ ] Closing summarizes insights and connects to thesis
+- [ ] Read-aloud test passes (no awkward sentences)
+- [ ] All factual claims have citations
+- [ ] Someone unfamiliar could follow the logic
+```
+
+### Step 4: Save the Skill File
+
+Create the skills directory and save your skill:
+
+```bash
+# Create skills directory (if it doesn't exist)
+mkdir -p .claude/skills
+
+# AI saves the skill file
+```
+
+Then tell AI:
+
+```
+Save this skill to .claude/skills/section-writer.md
+```
+
+Your directory structure now includes:
+
+```
+my-research-paper/
+├── .claude/
+│   ├── commands/           # Slash commands from specifyplus init
+│   └── skills/             # YOUR reusable intelligence
+│       └── section-writer.md
+├── .specify/
+│   └── memory/
+│       └── constitution.md
+├── specs/
+│   └── [your-paper]/
+│       ├── spec.md
+│       ├── plan.md
+│       └── tasks.md
+└── ...
+```
+
+### Step 5: Test the Skill
+
+**Test on a real task:**
+
+```
+I need to write the Discussion section for my paper.
+Use the section-writer skill to guide me.
+
+Key points:
+1. How AI applications address teacher workload
+2. Evidence of student outcome improvements
+3. Limitations and areas needing more research
+
+Thesis: AI tools can measurably improve K-12 classroom efficiency.
 ```
 
 **Evaluate the result:**
-- Did AI follow the skill's process?
-- Did output meet the quality criteria?
+- Did AI follow the skill's process (outline → opening → evidence → closing)?
+- Did output meet the quality criteria (claims cited, flows smoothly)?
 - What's missing or needs adjustment?
 
-### Step 5: Iterate Until It Works
+### Step 6: Iterate Until It Works
 
 If something's off, ask AI to update the skill:
 
@@ -214,7 +301,9 @@ The section-writer skill worked well, but I noticed:
 
 Update the skill to:
 1. Add source credibility check in Step 3
-2. Make quality criteria more specific (e.g., "8+ sources" instead of "multiple sources")
+2. Add "minimum 3 sources per major point" to quality criteria
+
+Then save the updated version to .claude/skills/section-writer.md
 ```
 
 Repeat testing until your skill produces consistent, high-quality results.
@@ -227,17 +316,16 @@ As you identify more patterns, you'll wonder: **Should I create a skill or a sub
 
 ### Decision Framework
 
-**Create a SKILL** when:
-- Pattern has 2-6 decision points
+**Create a SKILL (2-6 decision points)** when:
 - Human guides the process, AI assists
-- Pattern applies to similar contexts
+- You apply the framework, AI helps execute
 - Examples: section-writer, outline-refiner, citation-formatter
 
-**Create a SUBAGENT** when:
-- Pattern has 7+ decision points
+**Create a SUBAGENT (7+ decision points)** when:
 - AI should work autonomously with minimal guidance
-- Pattern requires complex judgment
-- Examples: research-validator (evaluates source credibility autonomously), fact-checker (verifies claims against sources)
+- AI makes judgments and returns verdicts
+- Pattern requires complex, multi-step reasoning
+- Examples: research-validator (evaluates source credibility), fact-checker (verifies claims)
 
 **From your research paper project:**
 
@@ -248,9 +336,36 @@ As you identify more patterns, you'll wonder: **Should I create a skill or a sub
 | Research validation | 8+ | AI judges credibility | **SUBAGENT** |
 | Fact checking | 7+ | AI verifies autonomously | **SUBAGENT** |
 
+### What Makes Subagents Different
+
+A subagent adds three things beyond a skill:
+
+**1. Role Definition** (autonomous identity):
+```
+**Name**: source-validator
+**Autonomy Level**: High (makes accept/reject decisions)
+**Invocation**: Automatic (after adding source) or manual
+```
+
+**2. Decision Authority** (what it can decide vs escalate):
+```
+**Can ACCEPT**: Peer-reviewed sources from past 10 years
+**Can REJECT**: Non-peer-reviewed sources, outdated sources
+**Must ESCALATE**: Borderline cases, conflicting information
+```
+
+**3. Reporting Format** (structured output):
+```
+=== SOURCE VALIDATION ===
+Source: [title]
+Verdict: [ACCEPT | REJECT | ESCALATE]
+Reasoning: [specific criteria applied]
+Required Actions: [if any]
+```
+
 ### Creating a Subagent (Preview)
 
-Subagents follow a similar conversation-based creation process, but with more emphasis on autonomous judgment:
+Subagents follow a similar conversation-based creation process:
 
 ```
 I want to create a subagent for validating research sources.
@@ -262,53 +377,119 @@ The subagent should autonomously:
 4. Flag potential bias
 5. Verify source actually supports the claim being made
 
-It should return a verdict (accept/reject/needs-review) with reasoning.
+It should return a verdict (accept/reject/escalate) with reasoning.
+
+Help me design this subagent with:
+- Role definition
+- Decision authority (what it can decide vs escalate)
+- Reporting format
 ```
 
 You'll learn more about subagents in later chapters. For now, focus on skills.
 
 ---
 
-## Part C: What You Can Include in a Skill
+## Part C: Validating Your Skill Works
 
-Skills bundle three types of content:
+Good skills trigger **reasoning mode** (context-specific analysis). Bad skills trigger **prediction mode** (generic responses).
 
-### 1. Instructions (Required)
-Every skill needs clear instructions explaining your process. When you describe your workflow, AI structures it into proper instructions.
+### Test Your Skill's Effectiveness
 
-### 2. Reference Materials (Optional)
-Sometimes instructions alone aren't enough. You can include:
-- Templates (section outline templates, quality checklists)
-- Examples (sample good sections, before/after comparisons)
-- Reference documents (style guides, citation format rules)
+Ask your AI to apply your skill to a challenging case:
 
-**To include materials:**
 ```
-I want to add a template to my section-writer skill.
-Here's my standard section outline:
+Apply the section-writer skill to this vague request:
 
-[Opening Paragraph]
-- Hook: Why this matters
-- Context: What reader needs to know
-- Preview: What this section covers
+"Write about AI in education"
 
-[Body Paragraphs - repeat for each point]
-- Topic sentence
-- Evidence/citation
-- Explanation of significance
-- Transition
-
-[Closing Paragraph]
-- Summary of key insights
-- Connection to thesis
-- Setup for next section
+Walk me through how you're applying each step of the skill.
+Show your reasoning for each quality check.
 ```
 
-### 3. Quality Checks (Recommended)
-Define how to verify output quality:
-- Checklist items (every claim cited, reads smoothly)
-- Success criteria (someone unfamiliar can follow)
-- Red flags (unsupported claims, choppy transitions)
+**Good response (reasoning mode):**
+
+```
+Applying section-writer skill:
+
+STEP 1 - OUTLINE KEY POINTS:
+The request is too vague. Before outlining, I need:
+- What specific aspect of AI in education?
+- What thesis should this connect to?
+- What audience level?
+
+[Skill triggers clarification before proceeding]
+
+STEP 2-4 - [Would proceed after clarification]
+
+QUALITY CHECK:
+- Cannot verify "connects to thesis" without knowing thesis
+- Cannot ensure "someone unfamiliar can follow" without knowing audience
+
+SKILL VERDICT: Request needs refinement before skill can be applied effectively.
+```
+
+**Bad response (prediction mode):**
+
+```
+Here's a section about AI in education:
+
+AI is transforming education in many ways. It helps teachers
+and students learn better. Many schools are using AI tools...
+
+[Generic content that ignores skill process]
+```
+
+If you get prediction mode responses, your skill needs strengthening. Revise with more specific criteria and quality checks.
+
+---
+
+## Part D: Building Your Intelligence Library
+
+### Organizing Your Skills
+
+Standard directory structure:
+
+```
+my-research-paper/
+├── .claude/
+│   ├── commands/                    # Slash commands (from specifyplus)
+│   └── skills/                      # YOUR accumulated intelligence
+│       ├── section-writer.md        ← Your first skill
+│       ├── outline-refiner.md       ← Future skill
+│       └── source-evaluator.md      ← Future skill
+├── .specify/
+│   └── memory/
+│       └── constitution.md
+├── specs/
+└── ...
+```
+
+### Intelligence Reuse Strategy
+
+**Skill reuse** (apply to new contexts):
+
+```
+# Project 2: Different research paper
+I'm writing a section on climate policy impacts.
+
+Apply the section-writer skill from .claude/skills/section-writer.md
+
+Context: This is for a policy paper, not education research.
+Key points: (1) Current policy landscape, (2) Economic impacts, (3) Implementation challenges
+Thesis: Carbon pricing is the most efficient policy mechanism.
+```
+
+**Intelligence composition** (combine multiple skills):
+
+```
+# Project 3: Comprehensive paper
+Apply these skills in sequence:
+1. outline-refiner → improve paper structure
+2. section-writer → write each section
+3. source-evaluator → validate all citations
+
+Start with outline-refiner on my current outline.
+```
 
 ---
 
@@ -371,11 +552,11 @@ With your skill, dramatically faster:
 3. Write sections using skill guidance (3 hours—skill provides structure)
 4. **Total**: 4 hours (50% faster)
 
-### Project 3: Multi-Section Work (With Multiple Skills)
+### Project 3: Multi-Paper Work (With Multiple Skills)
 
 With accumulated skills:
 1. Use `section-writer` skill to write (2 hours)
-2. Use `research-validator` subagent to check sources (1 hour)
+2. Use `source-evaluator` skill to check citations (1 hour)
 3. Use `outline-refiner` skill to improve structure (30 min)
 4. **Total**: 3.5 hours
 
@@ -391,14 +572,18 @@ Ready to create your first reusable skill? Practice conversation-based skill cre
 
 > "I want to create a skill for writing research paper sections. During my work on this paper, I noticed my best sections had clear openings, evidence integrated naturally, logical flow, and conclusions connecting to thesis. Help me turn this into a reusable skill. Ask me questions about my process."
 
+**Generate Complete Skill File:**
+
+> "Based on our conversation, create a complete skill file with: metadata (name, category, when to use), process steps, quality criteria, usage example, and self-check validation. Format as a .md file I can save to .claude/skills/section-writer.md"
+
 **Test Your Skill:**
 
-> "I need to write the Discussion section for my paper. Use the section-writer skill we created. Key points: (1) How AI applications address teacher workload, (2) Evidence of student outcome improvements, (3) Limitations and areas needing more research."
+> "Apply the section-writer skill to write my Discussion section. Key points: (1) How AI applications address teacher workload, (2) Evidence of student outcome improvements, (3) Limitations. Walk me through each step of the skill as you apply it."
 
 **Iterate Based on Results:**
 
-> "The skill worked, but I noticed [specific issue]. Update the skill to address this. Then test again with a different section."
+> "The skill worked, but I noticed [specific issue]. Update the skill to address this. Save the updated version."
 
 **Decide Skill vs Subagent:**
 
-> "I'm thinking about creating reusable intelligence for [your pattern]. Help me decide: (1) How many decision points does this involve? (2) Should human guide or AI work autonomously? (3) Based on that, should this be a skill or subagent? (4) Start the conversation-based creation process."
+> "I'm thinking about creating reusable intelligence for validating research sources. Help me decide: (1) How many decision points does this involve? (2) Should human guide or AI work autonomously? (3) Based on that, should this be a skill or subagent? (4) Start the creation process."
