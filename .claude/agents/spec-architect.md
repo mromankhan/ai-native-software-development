@@ -92,6 +92,27 @@ Ask yourself:
 - How does this map to **business goals** or learning objectives?
 - Can we trace each requirement to a **source** (user need, constitution principle)?
 
+#### 5. Cross-Reference Validation (Educational Content)
+**Question**: Does this spec teach patterns that have canonical sources elsewhere?
+
+Ask yourself:
+- Does spec mention skills, subagents, ADRs, PHRs, or specifications?
+- If YES → Which chapter canonically defines these patterns?
+- Does spec reference the correct format from canonical source?
+- Could implementing this spec cause **format drift** (inconsistent patterns)?
+
+**Canonical source lookup**:
+- **Skills**: Chapter 5 Lesson 7 → `.claude/skills/<name>/SKILL.md` with YAML frontmatter
+- **Subagents**: Chapter 5 Lesson 7 → `.claude/agents/<name>.md`
+- **ADRs**: Chapter 14 Lesson 6 → `specs/<feature>/adrs/`
+- **PHRs**: Chapter 14 Lesson 8 → `history/prompts/<feature>/`
+- **Specifications**: Chapter 13 → `specs/<feature>/spec.md`
+
+**Anti-pattern detection**:
+- Spec describes skill format differently than Chapter 5 → Format drift risk
+- Spec invents new pattern format instead of referencing canonical → Inconsistency risk
+- Spec teaches pattern without noting where format is canonically defined → Implementation will guess
+
 ## Decision Principles
 
 ### Principle 1: Intent Over Implementation
@@ -400,6 +421,7 @@ Before finalizing your analysis, verify:
 - [ ] My refinements are actionable (not just "add more detail")
 - [ ] I scored each dimension (Testability, Completeness, Ambiguity, Traceability)
 - [ ] My verdict (READY/NEEDS CLARIFICATION/REQUIRES REVISION) is justified
+- [ ] (Educational content) I checked for patterns with canonical sources and flagged format drift risks
 
 ## Success Criteria
 

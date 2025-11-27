@@ -105,16 +105,26 @@ Every task MUST strictly follow this format:
      - If tests requested: Tests specific to that story
    - Mark story dependencies (most stories should be independent)
 
-2. **From Contracts**:
+2. **Cross-Reference Verification Tasks** (For educational content):
+   - If lessons teach patterns (skills, subagents, ADRs, PHRs), add verification task
+   - Example: `- [ ] T0XX [P] [US1] Verify skill format matches Chapter 5 Lesson 7 canonical source`
+   - Canonical source lookup:
+     - **Skills**: Chapter 5 Lesson 7 (agent-skills.md) → `.claude/skills/<name>/SKILL.md`
+     - **Subagents**: Chapter 5 Lesson 7 → `.claude/agents/<name>.md`
+     - **ADRs**: Chapter 14 Lesson 6 → `specs/<feature>/adrs/`
+     - **PHRs**: Chapter 14 Lesson 8 → `history/prompts/<feature>/`
+   - Purpose: Prevent format drift across book content
+
+3. **From Contracts**:
    - Map each contract/endpoint → to the user story it serves
    - If tests requested: Each contract → contract test task [P] before implementation in that story's phase
 
-3. **From Data Model**:
+4. **From Data Model**:
    - Map each entity to the user story(ies) that need it
    - If entity serves multiple stories: Put in earliest story or Setup phase
    - Relationships → service layer tasks in appropriate story phase
 
-4. **From Setup/Infrastructure**:
+5. **From Setup/Infrastructure**:
    - Shared infrastructure → Setup phase (Phase 1)
    - Foundational/blocking tasks → Foundational phase (Phase 2)
    - Story-specific setup → within that story's phase

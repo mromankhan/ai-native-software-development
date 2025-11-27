@@ -101,6 +101,48 @@ ls .claude/skills/
 find specs/ -name "spec.md" -type f | head -3
 ```
 
+### STEP 1.5: Canonical Source Check (For Educational Content)
+
+**IF task is educational content THAT teaches patterns (skills, subagents, ADRs, PHRs)**:
+
+YOU MUST read canonical sources BEFORE proceeding:
+
+```bash
+# Identify patterns being taught
+# For each pattern, read its canonical source:
+
+# Skills canonical source
+cat book-source/docs/02-AI-Tool-Landscape/05-claude-code-features-and-workflows/07-agent-skills.md 2>/dev/null
+
+# Specifications canonical source
+cat book-source/docs/04-SDD-RI-Fundamentals/13-specification-driven-development-fundamentals/ 2>/dev/null
+
+# ADRs/PHRs canonical source
+cat book-source/docs/04-SDD-RI-Fundamentals/14-spec-kit-plus-hands-on/06-plan-phase.md 2>/dev/null
+cat book-source/docs/04-SDD-RI-Fundamentals/14-spec-kit-plus-hands-on/08-implementation-phase.md 2>/dev/null
+```
+
+**Extract from each canonical source**:
+- File structure (where patterns live)
+- YAML frontmatter requirements
+- Invocation pattern (how to use)
+
+**Store in intelligence object** for use in implementation phase:
+```json
+{
+  "canonical_formats": {
+    "skills": {
+      "path": ".claude/skills/<name>/SKILL.md",
+      "frontmatter": ["name", "description", "version"],
+      "invocation": "AI discovers via description field"
+    },
+    // ... other patterns
+  }
+}
+```
+
+**WHY THIS MATTERS**: Format drift in educational content creates inconsistent student learning. Chapter 14 originally used wrong skill format because this check wasn't performed.
+
 ### STEP 2: Task Characterization Through Reasoning
 
 **Think like a systems analyst classifying problems by their essential nature.**
@@ -2070,6 +2112,18 @@ Correction: Validate context usage in approval gates
 Symptom: Proceeding without approval gates
 Detection: Check if BLOCK keywords present and enforced
 Correction: Enforce approval gates between all phases
+```
+
+**Pattern 5: Format Drift (Educational Content)**
+```
+Symptom: Teaching patterns (skills, subagents, ADRs) with invented formats
+Detection: Compare formats in generated content vs canonical sources
+Canonical sources:
+  - Skills: Chapter 5 Lesson 7 (.claude/skills/<name>/SKILL.md)
+  - Subagents: Chapter 5 Lesson 7 (.claude/agents/<name>.md)
+  - ADRs: Chapter 14 Lesson 6 (specs/<feature>/adrs/)
+  - PHRs: Chapter 14 Lesson 8 (history/prompts/<feature>/)
+Correction: Read canonical source BEFORE generating any pattern-teaching content
 ```
 
 ### Self-Correction Protocol

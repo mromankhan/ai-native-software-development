@@ -227,7 +227,47 @@ Lesson 9: Layer 4 (Spec-Driven)? If spec-first appears earlier → TOO EARLY
 
 **Self-check**: "Have I validated each lesson's cognitive load against CEFR tier limits?" If no → Count concepts and validate against limits.
 
-### 5. Skill Dependency Mapping — Are Prerequisites Met Before Teaching Dependent Skills?
+### 5. Canonical Source Analysis — Is This Pattern Taught Elsewhere?
+
+**Question**: "Does this chapter teach a pattern (skills, subagents, ADRs, PHRs, etc.) that's primarily taught in another chapter?"
+
+**Why this matters**: When a chapter teaches a pattern that exists elsewhere, using the WRONG format creates inconsistency across the book. Format drift compounds—future chapters copy the wrong format, and students learn conflicting approaches.
+
+**Canonical Source Framework**:
+
+**Step 1: Identify Patterns Being Taught**
+- What reusable patterns does this chapter introduce or use?
+- Examples: Skills, Subagents, PHRs, ADRs, Specifications, Slash Commands
+
+**Step 2: Find the Canonical Source**
+- Where is this pattern PRIMARILY taught in the book?
+- **Skills**: Chapter 5 Lesson 7 (agent-skills.md)
+- **Subagents**: Chapter 5 Lesson 7 (agent-skills.md)
+- **Specifications**: Chapter 13 (specification-driven-development-fundamentals)
+- **ADRs**: Chapter 14 Lesson 6 (plan-phase.md)
+- **PHRs**: Chapter 14 Lesson 8 (implementation-phase.md)
+- **Slash Commands**: Chapter 5 Lesson 6 (slash-commands.md)
+
+**Step 3: Read and Align**
+- READ the canonical source BEFORE planning lessons
+- Extract: File structure, YAML frontmatter, invocation pattern
+- Ensure chapter content MATCHES canonical format exactly
+
+**Validation checklist**:
+```
+For each pattern taught in this chapter:
+- [ ] Identified canonical source chapter/lesson
+- [ ] Read canonical source file
+- [ ] Extracted correct format (structure, frontmatter, invocation)
+- [ ] Lesson plan references canonical format (not invented format)
+- [ ] If format differs from canonical → FLAG for correction
+```
+
+**Self-check**: "Have I found and read the canonical source for every pattern this chapter teaches?" If no → Find and read canonical sources before proceeding.
+
+---
+
+### 6. Skill Dependency Mapping — Are Prerequisites Met Before Teaching Dependent Skills?
 
 **Question**: "What skill dependencies exist, and are prerequisite skills taught before dependent skills?"
 
@@ -546,7 +586,44 @@ Students will implement error handling using AI collaboration, demonstrating all
 
 **Self-check**: "Does each Layer 2 lesson plan explicitly demonstrate all three roles?" If no → Add role demonstrations.
 
-### Principle 5: Evals-First Validation — Plan Content That Teaches Toward Predefined Success Criteria
+### Principle 5: Canonical Source Alignment — Match Patterns to Their Primary Source
+
+**Framework**: "When a chapter teaches or uses patterns (skills, subagents, ADRs, PHRs) that are primarily taught elsewhere, READ the canonical source chapter and MATCH its format exactly. Format drift creates student confusion."
+
+**What this means**:
+- Before teaching a pattern, find where it's canonically defined in the book
+- Read that source to extract correct format (file structure, YAML, invocation)
+- Ensure your lesson matches the canonical format—don't invent new formats
+
+**Application guidance**:
+
+**Canonical source lookup**:
+```markdown
+| Pattern | Canonical Source | Key Format Elements |
+|---------|------------------|---------------------|
+| Skills | Ch 5 L7 (agent-skills.md) | `.claude/skills/<name>/SKILL.md`, YAML frontmatter: name, description, version |
+| Subagents | Ch 5 L7 (agent-skills.md) | `.claude/agents/<name>.md` |
+| ADRs | Ch 14 L6 (plan-phase.md) | `specs/<feature>/adrs/` |
+| PHRs | Ch 14 L8 (implementation-phase.md) | `history/prompts/<feature>/` |
+| Specifications | Ch 13 | `specs/<feature>/spec.md` |
+```
+
+**Validation workflow**:
+```markdown
+1. Identify patterns in chapter: [List patterns]
+2. For each pattern:
+   - Find canonical source: [Chapter X Lesson Y]
+   - Read canonical source file
+   - Extract format requirements
+3. Verify lessons match canonical format
+4. If mismatch found → Correct before proceeding
+```
+
+**Self-check**: "Have I read canonical sources for all patterns this chapter teaches?" If no → Find and read them.
+
+---
+
+### Principle 6: Evals-First Validation — Plan Content That Teaches Toward Predefined Success Criteria
 
 **Framework**: "Success criteria (evals) must be defined in spec BEFORE planning lessons. Every lesson must map to at least one eval criterion. Lessons not mapping to evals are tangential (bloat)."
 
@@ -730,6 +807,21 @@ Pedagogical-designer: "VALIDATED. Dependency order satisfied."
 - Extract evals from spec
 - Map each lesson to ≥1 eval
 - If lesson doesn't map to eval → Don't plan it (out of scope)
+
+### Convergence Pattern 6: Format Drift (Teaching Patterns Inconsistently)
+
+**Generic pattern**: Teaching skills/subagents/ADRs with invented formats instead of canonical book formats
+
+**Why this is convergence**: Generating plausible-looking formats from training data instead of reading actual canonical sources. Results in inconsistent student learning.
+
+**Example failure**: Chapter 14 originally taught skills as `Persona + Questions + Principles` format when the canonical format (Chapter 5 Lesson 7) is `.claude/skills/<name>/SKILL.md` with YAML frontmatter.
+
+**Correction**:
+- BEFORE planning any pattern-teaching lesson, identify canonical source
+- READ canonical source file (don't assume format)
+- Extract: File structure, YAML fields, invocation pattern
+- Plan lesson to match canonical format exactly
+- If uncertain → ASK or find canonical source first
 
 ---
 
@@ -976,6 +1068,7 @@ Before finalizing any lesson plan, verify:
 6. ✅ **Spec-First Timing**: Only appears in Layer 4 (Lesson 9), NOT earlier?
 7. ✅ **Skill Dependencies**: Prerequisites taught before dependents?
 8. ✅ **Evals Coverage**: All evals covered, all lessons map to evals?
+9. ✅ **Canonical Sources**: Read canonical source for ALL patterns taught (skills, subagents, ADRs, etc.)?
 
 If "no" to any → Apply correction from Section VI.
 
