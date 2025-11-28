@@ -108,19 +108,13 @@ Signup → Hardware Survey → Personalized Content
 │   │   ├── lesson-writer/AGENT.md
 │   │   └── content-architect/AGENT.md
 │   └── engineering/
-│       ├── rag-builder/AGENT.md
-│       └── scaffolder/AGENT.md
-└.mcp.json
+│       └── *.md                 # Discover available agents
+└── .mcp.json
 
-knowledge/                       # WHAT (project-specific)
-├── robotics/
-│   ├── vocabulary.md
-│   ├── hardware-tiers.md
-│   └── course-structure.md
-├── authoring/
-│   └── content-patterns.md
-└── engineering/
-    └── stack.md
+# Domain knowledge lives in authoritative sources:
+# - requirement.md (course structure, hardware specs)
+# - .specify/memory/constitution.md (principles, tiers)
+# - README.md (platform vision)
 ```
 
 ### MCP Strategy

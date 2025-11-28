@@ -1,5 +1,5 @@
 ---
-description: Execute the implementation plan by processing and executing all tasks defined in tasks.md
+description: Execute the implementation plan with context-aware agent routing. Routes to content-implementer for authoring tasks, general-purpose for engineering, and specialized agents for platform work.
 ---
 
 ## User Input
@@ -12,197 +12,275 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Core Directive
 
-**Default to Action**: Execute tasks rather than proposing them. Read task files, run implementation, write code, and mark tasks complete. Only pause for user input when checklists are incomplete or critical errors block progress. Your job is to implement, not to plan.
+**Context-Aware Implementation**: This command analyzes tasks.md to determine work type and routes to the appropriate implementation agent:
+- **Content Work** (lessons, modules, chapters) → `content-implementer` subagent
+- **Engineering Work** (features, APIs, components) → `general-purpose` subagent
+- **Platform Work** (RAG, auth, infrastructure) → specialized agents (`rag-builder`, `scaffolder`, or `general-purpose`)
 
-**WHY**: Implementation speed depends on autonomous execution. Each pause for "should I proceed?" costs momentum. Trust the tasks.md plan and execute.
+**WHY**: Different work types require different implementation expertise. Educational content needs pedagogical validation. Engineering needs test-driven development. Platform needs integration testing.
+
+**Agent Discovery**: Before routing, check `.claude/agents/` for current agent inventory. Agent names below are examples—always verify what's actually available.
 
 ## Outline
 
-1. Run `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Prerequisites Check**: Run `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` and parse FEATURE_DIR and AVAILABLE_DOCS.
 
-2. **Check checklists status** (if FEATURE_DIR/checklists/ exists):
-   - Scan all checklist files in the checklists/ directory
-   - For each checklist, count:
-     - Total items: All lines matching `- [ ]` or `- [X]` or `- [x]`
-     - Completed items: Lines matching `- [X]` or `- [x]`
-     - Incomplete items: Lines matching `- [ ]`
-   - Create a status table:
+2. **Load Implementation Context**:
+   - **REQUIRED**: Read `tasks.md` for task list
+   - **REQUIRED**: Read `plan.md` for architecture/structure
+   - **IF EXISTS**: Read `data-model.md`, `contracts/`, `research.md`, `quickstart.md`
 
-     ```text
-     | Checklist | Total | Completed | Incomplete | Status |
-     |-----------|-------|-----------|------------|--------|
-     | ux.md     | 12    | 12        | 0          | ✓ PASS |
-     | test.md   | 8     | 5         | 3          | ✗ FAIL |
-     | security.md | 6   | 6         | 0          | ✓ PASS |
-     ```
+3. **Classify Work Type**: Analyze tasks.md to determine routing:
 
-   - Calculate overall status:
-     - **PASS**: All checklists have 0 incomplete items
-     - **FAIL**: One or more checklists have incomplete items
+   ```
+   CLASSIFICATION SIGNALS:
 
-   - **If any checklist is incomplete**:
-     - Display the table with incomplete item counts
-     - **STOP** and ask: "Some checklists are incomplete. Do you want to proceed with implementation anyway? (yes/no)"
-     - Wait for user response before continuing
-     - If user says "no" or "wait" or "stop", halt execution
-     - If user says "yes" or "proceed" or "continue", proceed to step 3
+   CONTENT (→ content-implementer):
+   - tasks mention: lesson, module, chapter, exercise, assessment
+   - tasks reference: learning objectives, proficiency, teaching
+   - tasks include: hardware tier markers, layer progression
 
-   - **If all checklists are complete**:
-     - Display the table showing all checklists passed
-     - Automatically proceed to step 3
+   ENGINEERING (→ general-purpose):
+   - tasks mention: implement, endpoint, component, service, test
+   - tasks reference: API, database, frontend, backend
+   - tasks include: technical implementation steps
 
-3. Load and analyze the implementation context:
-   - **REQUIRED**: Read tasks.md for the complete task list and execution plan
-   - **REQUIRED**: Read plan.md for tech stack, architecture, and file structure
-   - **IF EXISTS**: Read data-model.md for entities and relationships
-   - **IF EXISTS**: Read contracts/ for API specifications and test requirements
-   - **IF EXISTS**: Read research.md for technical decisions and constraints
-   - **IF EXISTS**: Read quickstart.md for integration scenarios
+   PLATFORM (→ specialized):
+   - RAG tasks → rag-builder
+   - Scaffolding tasks → scaffolder
+   - Auth/deployment → general-purpose
+   ```
 
-4. **Project Setup Verification**:
-   - **REQUIRED**: Create/verify ignore files based on actual project setup:
+4. **Route to Appropriate Implementer**:
 
-   **Detection & Creation Logic**:
-   - Check if the following command succeeds to determine if the repository is a git repo (create/verify .gitignore if so):
+   ### For CONTENT Work (content-implementer)
 
-     ```sh
-     git rev-parse --git-dir 2>/dev/null
-     ```
+   For each lesson task, spawn a `content-implementer` subagent:
 
-   - Check if Dockerfile* exists or Docker in plan.md → create/verify .dockerignore
-   - Check if .eslintrc*or eslint.config.* exists → create/verify .eslintignore
-   - Check if .prettierrc* exists → create/verify .prettierignore
-   - Check if .npmrc or package.json exists → create/verify .npmignore (if publishing)
-   - Check if terraform files (*.tf) exist → create/verify .terraformignore
-   - Check if .helmignore needed (helm charts present) → create/verify .helmignore
+   ```
+   Use Task tool with:
+   - subagent_type: "content-implementer"
+   - prompt: Include:
+     - Lesson specification from tasks.md
+     - Plan context (pedagogical arc, stage)
+     - Constitution reference
+     - Hardware tier requirements
+     - Teaching modality for this lesson
+     - Previous lesson context (if not first)
+   ```
 
-   **If ignore file already exists**: Verify it contains essential patterns, append missing critical patterns only
-   **If ignore file missing**: Create with full pattern set for detected technology
+   **content-implementer Responsibilities**:
+   - Generate lesson following 4-layer framework
+   - Apply hardware tier gates (`<HardwareGate>`, `<CloudFallback>`)
+   - Implement Three Roles (INVISIBLE to students)
+   - Create skills/subagents for Stage 3 lessons
+   - End with "Try With AI" section only
 
-   **Common Patterns by Technology** (from plan.md tech stack):
-   - **Node.js/JavaScript/TypeScript**: `node_modules/`, `dist/`, `build/`, `*.log`, `.env*`
-   - **Python**: `__pycache__/`, `*.pyc`, `.venv/`, `venv/`, `dist/`, `*.egg-info/`
-   - **Java**: `target/`, `*.class`, `*.jar`, `.gradle/`, `build/`
-   - **C#/.NET**: `bin/`, `obj/`, `*.user`, `*.suo`, `packages/`
-   - **Go**: `*.exe`, `*.test`, `vendor/`, `*.out`
-   - **Ruby**: `.bundle/`, `log/`, `tmp/`, `*.gem`, `vendor/bundle/`
-   - **PHP**: `vendor/`, `*.log`, `*.cache`, `*.env`
-   - **Rust**: `target/`, `debug/`, `release/`, `*.rs.bk`, `*.rlib`, `*.prof*`, `.idea/`, `*.log`, `.env*`
-   - **Kotlin**: `build/`, `out/`, `.gradle/`, `.idea/`, `*.class`, `*.jar`, `*.iml`, `*.log`, `.env*`
-   - **C++**: `build/`, `bin/`, `obj/`, `out/`, `*.o`, `*.so`, `*.a`, `*.exe`, `*.dll`, `.idea/`, `*.log`, `.env*`
-   - **C**: `build/`, `bin/`, `obj/`, `out/`, `*.o`, `*.a`, `*.so`, `*.exe`, `Makefile`, `config.log`, `.idea/`, `*.log`, `.env*`
-   - **Swift**: `.build/`, `DerivedData/`, `*.swiftpm/`, `Packages/`
-   - **R**: `.Rproj.user/`, `.Rhistory`, `.RData`, `.Ruserdata`, `*.Rproj`, `packrat/`, `renv/`
-   - **Universal**: `.DS_Store`, `Thumbs.db`, `*.tmp`, `*.swp`, `.vscode/`, `.idea/`
-
-   **Tool-Specific Patterns**:
-   - **Docker**: `node_modules/`, `.git/`, `Dockerfile*`, `.dockerignore`, `*.log*`, `.env*`, `coverage/`
-   - **ESLint**: `node_modules/`, `dist/`, `build/`, `coverage/`, `*.min.js`
-   - **Prettier**: `node_modules/`, `dist/`, `build/`, `coverage/`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`
-   - **Terraform**: `.terraform/`, `*.tfstate*`, `*.tfvars`, `.terraform.lock.hcl`
-   - **Kubernetes/k8s**: `*.secret.yaml`, `secrets/`, `.kube/`, `kubeconfig*`, `*.key`, `*.crt`
-
-5. Parse tasks.md structure and extract:
-   - **Task phases**: Setup, Tests, Core, Integration, Polish
-   - **Task dependencies**: Sequential vs parallel execution rules
-   - **Task details**: ID, description, file paths, parallel markers [P]
-   - **Execution flow**: Order and dependency requirements
-
-6. Execute implementation following the task plan:
-   - For each lesson, use a separate content-implementer subagent. You can run them in parallel or sequentially based on the task details in tasks.md.
-   - You're in collaboration with user and responsible to orchestrate the subagents. Ensure the instructions are clear and well-defined, use the evaluation rubric skill to assess the quality of the implementation. Continuously iterate, once you're satisfied with each lesson, and add them in the directory.
-   - All content-implementer subagents report back to you and you're responsible to add the lessons in the main file system.
-   - **Phase-by-phase execution**: Complete each phase before moving to the next
-   - **Respect dependencies**: Run sequential tasks in order, parallel tasks [P] can run together
-   - **Follow TDD approach**: Execute test tasks before their corresponding implementation tasks
-   - **File-based coordination**: Tasks affecting the same files must run sequentially
-   - **Validation checkpoints**: Verify each phase completion before proceeding
-
-6a. **Constitutional Validation Gate** (for educational content):
-   - **MANDATORY** for lesson/chapter creation tasks
-   - **Two-Pass Workflow**: content-implementer → educational-validator → filesystem
-
-   **Process**:
+   **Constitutional Validation Gate** (MANDATORY for content):
    ```
    1. content-implementer generates draft lesson
-      ↓ (report back to orchestrator)
+      ↓
    2. educational-validator validates constitutional compliance
       ↓
       ├─→ PASS: Write to filesystem, mark task complete
-      └─→ FAIL: Show violations
-          ↓
-          Option A: Auto-fix (if trivial: metadata, heading format)
-          Option B: Regenerate with violations as context
-          Option C: Report to user for manual review
+      └─→ FAIL: Show violations, regenerate or fix
    ```
 
-   **Validation Checks** (automated):
-   - ✅ Framework invisibility (no meta-commentary: "AI as Teacher", "Part 2:", etc.)
-   - ✅ Evidence presence (70%+ code has output, claims have citations)
-   - ✅ Structural compliance (ends with "Try With AI/Practice/Explore" ONLY)
-   - ✅ Proficiency metadata (uses `proficiency_level`, not deprecated `cefr_level`)
+   ### For ENGINEERING Work (general-purpose)
 
-   **When to Skip**:
-   - ❌ Non-educational tasks (API endpoints, database models, scripts)
-   - ❌ Documentation files (README, ADRs, specifications)
-   - ✅ ONLY educational lessons/chapters require validation
+   ```
+   Use Task tool with:
+   - subagent_type: "general-purpose"
+   - prompt: Include:
+     - Task specification from tasks.md
+     - Plan context (architecture, dependencies)
+     - Test requirements
+     - Integration points
+   ```
 
-   **Invocation**:
-   - Use Task tool with `subagent_type: "educational-validator"`
-   - Pass generated lesson content as input
-   - Review validation report before filesystem write
+   **general-purpose Responsibilities**:
+   - Implement code following spec
+   - Write tests (TDD approach)
+   - Handle error cases
+   - Document APIs
 
-   **Reference**: `.claude/agents/educational-validator.md` for full validation framework
+   ### For PLATFORM Work (specialized agents)
 
-7. Implementation execution rules:
-   - **Setup first**: Initialize project structure, dependencies, configuration
-   - **Tests before code**: If you need to write tests for contracts, entities, and integration scenarios
-   - **Core development**: Implement models, services, CLI commands, endpoints
-   - **Integration work**: Database connections, middleware, logging, external services
-   - **Polish and validation**: Unit tests, performance optimization, documentation
-   - **Educational content**: Apply step 6a validation gate before filesystem write
+   ```
+   RAG Implementation:
+   Use Task tool with:
+   - subagent_type: "general-purpose" (or custom rag-builder if exists)
+   - prompt: RAG-specific requirements from tasks
 
-8. Progress tracking and error handling:
+   Auth Implementation:
+   Use Task tool with:
+   - subagent_type: "general-purpose"
+   - prompt: Better-Auth integration requirements
+
+   Infrastructure Implementation:
+   Use Task tool with:
+   - subagent_type: "general-purpose"
+   - prompt: Deployment/CI/CD requirements
+   ```
+
+5. **Execution Flow**:
+
+   ```
+   FOR each task in tasks.md:
+     1. Determine task type (content/engineering/platform)
+     2. Route to appropriate subagent
+     3. Receive implementation from subagent
+     4. Validate (constitutional for content, tests for engineering)
+     5. Write to filesystem if valid
+     6. Mark task complete in tasks.md
+   ```
+
+   **Parallel Execution**: Tasks marked [P] can run in parallel. Use multiple Task tool calls in single message.
+
+6. **Validation by Work Type**:
+
+   ### Content Validation
+   ```
+   Use Task tool with:
+   - subagent_type: "educational-validator"
+   - prompt: Validate lesson against constitutional compliance:
+     - Framework invisibility (no meta-commentary)
+     - Evidence presence (code outputs, citations)
+     - Structural compliance (ends with "Try With AI" ONLY)
+     - Proficiency metadata correct
+   ```
+
+   ### Engineering Validation
+   ```
+   Run test suite:
+   - Unit tests pass
+   - Integration tests pass
+   - Coverage meets requirements
+   - Linting/type checking pass
+   ```
+
+   ### Platform Validation
+   ```
+   - Integration tests pass
+   - Deployment validation in sandbox
+   - Security review for auth/data handling
+   ```
+
+7. **Progress Tracking**:
    - Report progress after each completed task
-   - Halt execution if any non-parallel task fails
-   - For parallel tasks [P], continue with successful tasks, report failed ones
-   - Provide clear error messages with context for debugging
-   - Suggest next steps if implementation cannot proceed
-   - **IMPORTANT** For completed tasks, make sure to mark the task off as [X] in the tasks file.
-   - **Educational content**: Track validation results (PASS/FAIL counts, common violations)
+   - Mark tasks complete: `- [X]` in tasks.md
+   - Track validation results (PASS/FAIL counts)
+   - Halt on blocking failures, continue on parallel task failures
 
-9. Completion validation:
-   - Verify all required tasks are completed
-   - Check that implemented features match the original specification
-   - Validate that tests pass and coverage meets requirements
-   - Confirm the implementation follows the technical plan
-   - Report final status with summary of completed work
-   - **Educational content**: Ensure all lessons passed constitutional validation (step 6a)
+## Hardware Tier Implementation (Content Only)
 
-Note: This command assumes a complete task breakdown exists in tasks.md. If tasks are incomplete or missing, suggest running `/sp.tasks` first to regenerate the task list.
+For content implementation, ensure each lesson includes:
+
+```jsx
+// For Tier 2+ content
+<HardwareGate minTier={2}>
+  This exercise requires NVIDIA RTX GPU...
+  [GPU-specific content]
+</HardwareGate>
+
+// Always provide Tier 1 fallback
+<CloudFallback tier={1}>
+  If you don't have local GPU, use Omniverse Cloud...
+  [Cloud-based alternative]
+</CloudFallback>
+```
+
+**Tier Requirements**:
+- Tier 1 MUST work for ALL content (browser/cloud path)
+- Tier 2+ content MUST have fallback
+- Robotics content MUST use simulation-first approach
+
+## Content Anti-Pattern Checklist
+
+Before writing any lesson to filesystem, verify:
+
+```
+✅ Ends with "Try With AI" as ONLY final section
+✅ No "What's Next", "Summary", "Key Takeaways" sections
+✅ No "Stage 1/2/3/4" labels in student-facing text
+✅ No "Three Roles" headers or meta-commentary
+✅ Hardware tier gates present for Tier 2+ content
+✅ Safety considerations for robotics content
+✅ Code examples have output/test logs
+✅ Claims have citations
+```
+
+**Validation Command**:
+```bash
+# Check for forbidden patterns
+grep -E "What's Next|Key Takeaways|Summary|Stage [0-9]|Three Roles" lesson.md
+# Expected: Zero matches
+
+# Check for missing hardware gates
+grep -l "RTX\|GPU\|Isaac Sim" lesson.md | xargs grep -L "HardwareGate"
+# Expected: Zero matches (all GPU content has gates)
+```
+
+## Cross-Book Intelligence Creation
+
+During implementation, watch for:
+
+```
+INTELLIGENCE OPPORTUNITIES:
+- Pattern used 2+ times → Consider creating skill
+- Complex workflow (5+ decisions) → Consider creating subagent
+- Reusable across books → Add to .claude/skills/ (platform-level)
+- Domain-specific pattern → Document in spec or constitution
+```
+
+For Stage 3 lessons, explicitly create:
+- `.claude/skills/<skill-name>/SKILL.md` with YAML frontmatter
+- OR `.claude/agents/<agent-name>.md` for complex patterns
+
+## Completion Validation
+
+Before marking implementation complete:
+
+1. **All tasks marked `[X]` in tasks.md**
+2. **Validation results**:
+   - Content: All lessons passed educational-validator
+   - Engineering: All tests pass
+   - Platform: Integration tests pass
+
+3. **Cross-book intelligence**:
+   - Skills/subagents created for recurring patterns
+   - Knowledge files updated if new domain info
+
+4. **Final report**:
+   ```
+   IMPLEMENTATION COMPLETE:
+   - Tasks completed: N/N
+   - Content lessons: [N] passed validation
+   - Engineering tasks: [N] tests passing
+   - Platform tasks: [N] integrations verified
+   - Intelligence created: [list skills/subagents]
+   ```
+
+## Key Rules
+
+- Route to content-implementer for ANY educational content
+- Route to general-purpose for engineering/platform work
+- Constitutional validation MANDATORY for content
+- Test validation MANDATORY for engineering
+- Mark tasks complete ONLY after validation passes
+- Hardware tier fallbacks REQUIRED for Tier 2+ content
 
 ---
 
-As the main request completes, you MUST create and complete a PHR (Prompt History Record) using agent‑native tools when possible.
+As the main request completes, you MUST create and complete a PHR (Prompt History Record).
 
-1) Determine Stage
-   - Stage: constitution | spec | plan | tasks | red | green | refactor | explainer | misc | general
+1) Determine Stage: `green` (implementation)
 
 2) Generate Title and Determine Routing:
-   - Generate Title: 3–7 words (slug for filename)
-   - Route is automatically determined by stage:
-     - `constitution` → `history/prompts/constitution/`
-     - Feature stages → `history/prompts/<feature-name>/` (spec, plan, tasks, red, green, refactor, explainer, misc)
-     - `general` → `history/prompts/general/`
+   - Route: `history/prompts/<feature-name>/`
 
-3) Create and Fill PHR (Shell first; fallback agent‑native)
-   - Run: `.specify/scripts/bash/create-phr.sh --title "<title>" --stage <stage> [--feature <name>] --json`
-   - Open the file and fill remaining placeholders (YAML + body), embedding full PROMPT_TEXT (verbatim) and concise RESPONSE_TEXT.
-   - If the script fails:
-     - Read `.specify/templates/phr-template.prompt.md` (or `templates/…`)
-     - Allocate an ID; compute the output path based on stage from step 2; write the file
-     - Fill placeholders and embed full PROMPT_TEXT and concise RESPONSE_TEXT
+3) Create and Fill PHR:
+   - Run: `.specify/scripts/bash/create-phr.sh --title "<title>" --stage green --feature <name> --json`
+   - Fill placeholders with implementation summary
 
 4) Validate + report
-   - No unresolved placeholders; path under `history/prompts/` and matches stage; stage/title/date coherent; print ID + path + stage + title.
-   - On failure: warn, don't block. Skip only for `/sp.phr`.
