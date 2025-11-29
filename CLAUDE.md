@@ -115,7 +115,37 @@ Ask yourself these questions **in order**:
 - **Wrong**: Motor control without safety checks
 - **Right**: Safety validation before any physical deployment concepts
 
-### Step 5: State Your Understanding (BEFORE starting work)
+### Step 5: Small Scope Verification (For Complex Work)
+
+**Apply when**: 5+ interacting entities OR 3+ constraint types OR safety-critical content
+
+**Ask yourself:**
+
+1. **Can I find a counterexample with 3-5 instances?**
+   - 3 students with different hardware tiers
+   - 3 lessons in a progression
+   - 3 agents in a handoff chain
+   - 3 skills with dependencies
+
+2. **What invariants must hold?**
+   - Every lesson has Tier 1 fallback: `∀ lesson: Lesson | tier > 1 → some fallback`
+   - No circular dependencies: `no skill: Skill | skill in skill.^dependencies`
+   - Agent handoffs complete: `∀ handoff | some receiver ∧ some context`
+   - Coverage complete: `∀ exercise | some hardwareTier`
+
+3. **Generate minimal test cases:**
+   ```
+   Test: 3 lessons with tiers [1, 2, 3]
+   Check: Each has appropriate fallback
+   Result: Tier 1 lesson needs clarification (is base tier, no fallback)
+   Fix: Document that Tier 1 is base tier in spec
+   ```
+
+4. **If counterexample found → Fix the design before implementing**
+
+**When to skip**: Simple single-entity work, purely informational content, complexity < 5 entities AND < 3 constraints
+
+### Step 6: State Your Understanding (BEFORE starting work)
 
 **Output this summary** (shows your reasoning):
 
@@ -128,6 +158,7 @@ CONTEXT GATHERED:
 - Proficiency: [A1/A2/B1/etc] or N/A
 - Pedagogical Layer: [L1/L2/L3/L4] because [reasoning]
 - Cross-Book Value: [Does this contribute reusable intelligence?]
+- Formal Verification: [Required? YES/NO - triggers: 5+ entities, safety-critical, etc.]
 - Conflicts Checked: [any detected and resolved]
 ```
 
@@ -238,7 +269,7 @@ CONTEXT GATHERED:
 
 **Reference**: `.specify/memory/constitution.md` (v1.0.0)
 
-### 7 Core Principles (Decision Frameworks, Not Rules)
+### 8 Core Principles (Decision Frameworks, Not Rules)
 
 **Before any platform decision, ask yourself:**
 
@@ -249,12 +280,13 @@ CONTEXT GATHERED:
 5. **Intelligence Accumulation**: What cross-book intelligence compounds from this work?
 6. **Anti-Convergence**: Am I varying teaching modality AND serving all three stakeholders?
 7. **Minimal Content**: Does every section map to a learning objective?
+8. **Formal Verification**: For complex specs (5+ entities, safety-critical), can I find counterexamples with 3-5 instances?
 
 **Additional Platform Principles:**
 
-8. **Hardware-Awareness**: Does content work for Tier 1 students (cloud fallback)?
-9. **Simulation-First**: Is concept taught in simulation before physical deployment?
-10. **Safety-Critical**: For robotics content, are safety checks included?
+9. **Hardware-Awareness**: Does content work for Tier 1 students (cloud fallback)?
+10. **Simulation-First**: Is concept taught in simulation before physical deployment?
+11. **Safety-Critical**: For robotics content, are safety checks included?
 
 **If "no" to any → Apply correction from constitution Section 0.**
 
@@ -384,6 +416,13 @@ Agents are organized by function. Explore the directory to discover available ag
 10. ✅ Cross-book intelligence value assessed?
 11. ✅ All three stakeholders considered where relevant?
 12. ✅ Simulation-first approach for physical concepts?
+
+### Formal Verification Checklist (Complex Work)
+13. ✅ Complexity assessed (5+ entities OR 3+ constraints OR safety-critical)?
+14. ✅ If complex: Invariants identified and documented?
+15. ✅ If complex: Small scope test (3-5 instances) performed?
+16. ✅ If complex: No counterexamples found (or all addressed)?
+17. ✅ If complex: Relational constraints verified (cycles, coverage, uniqueness)?
 
 **If "no" to any → Apply correction**
 
@@ -536,6 +575,9 @@ Future sessions automatically benefit from past learnings.
 - ✅ Use production examples with hardware tier awareness
 - ✅ Provide Tier 1 fallback for ALL content
 - ✅ Apply simulation-first for robotics concepts
+- ✅ Apply formal verification for complex specs (5+ entities, safety-critical)
+- ✅ Generate small scope tests (3-5 instances) to find counterexamples
+- ✅ Document invariants for multi-component systems
 
 **You Fail When**:
 - ❌ Skip L1 foundation to jump to L4
@@ -546,6 +588,9 @@ Future sessions automatically benefit from past learnings.
 - ❌ Assume all students have RTX GPUs (no Tier 1 fallback)
 - ❌ Teach motor control without safety considerations
 - ❌ Ignore cross-book intelligence accumulation
+- ❌ Skip formal verification for complex/safety-critical specs
+- ❌ Proceed to implementation with unresolved counterexamples
+- ❌ Miss invariant violations that small scope testing would catch
 
 ---
 

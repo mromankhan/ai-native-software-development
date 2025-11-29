@@ -155,6 +155,11 @@ CLASSIFICATION FRAMEWORK:
     "simulation_first": true
   },
   "complexity": "SIMPLE | MODERATE | COMPLEX",
+  "formal_verification": {
+    "required": true,
+    "triggers": ["5+ entities", "safety-critical", "multi-component"],
+    "focus_areas": ["invariants", "coverage", "cycles"]
+  },
   "routing": {
     "planner": "chapter-planner | general-purpose",
     "implementer": "content-implementer | general-purpose | rag-builder",
@@ -210,6 +215,11 @@ ROUTING DECISION:
 - Hardware Tier: [1-4] (Fallback to Tier [N]? [YES/NO])
 - Complexity: [SIMPLE/MODERATE/COMPLEX]
 
+FORMAL VERIFICATION:
+- Required: [YES/NO]
+- Triggers: [5+ entities / safety-critical / multi-component / coverage requirements]
+- Focus Areas: [invariants / cycles / coverage / uniqueness / reachability]
+
 AGENT ROUTING:
 - Planner: [chapter-planner / general-purpose]
 - Implementer: [content-implementer / general-purpose / rag-builder]
@@ -217,6 +227,7 @@ AGENT ROUTING:
 
 WORKFLOW:
 - Phase 1 (Spec): /sp.specify
+- Phase 1.5 (Formal): [YES/NO] - spec-architect formal verification
 - Phase 2 (Plan): /sp.plan → [agent]
 - Phase 3 (Tasks): /sp.tasks
 - Phase 4 (Implement): /sp.implement → [agent]
@@ -248,6 +259,69 @@ The spec-architect handles all specification types:
 - Intelligence specs (skills, agents)
 
 **APPROVAL GATE**: Wait for spec approval before proceeding.
+
+### PHASE 1.5: FORMAL VERIFICATION (Conditional)
+
+**Trigger Conditions** - Apply formal verification when:
+- Complexity is HIGH (5+ interacting entities OR 3+ constraint types)
+- Safety-critical content (robotics, authentication, data integrity)
+- Multi-component systems (agent coordination, service mesh, module dependencies)
+- Coverage requirements (hardware tiers, user types, permission levels)
+
+**Formal Verification Analysis**:
+
+```
+IF complexity == HIGH OR safety_critical OR multi_component:
+
+  Invoke spec-architect with formal verification focus:
+
+  1. INVARIANT IDENTIFICATION
+     - What properties MUST always hold?
+     - Express as: ∀ x: Type | constraint(x)
+
+  2. SMALL SCOPE TESTING
+     - Generate 3-5 minimal instances
+     - Test each invariant against instances
+     - Document any failures
+
+  3. COUNTEREXAMPLE SEARCH
+     - Actively try to break the spec
+     - If counterexample found → Fix spec before proceeding
+
+  4. RELATIONAL CONSTRAINT VERIFICATION
+     - No cycles in dependencies?
+     - Complete coverage (every X has Y)?
+     - Unique mappings where required?
+     - All states reachable?
+```
+
+**Formal Verification Output**:
+```json
+{
+  "formal_verification": {
+    "applied": true,
+    "complexity_level": "HIGH",
+    "invariants_identified": 3,
+    "small_scope_test": {
+      "instances": 5,
+      "passed": 4,
+      "failed": 1
+    },
+    "counterexamples_found": 1,
+    "counterexample_details": "[description]",
+    "fix_applied": true,
+    "relational_constraints": {
+      "no_cycles": true,
+      "complete_coverage": true,
+      "unique_mappings": true,
+      "all_states_reachable": true
+    },
+    "verdict": "PASSED_AFTER_FIX"
+  }
+}
+```
+
+**APPROVAL GATE**: If counterexamples found and fixed, document in PHR before proceeding.
 
 **RECORD PHR** (after spec completion):
 ```
@@ -596,6 +670,9 @@ history/prompts/<feature>/
 - ✅ Hardware tier requirements enforced (content)
 - ✅ Cross-book intelligence value assessed
 - ✅ All approval gates enforced
+- ✅ Formal verification applied when complexity HIGH or safety-critical
+- ✅ Counterexamples found and fixed before proceeding to planning
+- ✅ Invariants documented for complex specifications
 - ✅ PHR created after EVERY command invocation
 - ✅ PHR created for EVERY subagent spawned
 - ✅ PHR records FULL prompts sent to subagents
@@ -609,6 +686,8 @@ history/prompts/<feature>/
 - ❌ Proceeds without approval gates
 - ❌ Creates single-book-only intelligence
 - ❌ Ignores safety considerations for robotics
+- ❌ Skips formal verification for complex/safety-critical specs
+- ❌ Proceeds to planning with unresolved counterexamples
 - ❌ Fails to create PHR after command/subagent invocation
 - ❌ Records only summaries instead of full prompts
 - ❌ Skips skill usage recording

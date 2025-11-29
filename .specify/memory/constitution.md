@@ -502,7 +502,7 @@ Students must EXPERIENCE Three Roles through action, not STUDY the framework thr
 
 ---
 
-## V. Foundational Principles (7 Decision Frameworks)
+## V. Foundational Principles (8 Decision Frameworks)
 
 <!-- REASONING ACTIVATION: Principles as frameworks, not rules -->
 
@@ -639,6 +639,66 @@ Students must EXPERIENCE Three Roles through action, not STUDY the framework thr
 
 ---
 
+### Principle 8: Formal Verification (Analyzable Over Informal)
+
+**Core Question**: Can this specification be automatically checked for consistency and completeness?
+
+This principle applies **Software Abstractions** (Daniel Jackson, MIT Press) insights to specification quality. The core insight: **most specification bugs can be found by checking small instances (3-5 objects)**.
+
+**Decision Framework:**
+- If spec has 5+ interacting entities → Formal verification required
+- If spec has 3+ constraint types → Formal verification required
+- If safety-critical (robotics, auth, data) → Formal verification required
+- If multi-component system → Formal verification required
+
+**Verification Techniques:**
+
+1. **Small Scope Hypothesis**
+   - Generate 3-5 minimal instances
+   - Test all invariants against these instances
+   - If counterexample found → Fix spec before implementation
+
+2. **Invariant Identification**
+   - What properties MUST always hold?
+   - Express as: `∀ x: Type | constraint(x)`
+   - Common invariants: coverage, uniqueness, no-cycles, reachability
+
+3. **Relational Constraint Analysis**
+   - **No cycles**: Dependencies don't loop (`no x: X | x in x.^relation`)
+   - **Coverage**: Every X has corresponding Y (`∀ x: X | some x.relation`)
+   - **Uniqueness**: One-to-one mappings where required
+   - **Reachability**: All states accessible from initial state
+
+**Application Examples:**
+
+```
+# Hardware Tier Coverage Invariant
+∀ lesson: Lesson | some lesson.hardwareTier
+∀ lesson: Lesson | lesson.tier > 1 → some lesson.fallback
+
+# No Circular Dependencies
+no skill: Skill | skill in skill.^dependencies
+
+# Agent Handoff Completeness
+∀ handoff: Handoff | some handoff.receiver ∧ some handoff.context
+```
+
+**Counterexample Format:**
+```
+Counterexample: [Name]
+- Instance setup: 3 lessons with tiers [1, 2, 3]
+- Invariant: Every lesson has fallback
+- Violation: Lesson with Tier 1 has no fallback defined
+- Fix: Add "Tier 1 is base tier, no fallback needed" to spec
+```
+
+**When to Skip:**
+- Simple, single-entity specifications
+- Purely informational content (no constraints)
+- Complexity score < 5 entities AND < 3 constraints
+
+---
+
 ## VI. Platform Quality Standards
 
 ### Content Quality
@@ -658,6 +718,13 @@ Students must EXPERIENCE Three Roles through action, not STUDY the framework thr
 - [ ] Skills use Persona + Questions + Principles pattern
 - [ ] Subagents have clear scope and handoff protocols
 - [ ] Knowledge encoded for reuse, not one-time use
+
+### Formal Verification Quality (Complex Specs)
+- [ ] Invariants identified and documented
+- [ ] Small scope test (3-5 instances) performed
+- [ ] No counterexamples found (or all addressed)
+- [ ] Relational constraints verified (cycles, coverage, uniqueness)
+- [ ] Safety-critical specs have formal verification applied
 
 ### RAG Integration Quality
 - [ ] Clear section headers for chunk boundaries
