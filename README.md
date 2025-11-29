@@ -174,7 +174,7 @@ Signup → Hardware Survey → Personalized Content
 
 **Exit:** ✅ 47 lessons across 2 modules with complete skill infrastructure
 
-**Extensions** (moved to Phase 4):
+**Extensions** (moved to Phase 5):
 - Create Mermaid/React Flow diagrams
 - Add hardware-filtered sections
 
@@ -199,8 +199,6 @@ Signup → Hardware Survey → Personalized Content
 | 4.3 | Embedding pipeline (content → vectors) |
 | 4.4 | OpenAI Agents SDK config |
 | 4.5 | Deploy to Cloud Run |
-| 4.6 | Create Mermaid/React Flow diagrams (from Phase 2) |
-| 4.7 | Add hardware-filtered sections (from Phase 2) |
 
 **Exit:** RAG chatbot answering questions with book context + visual enhancements
 
@@ -211,6 +209,10 @@ Signup → Hardware Survey → Personalized Content
 | 5.1 | ChatSidebar component |
 | 5.2 | Current page context injection |
 | 5.3 | Select-to-ask functionality |
+
+
+| 5.6 | Create Mermaid/React Flow diagrams (from Phase 2) |
+| 5.7 | Add hardware-filtered sections (from Phase 2) |
 | 5.4 | Hardware-aware responses |
 
 **Exit:** Functional chat sidebar with context awareness
