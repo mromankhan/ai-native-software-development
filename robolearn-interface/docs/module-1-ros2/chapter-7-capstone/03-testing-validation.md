@@ -578,4 +578,4 @@ But the foundational skills you've learned—communication patterns, system arch
 
 ---
 
-**Next**: [Module 2: Building Robot Worlds with Gazebo →](../../module-2-gazebo-unity/README.md)
+**Next**: [Module 2: Building Robot Worlds with Gazebo →](../../module-2-simulation/README.md)
