@@ -15,11 +15,15 @@ import styles from './styles.module.css';
 export function LanguageToggle(): React.ReactElement {
   const {
     i18n: { currentLocale, locales, defaultLocale },
+    siteConfig,
   } = useDocusaurusContext();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Get baseUrl from config (e.g., "/robolearn/" or "/")
+  const baseUrl = siteConfig.baseUrl || '/';
 
   // Close dropdown when clicking outside or pressing Escape
   useEffect(() => {
@@ -53,13 +57,42 @@ export function LanguageToggle(): React.ReactElement {
     setIsTransitioning(true);
     setIsOpen(false);
 
-    // Get current path without locale prefix
-    const pathWithoutLocale = location.pathname.replace(/^\/(en|ur)/, '') || '/';
+    // Get current pathname
+    let pathname = location.pathname;
     
-    // Build new path with target locale
-    const newPath = targetLocale === defaultLocale
-      ? pathWithoutLocale
-      : `/${targetLocale}${pathWithoutLocale}`;
+    // Normalize baseUrl (remove trailing slash, handle root)
+    const baseUrlPath = baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '');
+    
+    // Remove baseUrl from pathname if present
+    if (baseUrlPath && pathname.startsWith(baseUrlPath)) {
+      pathname = pathname.slice(baseUrlPath.length);
+    }
+    
+    // Ensure pathname starts with /
+    if (!pathname.startsWith('/')) {
+      pathname = '/' + pathname;
+    }
+    
+    // Remove current locale prefix (e.g., "/en" or "/ur")
+    // Handle patterns like "/en/docs/...", "/ur/docs/...", "/en/", "/ur/"
+    const pathWithoutLocale = pathname.replace(/^\/(en|ur)(\/|$)/, '/') || '/';
+    
+    // Build new path: baseUrl + locale (if not default) + path
+    let newPath = baseUrlPath || '';
+    
+    // Add locale prefix if not default locale
+    if (targetLocale !== defaultLocale) {
+      newPath += `/${targetLocale}`;
+    }
+    
+    // Add the path (ensure it starts with /)
+    const finalPath = pathWithoutLocale === '/' ? '' : pathWithoutLocale;
+    newPath += finalPath;
+    
+    // Ensure path starts with / (for root baseUrl case)
+    if (!newPath.startsWith('/')) {
+      newPath = '/' + newPath;
+    }
 
     // Small delay for smooth transition animation
     await new Promise(resolve => setTimeout(resolve, 150));
