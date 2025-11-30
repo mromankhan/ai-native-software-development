@@ -11,7 +11,7 @@ const STATS: Stat[] = [
   { value: 4, label: 'Modules' },
   { value: 48, label: 'Lessons' },
   { value: 12, label: 'Labs' },
-  { value: 24, label: 'AI Chat', suffix: '/7' },
+  { value: 24, label: 'Personalize', suffix: '/7' },
 ];
 
 /**

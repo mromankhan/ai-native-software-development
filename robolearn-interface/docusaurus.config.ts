@@ -296,7 +296,7 @@ const config: Config = {
         },
         {
           to: "/chat",
-          label: "AI Chat",
+          label: "Personalize",
           position: "left",
         },
         {

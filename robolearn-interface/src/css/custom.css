@@ -1192,16 +1192,21 @@ pre code {
   gap: 0.75rem !important;
 }
 
-/* Hide "Labs" and "AI Chat" links until those pages exist */
+/* Hide "Labs" and "Personalize" links until those pages exist */
+/* Match both /labs and /robolearn/labs (works with any baseUrl) */
 .navbar__link[href="/labs"],
-.navbar__link[href="/chat"] {
+.navbar__link[href="/chat"],
+.navbar__link[href$="/labs"],
+.navbar__link[href$="/chat"] {
   opacity: 0.5;
   pointer-events: none;
   position: relative;
 }
 
 .navbar__link[href="/labs"]::after,
-.navbar__link[href="/chat"]::after {
+.navbar__link[href="/chat"]::after,
+.navbar__link[href$="/labs"]::after,
+.navbar__link[href$="/chat"]::after {
   content: 'SOON';
   position: absolute;
   top: -8px;
@@ -1232,9 +1237,13 @@ pre code {
   }
 
   /* Alternative selector - hide links by href on mobile navbar (not sidebar) */
+  /* Match both root paths and paths with baseUrl */
   .navbar__inner > .navbar__items > a.navbar__link[href="/docs/preface-agent-native"],
+  .navbar__inner > .navbar__items > a.navbar__link[href$="/docs/preface-agent-native"],
   .navbar__inner > .navbar__items > a.navbar__link[href="/labs"],
-  .navbar__inner > .navbar__items > a.navbar__link[href="/chat"] {
+  .navbar__inner > .navbar__items > a.navbar__link[href$="/labs"],
+  .navbar__inner > .navbar__items > a.navbar__link[href="/chat"],
+  .navbar__inner > .navbar__items > a.navbar__link[href$="/chat"] {
     display: none !important;
   }
 
@@ -1294,7 +1303,9 @@ pre code {
 
   /* Hide "SOON" badges on mobile - too cluttered */
   .navbar__link[href="/labs"]::after,
-  .navbar__link[href="/chat"]::after {
+  .navbar__link[href="/chat"]::after,
+  .navbar__link[href$="/labs"]::after,
+  .navbar__link[href$="/chat"]::after {
     display: none !important;
   }
 }
