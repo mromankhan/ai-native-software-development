@@ -19,8 +19,9 @@ const OAUTH_CLIENT_ID = process.env.OAUTH_CLIENT_ID || "robolearn-public-client"
 // Base URL configuration - defaults to "/" for local development
 const BASE_URL = process.env.BASE_URL || "/";
 
-// ChatKit domain key (optional, dummy value for custom backends)
-const CHATKIT_DOMAIN_KEY = process.env.CHATKIT_DOMAIN_KEY || "domain_pk_local_dev";
+// ChatKit domain key (required for whitelabeled domains, optional for custom backends)
+// Read from environment variable, trim whitespace, fallback to dummy value
+const CHATKIT_DOMAIN_KEY = process.env.CHATKIT_DOMAIN_KEY?.trim() || "domain_pk_local_dev";
 
 const config: Config = {
   title: "RoboLearn",

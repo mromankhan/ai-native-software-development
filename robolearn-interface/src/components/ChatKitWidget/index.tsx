@@ -47,9 +47,10 @@ export function ChatKitWidget({ backendUrl }: ChatKitWidgetProps): React.ReactEl
   const authUrl = (siteConfig.customFields?.authUrl as string) || 'http://localhost:3001';
   const oauthClientId = (siteConfig.customFields?.oauthClientId as string) || 'robolearn-interface';
   
-  // Domain key for ChatKit (required by API, but not used for custom backends)
+  // Domain key for ChatKit (required for whitelabeled domains)
   // Read from siteConfig.customFields (set via CHATKIT_DOMAIN_KEY env var in deployment)
-  const domainKey = (siteConfig.customFields?.chatkitDomainKey as string) || 'domain_pk_local_dev';
+  // Trim whitespace and fallback to dummy value if not set
+  const domainKey = (siteConfig.customFields?.chatkitDomainKey as string)?.trim() || 'domain_pk_local_dev';
   
   // Check if user is logged in
   const isLoggedIn = !!session?.user?.id;

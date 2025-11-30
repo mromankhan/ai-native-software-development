@@ -62,6 +62,9 @@ jobs:
           OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
           BASE_URL: ${{ secrets.BASE_URL }}
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
+          # ChatKit domain key - REQUIRED for whitelabeled domains
+          # Get this from your OpenAI ChatKit whitelabeled domain configuration
+          # If not set, defaults to "domain_pk_local_dev" (dummy value for custom backends)
           CHATKIT_DOMAIN_KEY: ${{ secrets.CHATKIT_DOMAIN_KEY }}
           # GEMINI_API_KEY is optional - LibreTranslate (free) is used by default
           # Only set this if you want to use Gemini instead of LibreTranslate
