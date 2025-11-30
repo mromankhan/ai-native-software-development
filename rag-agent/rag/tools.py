@@ -6,9 +6,12 @@ Provides a function tool that agents can call to search educational content.
 
 from typing import Optional
 import logging
+from agents import function_tool
+from agents.tool_context import ToolContext
 from models.search import SearchQuery, SearchResponse
 from core.config import get_settings
 from .search import RoboLearnSearch
+from state import RoboLearnAgentContext
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +38,9 @@ def get_search_client() -> Optional[RoboLearnSearch]:
         return None
 
 
-def search_tool(
+@function_tool
+async def search_tool(
+    ctx: ToolContext[RoboLearnAgentContext],
     query: str,
     hardware_tier: Optional[int] = None,
     module: Optional[str] = None,
@@ -62,7 +67,7 @@ def search_tool(
         dict: Search response with results, citations, and lesson URLs
         
     Example:
-        >>> result = search_tool("How do I create a ROS 2 node?")
+        >>> result = await search_tool(ctx, "How do I create a ROS 2 node?")
         >>> print(result["results"][0]["citation"])
         "Workspaces and Packages | Module ROS2"
     """

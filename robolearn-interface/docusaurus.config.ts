@@ -29,6 +29,7 @@ const config: Config = {
   customFields: {
     authUrl: AUTH_URL,
     oauthClientId: OAUTH_CLIENT_ID,
+    backendUrl: process.env.BACKEND_URL || "http://localhost:8000",
   },
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -97,6 +98,15 @@ const config: Config = {
           "sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==",
         crossorigin: "anonymous",
         referrerpolicy: "no-referrer",
+      },
+    },
+    // ChatKit CDN - Required for ChatKit UI
+    // Note: Docusaurus doesn't support 'strategy' attribute, script loads normally
+    {
+      tagName: "script",
+      attributes: {
+        src: "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+        defer: "true",
       },
     },
     // Google Analytics 4 (GA4) - Configure with environment variable

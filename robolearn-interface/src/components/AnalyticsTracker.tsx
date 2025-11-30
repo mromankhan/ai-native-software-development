@@ -164,7 +164,7 @@ export const AnalyticsTracker: React.FC<AnalyticsTrackerProps> = ({
   return (
     <>
       {children}
-      {isDevelopment && (
+      {/* {isDevelopment && (
         <div
           style={{
             position: "fixed",
@@ -182,7 +182,7 @@ export const AnalyticsTracker: React.FC<AnalyticsTrackerProps> = ({
         >
           📊 Scroll: {Math.round(lastScrollDepth)}%
         </div>
-      )}
+      )} */}
     </>
   );
 };

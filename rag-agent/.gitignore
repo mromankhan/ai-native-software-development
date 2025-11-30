@@ -43,3 +43,6 @@ htmlcov/
 # Misc
 .DS_Store
 *.log
+
+# Local chatkit directory (conflicts with installed package)
+chatkit/

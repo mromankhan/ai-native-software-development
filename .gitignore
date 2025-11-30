@@ -43,3 +43,8 @@ htmlcov/
 # Translation cache (temporary, regenerated)
 .translation-cache/
 # i18n/ - REMOVED: We commit translated files so CI doesn't need to translate
+
+openai-chatkit-starter-app-main/
+business_leads_agent/
+
+car-fixer-platform/

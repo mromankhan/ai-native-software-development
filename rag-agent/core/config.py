@@ -34,8 +34,11 @@ class Settings(BaseSettings):
     # Batch Configuration
     batch_size: int = Field(default=100, description="Batch size for Qdrant upserts")
 
-    # Database (Neon Postgres)
-    database_url: str = Field(default="", description="Postgres connection URL")
+    # Database (Neon Postgres) - Required for ChatKit
+    database_url: str = Field(
+        default="",
+        description="Postgres connection URL (postgresql+asyncpg://user:pass@host:port/db). Required for ChatKit."
+    )
 
     # Admin API
     admin_api_key: str = Field(default="", description="API key for admin endpoints")

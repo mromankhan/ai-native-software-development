@@ -15,17 +15,20 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { PyodideProvider } from '@/contexts/PyodideContext';
 import { AnalyticsTracker } from '@/components/AnalyticsTracker';
+import { ChatKitWidget } from '@/components/ChatKitWidget';
 
 export default function Root({ children }: { children: React.ReactNode }) {
   const { siteConfig } = useDocusaurusContext();
   const authUrl = (siteConfig.customFields?.authUrl as string) || 'http://localhost:3001';
   const oauthClientId = (siteConfig.customFields?.oauthClientId as string) || 'robolearn-interface';
+  const backendUrl = (siteConfig.customFields?.backendUrl as string) || process.env.BACKEND_URL || 'http://localhost:8000';
 
   return (
     <AuthProvider authUrl={authUrl} oauthClientId={oauthClientId}>
       <PyodideProvider>
         <AnalyticsTracker>
           {children}
+          <ChatKitWidget backendUrl={backendUrl} />
         </AnalyticsTracker>
       </PyodideProvider>
     </AuthProvider>

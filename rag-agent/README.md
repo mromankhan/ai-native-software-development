@@ -57,6 +57,8 @@ DOCS_PATH=../robolearn-interface/docs
 FRONTEND_BASE_URL=https://mjunaidca.github.io/robolearn
 ```
 
+uv run uvicorn app:app --port 8000 --reload
+
 ### 3. Ingest Content
 
 **First-time ingestion (complete re-index):**
@@ -113,7 +115,7 @@ uvicorn app:app --port 8000 --reload
 
    ```bash
 # Copy your ChatKit server code
-cp -r /path/to/your/chatkit/* rag-agent/chatkit/
+cp -r /path/to/your/chatkit/* rag-agent/chatkit_integration/
 ```
 
 ### Step 2: Register ChatKit Router
