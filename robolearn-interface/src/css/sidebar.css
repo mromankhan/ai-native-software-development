@@ -240,6 +240,13 @@
    5. MENU ITEMS — Lesson Links
    ============================================================================ */
 
+/* Hide Docusaurus default arrow icons on lesson items (keep only our progress dot) */
+.menu__link .menu__caret,
+.menu__link svg[class*="caret"],
+.menu__link .icon {
+  display: none !important;
+}
+
 /* Base menu link */
 .menu__link {
   display: flex !important;

@@ -45,6 +45,14 @@ jobs:
         working-directory: robolearn-interface
         run: npm ci
 
+      - name: Restore translation cache
+        uses: actions/cache@v4
+        with:
+          path: robolearn-interface/.translation-cache
+          key: translation-cache-${{ runner.os }}-${{ hashFiles('robolearn-interface/docs/**/*.md') }}
+          restore-keys: |
+            translation-cache-${{ runner.os }}-
+
       - name: Build site
         working-directory: robolearn-interface
         env:
@@ -53,9 +61,16 @@ jobs:
           AUTH_URL: ${{ secrets.AUTH_URL }}
           OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
           BASE_URL: ${{ secrets.BASE_URL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           # Optional: Add other env vars if needed
           # GA4_MEASUREMENT_ID: ${{ secrets.GA4_MEASUREMENT_ID }}
         run: npm run build
+
+      - name: Save translation cache
+        uses: actions/cache@v4
+        with:
+          path: robolearn-interface/.translation-cache
+          key: translation-cache-${{ runner.os }}-${{ hashFiles('robolearn-interface/docs/**/*.md') }}
 
       - name: Upload build artifacts
         uses: actions/upload-pages-artifact@v3

@@ -133,7 +133,16 @@ const config: Config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
-    locales: ["en"],
+    locales: ["en", "ur"],
+    localeConfigs: {
+      en: {
+        label: "EN",
+      },
+      ur: {
+        label: "UR",
+        direction: "rtl",
+      },
+    },
   },
   
   presets: [
@@ -193,6 +202,18 @@ const config: Config = {
         docsPath: "docs",
       },
     ],
+    // Auto-Translate Plugin - Automatically translates content to Urdu using Gemini API
+    [
+      "./plugins/docusaurus-plugin-auto-translate",
+      {
+        enabled: true,
+        sourceLocale: "en",
+        targetLocales: ["ur"],
+        apiProvider: "gemini",
+        model: "gemini-flash-lite-latest",
+        apiKey: process.env.GEMINI_API_KEY,
+        cacheDir: ".translation-cache",
+        docsPath: "docs",
     // Local Search Plugin - No external service needed, works offline
     // Note: We use a custom search bar component, so we disable the default navbar search
     [
@@ -326,6 +347,10 @@ const config: Config = {
         },
         {
           type: "custom-searchBar",
+          position: "right",
+        },
+        {
+          type: "custom-languageToggle",
           position: "right",
         },
         {

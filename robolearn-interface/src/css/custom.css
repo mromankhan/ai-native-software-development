@@ -1080,6 +1080,7 @@ pre code {
    SIDEBAR STYLING - Premium enhancements for left navigation
    ============================================================================ */
 @import "./sidebar.css";
+@import "./rtl.css";
 
 /* ============================================================================
    DOC PAGES STYLING - Premium enhancements for chapter pages

@@ -184,9 +184,7 @@ Signup → Hardware Survey → Personalized Content
 |------|-------------|
 | 3.1 | Better-Auth setup (use official MCP) |
 | 3.2 | Neon Postgres schema |
-| 3.3 | Hardware survey component |
-| 3.4 | HardwareContext provider |
-| 3.5 | Content filtering based on profile |
+| 3.3 | Survey component |
 
 **Exit:** Users can signup, complete survey, see filtered content
 
@@ -217,7 +215,28 @@ Signup → Hardware Survey → Personalized Content
 
 **Exit:** Functional chat sidebar with context awareness
 
-### Phase 6: Interactive Lab (Hour 8-9)
+### Phase 6: Bonus Features (Hour 9-9.5)
+
+| Task | Deliverable |
+|------|-------------|
+| 6.1 | Urdu translation or Multi Langguage |
+| 6.2 | LanguageToggle component |
+
+**Exit:** Full 300-point feature set
+
+### Phase 7: Ship (Hour 9.5-10)
+
+| Task | Deliverable |
+|------|-------------|
+| 7.1 | End-to-end testing |
+| 7.2 | 90-second demo video |
+| 7.3 | README with setup instructions |
+| 7.4 | Submit |
+
+**Exit:** Hackathon submission complete
+
+
+### Phase 8: Interactive Lab (Hour 8-9)
 
 | Task | Deliverable |
 |------|-------------|
@@ -225,30 +244,10 @@ Signup → Hardware Survey → Personalized Content
 | 6.2 | MockROSBridge class |
 | 6.3 | RobotViewer component |
 | 6.4 | Wire up: code → mock ROS → robot responds |
+| 6.5 | Personalization endpoint |
+| 6.6 | Personalize tab in content |
 
 **Exit:** Students write ROS-like code, see robot react
-
-### Phase 7: Bonus Features (Hour 9-9.5)
-
-| Task | Deliverable |
-|------|-------------|
-| 7.1 | Urdu translation via translator agent |
-| 7.2 | LanguageToggle component |
-| 7.3 | Personalization endpoint |
-| 7.4 | Personalize tab in content |
-
-**Exit:** Full 300-point feature set
-
-### Phase 8: Ship (Hour 9.5-10)
-
-| Task | Deliverable |
-|------|-------------|
-| 8.1 | End-to-end testing |
-| 8.2 | 90-second demo video |
-| 8.3 | README with setup instructions |
-| 8.4 | Submit |
-
-**Exit:** Hackathon submission complete
 
 ---
 
