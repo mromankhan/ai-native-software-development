@@ -16,6 +16,20 @@ interface FormErrors {
   general?: string;
 }
 
+// Eye icons for password visibility toggle
+const EyeIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+);
+
+const EyeOffIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+  </svg>
+);
+
 type Step = 1 | 2;
 
 export function SignUpForm() {
@@ -25,6 +39,8 @@ export function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Check for OAuth parameters or redirect param
   const clientId = searchParams.get("client_id");
@@ -220,7 +236,7 @@ export function SignUpForm() {
           <span className={`transition-colors duration-300 ${
             currentStep === 2 ? "text-indigo-600" : "text-slate-400"
           }`}>
-            Background
+            Learning Profile
           </span>
         </div>
       </div>
@@ -250,6 +266,7 @@ export function SignUpForm() {
             <input
               id="name"
               type="text"
+              autoComplete="name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               onFocus={() => setFocusedField("name")}
@@ -272,6 +289,7 @@ export function SignUpForm() {
                 id="email"
                 type="email"
                 required
+                autoComplete="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 onFocus={() => setFocusedField("email")}
@@ -301,21 +319,31 @@ export function SignUpForm() {
             <div className="relative">
               <input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
+                autoComplete="new-password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 onFocus={() => setFocusedField("password")}
                 onBlur={() => setFocusedField(null)}
-                className={`w-full px-4 py-3 border rounded-xl transition-all duration-200 bg-white/50 backdrop-blur-sm ${
-                  errors.password 
-                    ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20" 
+                className={`w-full px-4 py-3 pr-12 border rounded-xl transition-all duration-200 bg-white/50 backdrop-blur-sm ${
+                  errors.password
+                    ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                     : focusedField === "password"
                     ? "border-indigo-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 shadow-sm shadow-indigo-500/10"
                     : "border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20"
                 }`}
                 placeholder="At least 8 characters"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1"
+                tabIndex={-1}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+              </button>
               {focusedField === "password" && (
                 <div className="absolute inset-0 rounded-xl border-2 border-indigo-500 pointer-events-none animate-in scale-in opacity-50" />
               )}
@@ -332,21 +360,31 @@ export function SignUpForm() {
             <div className="relative">
               <input
                 id="confirmPassword"
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 required
+                autoComplete="new-password"
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 onFocus={() => setFocusedField("confirmPassword")}
                 onBlur={() => setFocusedField(null)}
-                className={`w-full px-4 py-3 border rounded-xl transition-all duration-200 bg-white/50 backdrop-blur-sm ${
-                  errors.confirmPassword 
-                    ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20" 
+                className={`w-full px-4 py-3 pr-12 border rounded-xl transition-all duration-200 bg-white/50 backdrop-blur-sm ${
+                  errors.confirmPassword
+                    ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                     : focusedField === "confirmPassword"
                     ? "border-indigo-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 shadow-sm shadow-indigo-500/10"
                     : "border-slate-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20"
                 }`}
                 placeholder="Confirm your password"
               />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1"
+                tabIndex={-1}
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+              >
+                {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
+              </button>
               {focusedField === "confirmPassword" && (
                 <div className="absolute inset-0 rounded-xl border-2 border-indigo-500 pointer-events-none animate-in scale-in opacity-50" />
               )}
