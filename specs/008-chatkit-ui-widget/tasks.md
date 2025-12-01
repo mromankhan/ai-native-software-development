@@ -405,3 +405,4 @@ This task breakdown represents how to rebuild the ChatKit UI widget from scratch
 - [ ] Add message history search
 - [ ] Improve scroll hiding (request ChatKit config)
 
+

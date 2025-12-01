@@ -597,3 +597,4 @@ The RoboLearn platform needs a conversational AI interface that:
 - Schema: `chatkit`
 - Tables: `threads`, `items`, `attachments`
 
+
