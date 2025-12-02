@@ -242,7 +242,7 @@ async function runTests() {
     );
     console.log(`💾 Results saved to ${resultsPath}\n`);
 
-    process.exit(failed > 0 ? 1 : 0);
+    process.exit(output.summary.failed > 0 ? 1 : 0);
   } catch (error) {
     console.error('❌ Test suite failed:', error);
     process.exit(1);
