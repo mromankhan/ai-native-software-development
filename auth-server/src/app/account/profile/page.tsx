@@ -9,7 +9,7 @@ export default async function ProfilePage() {
   });
 
   if (!session) {
-    redirect("/sign-in");
+    redirect("/auth/sign-in");
   }
 
   return (

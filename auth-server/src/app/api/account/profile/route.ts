@@ -34,14 +34,14 @@ export async function PATCH(request: NextRequest) {
     await db
       .update(user)
       .set({
-        name: name || undefined,
-        givenName: givenName || undefined,
-        familyName: familyName || undefined,
-        picture: picture || undefined,
-        softwareBackground: softwareBackground || undefined,
-        hardwareTier: hardwareTier || undefined,
-        locale: locale || undefined,
-        zoneinfo: zoneinfo || undefined,
+        name: name || null,
+        givenName: givenName || null,
+        familyName: familyName || null,
+        picture: picture || null,
+        softwareBackground: softwareBackground || null,
+        hardwareTier: hardwareTier || null,
+        locale: locale || null,
+        zoneinfo: zoneinfo || null,
         updatedAt: new Date(),
       })
       .where(eq(user.id, session.user.id));
