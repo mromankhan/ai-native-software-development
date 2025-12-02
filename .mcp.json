@@ -24,6 +24,14 @@
     "better-auth": {
       "type": "http",
       "url": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+    },
+    "next-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "next-devtools-mcp@latest"
+      ],
+      "env": {}
     }
   }
 }
