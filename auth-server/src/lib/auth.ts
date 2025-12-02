@@ -13,7 +13,6 @@ import { eq, and } from "drizzle-orm";
 import { Resend } from "resend";
 import * as nodemailer from "nodemailer";
 import { TRUSTED_CLIENTS, DEFAULT_ORG_ID } from "./trusted-clients";
-import bcrypt from "bcryptjs";
 
 // Cached default organization ID (validated at startup)
 let cachedDefaultOrgId: string | null = null;
@@ -168,22 +167,7 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     // Always require email verification for security
     requireEmailVerification: true,
-    // Use bcrypt for password hashing (matches seed script)
-    // Better Auth default is scrypt, but we use bcrypt for compatibility
-    password: {
-      hash: async (password) => {
-        console.log("[AUTH] Hashing password with bcrypt");
-        return await bcrypt.hash(password, 10);
-      },
-      verify: async ({ hash, password }) => {
-        console.log("[AUTH] Verifying password with bcrypt");
-        console.log("[AUTH] Hash starts with:", hash?.substring(0, 10));
-        console.log("[AUTH] Password length:", password?.length);
-        const result = await bcrypt.compare(password, hash);
-        console.log("[AUTH] Verification result:", result);
-        return result;
-      },
-    },
+    // Use default scrypt hashing (matches seed script)
     // Password reset (only when email is configured)
     ...(emailEnabled && {
       sendResetPassword: async ({ user, url }) => {

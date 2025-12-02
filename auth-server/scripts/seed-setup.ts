@@ -10,11 +10,24 @@ import {
   DEFAULT_ORG_NAME,
   DEFAULT_ORG_SLUG,
 } from "../src/lib/trusted-clients";
-import bcrypt from "bcryptjs";
+import { scrypt, randomBytes } from "crypto";
+import { promisify } from "util";
+
+const scryptAsync = promisify(scrypt);
 
 const TEST_ADMIN_EMAIL = "admin@robolearn.io";
 const TEST_ADMIN_PASSWORD = "Admin123!@#"; // For local dev only
 const TEST_ADMIN_NAME = "Admin User";
+
+/**
+ * Hash password using scrypt (Better Auth's default algorithm)
+ * Format matches Better Auth's internal hashing: salt:hash (hex encoded)
+ */
+async function hashPassword(password: string): Promise<string> {
+  const salt = randomBytes(16);
+  const derivedKey = (await scryptAsync(password, salt, 64)) as Buffer;
+  return `${salt.toString("hex")}:${derivedKey.toString("hex")}`;
+}
 
 // Schema definitions
 const user = pgTable("user", {
@@ -198,7 +211,7 @@ async function createAdminUser() {
   // Create admin user
   console.log(`  ✅ Creating admin user: ${TEST_ADMIN_EMAIL}`);
   const userId = crypto.randomUUID();
-  const hashedPassword = await bcrypt.hash(TEST_ADMIN_PASSWORD, 10);
+  const hashedPassword = await hashPassword(TEST_ADMIN_PASSWORD);
 
   await db.insert(user).values({
     id: userId,
