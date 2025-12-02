@@ -167,6 +167,18 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     // Always require email verification for security
     requireEmailVerification: true,
+    // Use bcrypt for password hashing (matches seed script)
+    // Better Auth default is scrypt, but we use bcrypt for compatibility
+    password: {
+      hash: async (password) => {
+        const bcrypt = await import("bcryptjs");
+        return await bcrypt.hash(password, 10);
+      },
+      verify: async ({ hash, password }) => {
+        const bcrypt = await import("bcryptjs");
+        return await bcrypt.compare(password, hash);
+      },
+    },
     // Password reset (only when email is configured)
     ...(emailEnabled && {
       sendResetPassword: async ({ user, url }) => {
