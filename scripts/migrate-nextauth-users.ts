@@ -945,19 +945,28 @@ async function mergeOverlappingUser(
 
   // Update/create credential account with source password
   const existingAccount = await targetSql`
-    SELECT id FROM public.account
+    SELECT id, password FROM public.account
     WHERE user_id = ${newId} AND provider_id = 'credential'
   `;
 
-  if (existingAccount.length > 0) {
-    // Update existing account password
+  if (existingAccount.length > 0 && existingAccount[0].password) {
+    // User already has a password in Better Auth - KEEP IT (don't overwrite)
+    // Just update the timestamp
+    await targetSql`
+      UPDATE public.account
+      SET updated_at = ${new Date().toISOString()}
+      WHERE user_id = ${newId} AND provider_id = 'credential'
+    `;
+    filledFields.push('password_kept');
+  } else if (existingAccount.length > 0) {
+    // Account exists but no password - set the NextAuth password
     await targetSql`
       UPDATE public.account
       SET password = ${sourceUser.password}, updated_at = ${new Date().toISOString()}
       WHERE user_id = ${newId} AND provider_id = 'credential'
     `;
   } else {
-    // Create new credential account
+    // No credential account - create one with NextAuth password
     const accountId = crypto.randomUUID();
     const now = new Date().toISOString();
     await targetSql`
