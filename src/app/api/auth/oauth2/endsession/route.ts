@@ -183,13 +183,39 @@ async function handleEndSession(request: NextRequest) {
       if (state) {
         redirectUrl.searchParams.set("state", state);
       }
-      return NextResponse.redirect(redirectUrl.toString(), 302);
+      const response = NextResponse.redirect(redirectUrl.toString(), 302);
+
+      // Clear cookies even on error to ensure logout completes
+      for (const name of SESSION_COOKIE_NAMES) {
+        response.cookies.set(name, "", {
+          expires: new Date(0),
+          path: "/",
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+        });
+      }
+
+      return response;
     }
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       { success: false, error: "Failed to end session" },
       { status: 500 }
     );
+
+    // Clear cookies even on error to ensure logout completes
+    for (const name of SESSION_COOKIE_NAMES) {
+      response.cookies.set(name, "", {
+        expires: new Date(0),
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      });
+    }
+
+    return response;
   }
 }
 
