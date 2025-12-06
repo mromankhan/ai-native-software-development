@@ -48,6 +48,49 @@ SELECT id, email, banned, ban_reason, ban_expires FROM "user" WHERE email = 'use
 UPDATE "user" SET banned = false, ban_reason = NULL, ban_expires = NULL WHERE email = 'user@example.com';
 ```
 
+## Logout Issues
+
+### SSO Session Not Cleared After Logout
+
+**Symptoms:**
+- User logs out from client app
+- User is redirected to `/logged-out` page
+- Visiting SSO directly shows user still logged in
+- User can auto-login again to client apps
+
+**Causes:**
+1. Cookie names mismatch - production uses `__Secure-` prefix
+2. Set-Cookie headers not being returned on redirect response
+3. Client not using full page navigation for logout
+
+**Solutions:**
+
+1. **Verify cookie names** - Check browser DevTools → Application → Cookies:
+   ```
+   Development: robolearn.session_token
+   Production:  __Secure-robolearn.session_token
+   ```
+
+2. **Check endsession response** - Must return Set-Cookie headers:
+   ```bash
+   curl -v "https://auth.panaversity.org/api/auth/oauth2/endsession?post_logout_redirect_uri=..."
+   # Look for:
+   # Set-Cookie: __Secure-robolearn.session_token=; ... Max-Age=0
+   ```
+
+3. **Client must use full page navigation** (not fetch):
+   ```javascript
+   // Wrong - cookies won't be processed cross-origin
+   await fetch('https://sso/api/auth/oauth2/endsession?...');
+
+   // Correct - browser processes Set-Cookie headers
+   window.location.href = 'https://sso/api/auth/oauth2/endsession?...';
+   ```
+
+**Technical Note:** Better Auth uses `__Secure-` prefix for cookies in production when `useSecureCookies: true`. This is a browser security feature that requires cookies to be sent only over HTTPS. The endsession endpoint must clear both prefixed and non-prefixed variants.
+
+---
+
 ## OAuth Issues
 
 ### "invalid_client" Error
