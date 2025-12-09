@@ -6,6 +6,8 @@ import { signUp } from "@/lib/auth-client";
 import { BackgroundSelect } from "./background-select";
 import { HardwareTierSelect } from "./hardware-tier-select";
 import { Toast } from "./toast";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import type { SoftwareBackground, HardwareTier } from "@/types/profile";
 
 interface FormErrors {
@@ -13,6 +15,7 @@ interface FormErrors {
   password?: string;
   confirmPassword?: string;
   name?: string;
+  phoneNumber?: string;
   background?: string;
   hardwareTier?: string;
   general?: string;
@@ -78,6 +81,7 @@ export function SignUpForm() {
     password: "",
     confirmPassword: "",
     name: "",
+    phoneNumber: "",
     softwareBackground: "beginner" as SoftwareBackground,
     hardwareTier: "" as HardwareTier | "",
   });
@@ -96,6 +100,13 @@ export function SignUpForm() {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
+    }
+
+    // Phone number validation (required)
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "Phone number is required";
+    } else if (!isValidPhoneNumber(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Please enter a valid phone number";
     }
 
     if (!formData.password) {
@@ -161,6 +172,7 @@ export function SignUpForm() {
         password: formData.password,
         name: formData.name,
         username,
+        phoneNumber: formData.phoneNumber || undefined, // Include phone number if provided
         callbackURL: isOAuthFlow ? "/auth/verify-callback" : "/",
       });
 
@@ -442,8 +454,8 @@ export function SignUpForm() {
                 onFocus={() => setFocusedField("email")}
                 onBlur={() => setFocusedField(null)}
                 className={`w-full px-4 py-3 border rounded-xl transition-all duration-200 bg-white/50 backdrop-blur-sm ${
-                  errors.email 
-                    ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20" 
+                  errors.email
+                    ? "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                     : focusedField === "email"
                     ? "border-pana-400 focus:border-pana-500 focus:ring-2 focus:ring-pana-500/20 shadow-sm shadow-pana-500/10"
                     : "border-slate-200 focus:border-pana-400 focus:ring-2 focus:ring-pana-500/20"
@@ -456,6 +468,43 @@ export function SignUpForm() {
             </div>
               {errors.email && (
                 <p className="text-sm text-red-600 animate-in slide-in-from-top">{errors.email}</p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="phoneNumber" className="block text-sm font-semibold text-slate-700">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <div className="phone-input-wrapper">
+                <PhoneInput
+                  id="phoneNumber"
+                  international
+                  defaultCountry="PK"
+                  value={formData.phoneNumber}
+                  onChange={(value) => {
+                    setFormData({ ...formData, phoneNumber: value || "" });
+                    // Clear error when user enters a valid phone number
+                    if (errors.phoneNumber && value && isValidPhoneNumber(value)) {
+                      setErrors({ ...errors, phoneNumber: undefined });
+                    }
+                  }}
+                  className="w-full"
+                />
+              </div>
+              {errors.phoneNumber ? (
+                <p className="text-sm text-red-600 animate-in slide-in-from-top flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {errors.phoneNumber}
+                </p>
+              ) : (
+                <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  Select your country code and enter phone number (required)
+                </p>
               )}
             </div>
 
@@ -632,6 +681,50 @@ export function SignUpForm() {
       </form>
         </>
       )}
+
+      {/* Custom styles for PhoneInput component */}
+      <style jsx global>{`
+        /* Phone Input Styling */
+        .PhoneInput {
+          display: flex;
+          align-items: center;
+        }
+        .PhoneInputCountry {
+          margin-right: 0.75rem;
+        }
+        .PhoneInputCountrySelect {
+          padding: 0.875rem;
+          border: 2px solid #e2e8f0;
+          border-radius: 0.75rem;
+          background: white;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .PhoneInputCountrySelect:hover {
+          border-color: #cbd5e1;
+        }
+        .PhoneInputCountrySelect:focus {
+          border-color: #1cd98e;
+          outline: none;
+          box-shadow: 0 0 0 4px rgba(28, 217, 142, 0.1);
+        }
+        .PhoneInputInput {
+          flex: 1;
+          padding: 0.875rem 1rem;
+          border: 2px solid #e2e8f0;
+          border-radius: 0.75rem;
+          background: white;
+          transition: all 0.2s;
+        }
+        .PhoneInputInput:hover {
+          border-color: #cbd5e1;
+        }
+        .PhoneInputInput:focus {
+          border-color: #1cd98e;
+          outline: none;
+          box-shadow: 0 0 0 4px rgba(28, 217, 142, 0.1);
+        }
+      `}</style>
     </div>
   );
 }
