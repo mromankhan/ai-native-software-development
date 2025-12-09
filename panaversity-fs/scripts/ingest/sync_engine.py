@@ -16,6 +16,7 @@ from typing import Optional
 from scripts.common.mcp_client import MCPClient, MCPToolError
 from scripts.ingest.source_scanner import SourceFile, ScanResult, get_valid_files
 from scripts.ingest.path_mapper import ContentType
+from scripts.ingest.asset_cache import AssetCache
 
 
 @dataclass
@@ -26,10 +27,12 @@ class SyncAction:
         source_file: The source file to sync
         action: Type of action (add, update, skip)
         reason: Why this action was chosen
+        existing_hash: For updates, the current hash in storage (for conflict detection)
     """
     source_file: SourceFile
     action: str  # "add", "update", "skip"
     reason: Optional[str] = None
+    existing_hash: Optional[str] = None
 
 
 @dataclass
@@ -87,6 +90,7 @@ async def get_storage_hashes(
     client: MCPClient,
     book_id: str,
     paths: list[str],
+    source_files: list[SourceFile],
     verbose: bool = False
 ) -> dict[str, Optional[str]]:
     """Get content hashes for existing files in storage.
@@ -95,6 +99,7 @@ async def get_storage_hashes(
         client: MCP client instance
         book_id: Book identifier
         paths: Storage paths to check
+        source_files: Corresponding source files (for content type detection)
         verbose: Print verbose output
 
     Returns:
@@ -102,14 +107,30 @@ async def get_storage_hashes(
     """
     hashes: dict[str, Optional[str]] = {}
 
+    # Initialize asset cache for assets
+    asset_cache = AssetCache()
+
+    # Create path -> source_file mapping
+    path_to_source = {f.mapped.storage_path: f for f in source_files}
+
     for path in paths:
+        source_file = path_to_source.get(path)
+
+        # For assets, check local cache instead of read_content
+        # (read_content doesn't work for assets due to schema validation)
+        if source_file and source_file.mapped.content_type == ContentType.ASSET:
+            cached_hash = asset_cache.get(book_id, path)
+            hashes[path] = cached_hash
+            if verbose and cached_hash:
+                print(f"  Asset cache hit: {path}")
+            continue
+
+        # For markdown/summary files, query server
         try:
             result = await client.read_content(book_id, path)
-            # Compute hash of existing content
-            content = result.get("content", "")
-            if content:
-                import hashlib
-                content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
+            # Use the server's authoritative hash (accounts for content normalization)
+            content_hash = result.get("file_hash_sha256")
+            if content_hash:
                 hashes[path] = content_hash
             else:
                 hashes[path] = None
@@ -153,7 +174,7 @@ async def compute_sync_plan(
     storage_paths = [f.mapped.storage_path for f in valid_files if f.mapped.storage_path]
 
     # Batch check existing hashes (with concurrency limit)
-    storage_hashes = await get_storage_hashes(client, book_id, storage_paths, verbose)
+    storage_hashes = await get_storage_hashes(client, book_id, storage_paths, valid_files, verbose)
 
     # Build sync plan
     actions: list[SyncAction] = []
@@ -170,21 +191,24 @@ async def compute_sync_plan(
             actions.append(SyncAction(
                 source_file=source_file,
                 action="add",
-                reason="New file"
+                reason="New file",
+                existing_hash=None
             ))
         elif existing_hash != source_file.content_hash:
             # File exists but content changed - update
             actions.append(SyncAction(
                 source_file=source_file,
                 action="update",
-                reason="Content changed"
+                reason="Content changed",
+                existing_hash=existing_hash
             ))
         else:
             # File unchanged - skip
             actions.append(SyncAction(
                 source_file=source_file,
                 action="skip",
-                reason="No changes"
+                reason="No changes",
+                existing_hash=existing_hash
             ))
 
     if verbose:
@@ -201,6 +225,7 @@ async def sync_file(
     book_id: str,
     source_file: SourceFile,
     action: str,
+    existing_hash: Optional[str] = None,
     verbose: bool = False
 ) -> tuple[bool, int, Optional[str]]:
     """Sync a single file to PanaversityFS.
@@ -210,6 +235,7 @@ async def sync_file(
         book_id: Book identifier
         source_file: Source file to sync
         action: Type of action ("add" or "update")
+        existing_hash: For updates, the current hash in storage (for conflict detection)
         verbose: Print verbose output
 
     Returns:
@@ -229,10 +255,14 @@ async def sync_file(
                 binary_data = base64.b64encode(f.read()).decode("ascii")
 
             # Determine asset type from path
-            asset_type = "img"  # default
+            # Valid MCP tool values: "images", "slides", "videos", "audio"
+            asset_type = "images"  # default
             path_parts = source_file.relative_path.lower().split("/")
             for part in path_parts:
-                if part in {"img", "slides", "videos", "audio"}:
+                if part in {"img", "image", "images"}:
+                    asset_type = "images"
+                    break
+                elif part in {"slides", "videos", "audio"}:
                     asset_type = part
                     break
 
@@ -244,28 +274,40 @@ async def sync_file(
                 binary_data=binary_data
             )
 
+            # Cache asset hash to prevent re-upload on next sync
+            asset_cache = AssetCache()
+            asset_cache.set(book_id, storage_path, source_file.content_hash, source_file.size_bytes)
+
             # For assets, we trust the upload_asset response
             # (verifying binary content would require downloading and comparing)
         else:
             # Text file - read as UTF-8
             content = source_file.absolute_path.read_text(encoding="utf-8")
-            local_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
 
-            # Write content
-            await client.write_content(
+            # Write content (with expected_hash for updates to enable conflict detection)
+            write_result = await client.write_content(
                 book_id=book_id,
                 path=storage_path,
-                content=content
+                content=content,
+                expected_hash=existing_hash  # Pass expected hash for updates
             )
 
-            # Verify upload by reading back and comparing hash
+            # Verify upload using the file_hash returned by write_content
+            # This is more reliable than reading back, as it's the hash of what was actually stored
+            returned_hash = write_result.get("file_hash")
+            if not returned_hash:
+                error_msg = "Upload verification failed: no file_hash in response"
+                if verbose:
+                    print(f"  FAILED: {source_file.relative_path} - {error_msg}")
+                return False, 0, error_msg
+
+            # Verify by reading back and checking the returned hash matches
             try:
                 verify_result = await client.read_content(book_id, storage_path)
-                uploaded_content = verify_result.get("content", "")
-                uploaded_hash = hashlib.sha256(uploaded_content.encode("utf-8")).hexdigest()
+                stored_hash = verify_result.get("file_hash_sha256", "")
 
-                if uploaded_hash != local_hash:
-                    error_msg = f"Upload verification failed: hash mismatch (local: {local_hash[:16]}..., uploaded: {uploaded_hash[:16]}...)"
+                if stored_hash != returned_hash:
+                    error_msg = f"Upload verification failed: hash mismatch (write returned: {returned_hash[:16]}..., read returned: {stored_hash[:16]}...)"
                     if verbose:
                         print(f"  FAILED: {source_file.relative_path} - {error_msg}")
                     return False, 0, error_msg
@@ -340,7 +382,7 @@ async def execute_sync_plan(
                 print(f"\rSyncing {index + 1}/{total}...", end="", flush=True)
 
             success, size, error = await sync_file(
-                client, book_id, sync_action.source_file, sync_action.action, verbose
+                client, book_id, sync_action.source_file, sync_action.action, sync_action.existing_hash, verbose
             )
 
             if success:

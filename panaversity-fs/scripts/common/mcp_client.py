@@ -1,6 +1,8 @@
 """MCP Client for PanaversityFS tool invocation.
 
-This module provides a lightweight HTTP client for invoking PanaversityFS MCP tools.
+This module provides a client for invoking PanaversityFS MCP tools using the
+official MCP SDK with StreamableHTTP (SSE) transport.
+
 It supports the key tools needed for hydration and ingestion workflows:
 - plan_build: Delta detection for incremental builds
 - read_content: Download individual files
@@ -16,7 +18,9 @@ import asyncio
 from typing import Any
 from dataclasses import dataclass
 
-import httpx
+from mcp.client.streamable_http import streamablehttp_client
+from mcp.client.session import ClientSession
+from mcp import types
 
 from scripts.common.log_sanitizer import sanitize_message
 
@@ -51,15 +55,18 @@ class MCPConfig:
     def from_env(cls) -> "MCPConfig":
         """Load configuration from environment variables."""
         base_url = os.environ.get("PANAVERSITY_MCP_URL", "http://localhost:8000")
+        # Ensure URL ends with /mcp for StreamableHTTP
+        if not base_url.endswith("/mcp"):
+            base_url = base_url.rstrip("/") + "/mcp"
         timeout = float(os.environ.get("PANAVERSITY_MCP_TIMEOUT", "120"))
         return cls(base_url=base_url, timeout_seconds=timeout)
 
 
 class MCPClient:
-    """HTTP client for invoking PanaversityFS MCP tools.
+    """MCP client using official SDK with StreamableHTTP (SSE) transport.
 
-    This client uses HTTP POST to invoke MCP tools directly, bypassing the
-    stdio-based MCP protocol. This is simpler for CI/CD integration.
+    This client uses the MCP SDK's streamable_http transport for proper
+    MCP protocol communication over HTTP with Server-Sent Events (SSE).
 
     Usage:
         async with MCPClient() as client:
@@ -74,21 +81,47 @@ class MCPClient:
             config: Optional configuration. If not provided, loads from environment.
         """
         self.config = config or MCPConfig.from_env()
-        self._client: httpx.AsyncClient | None = None
+        self._session: ClientSession | None = None
+        self._streams_context = None
 
     async def __aenter__(self) -> "MCPClient":
         """Enter async context manager."""
-        self._client = httpx.AsyncClient(
-            base_url=self.config.base_url,
-            timeout=httpx.Timeout(self.config.timeout_seconds)
-        )
-        return self
+        try:
+            # Create streamable HTTP client
+            self._streams_context = streamablehttp_client(
+                url=self.config.base_url,
+                timeout=self.config.timeout_seconds,
+                sse_read_timeout=self.config.timeout_seconds + 180  # Extra time for SSE
+            )
+
+            # Get read/write streams
+            read_stream, write_stream, _ = await self._streams_context.__aenter__()
+
+            # Initialize MCP session
+            self._session = ClientSession(read_stream, write_stream)
+            await self._session.__aenter__()
+
+            # Initialize the session
+            await self._session.initialize()
+
+            return self
+
+        except Exception as e:
+            safe_error = sanitize_message(str(e))
+            safe_url = sanitize_message(self.config.base_url)
+            raise MCPConnectionError(f"Failed to connect to MCP server at {safe_url}: {safe_error}")
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         """Exit async context manager."""
-        if self._client:
-            await self._client.aclose()
-            self._client = None
+        try:
+            if self._session:
+                await self._session.__aexit__(exc_type, exc_val, exc_tb)
+                self._session = None
+            if self._streams_context:
+                await self._streams_context.__aexit__(exc_type, exc_val, exc_tb)
+                self._streams_context = None
+        except Exception:
+            pass  # Ignore cleanup errors
 
     async def call_tool(self, tool_name: str, params: dict[str, Any]) -> dict[str, Any]:
         """Invoke an MCP tool with retry logic.
@@ -104,66 +137,51 @@ class MCPClient:
             MCPConnectionError: If connection to server fails after retries
             MCPToolError: If tool returns an error response
         """
-        if not self._client:
+        if not self._session:
             raise MCPError("Client not initialized. Use 'async with MCPClient()' context manager.")
 
         last_error: Exception | None = None
 
         for attempt in range(self.config.max_retries):
             try:
-                response = await self._client.post(
-                    "/mcp/tools/call",
-                    json={
-                        "name": tool_name,
-                        "arguments": params
-                    }
+                # Call the tool using MCP SDK
+                # FastMCP expects arguments wrapped in a "params" field
+                wrapped_args = {"params": params} if params else {}
+                result: types.CallToolResult = await self._session.call_tool(
+                    name=tool_name,
+                    arguments=wrapped_args
                 )
 
-                if response.status_code == 200:
-                    result = response.json()
-                    # MCP tools return JSON string in content field
-                    if "content" in result and isinstance(result["content"], list):
-                        # Parse the text content from MCP response
-                        for content_item in result["content"]:
-                            if content_item.get("type") == "text":
-                                return json.loads(content_item["text"])
-                    return result
-
-                elif response.status_code >= 500:
-                    # Server error - retry
-                    last_error = MCPConnectionError(f"Server error: {response.status_code}")
-                    if attempt < self.config.max_retries - 1:
-                        await asyncio.sleep(self.config.retry_delay_seconds * (attempt + 1))
-                        continue
-
-                else:
-                    # Client error - don't retry
-                    error_detail = response.text
-                    try:
-                        error_json = response.json()
-                        error_detail = error_json.get("detail", error_detail)
-                    except json.JSONDecodeError:
-                        pass
-                    # Sanitize error message to remove potential sensitive data
-                    error_detail = sanitize_message(str(error_detail))
+                # Check if tool returned an error
+                if result.isError:
+                    error_msg = sanitize_message(str(result.content))
                     raise MCPToolError(
-                        f"Tool '{tool_name}' failed: {error_detail}",
+                        f"Tool '{tool_name}' returned error: {error_msg}",
                         tool_name=tool_name,
-                        error_type=str(response.status_code)
+                        error_type="tool_error"
                     )
 
-            except httpx.ConnectError as e:
-                # Sanitize URL and error message
-                safe_url = sanitize_message(self.config.base_url)
-                safe_error = sanitize_message(str(e))
-                last_error = MCPConnectionError(f"Failed to connect to {safe_url}: {safe_error}")
-                if attempt < self.config.max_retries - 1:
-                    await asyncio.sleep(self.config.retry_delay_seconds * (attempt + 1))
-                    continue
+                # Extract result from content
+                # MCP tools return TextContent or ImageContent
+                for content_item in result.content:
+                    if isinstance(content_item, types.TextContent):
+                        # Parse JSON response
+                        try:
+                            return json.loads(content_item.text)
+                        except json.JSONDecodeError:
+                            # Return as-is if not JSON
+                            return {"result": content_item.text}
 
-            except httpx.TimeoutException as e:
+                # If no text content, return empty dict
+                return {}
+
+            except MCPToolError:
+                # Don't retry tool errors
+                raise
+
+            except Exception as e:
                 safe_error = sanitize_message(str(e))
-                last_error = MCPConnectionError(f"Request timeout: {safe_error}")
+                last_error = MCPConnectionError(f"Tool call failed: {safe_error}")
                 if attempt < self.config.max_retries - 1:
                     await asyncio.sleep(self.config.retry_delay_seconds * (attempt + 1))
                     continue

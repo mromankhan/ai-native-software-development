@@ -29,8 +29,8 @@ class TestComputeHash:
         file_path = temp_dir / "test.txt"
         file_path.write_text("Hello, World!")
 
-        hash1 = compute_hash(file_path)
-        hash2 = compute_hash(file_path)
+        hash1 = compute_hash(file_path, ContentType.MARKDOWN)
+        hash2 = compute_hash(file_path, ContentType.MARKDOWN)
 
         assert hash1 == hash2
 
@@ -41,8 +41,8 @@ class TestComputeHash:
         file1.write_text("Content A")
         file2.write_text("Content B")
 
-        hash1 = compute_hash(file1)
-        hash2 = compute_hash(file2)
+        hash1 = compute_hash(file1, ContentType.MARKDOWN)
+        hash2 = compute_hash(file2, ContentType.MARKDOWN)
 
         assert hash1 != hash2
 
@@ -51,7 +51,7 @@ class TestComputeHash:
         file_path = temp_dir / "test.txt"
         file_path.write_text("Test content")
 
-        hash_value = compute_hash(file_path)
+        hash_value = compute_hash(file_path, ContentType.MARKDOWN)
 
         assert len(hash_value) == 64  # SHA256 produces 64 hex chars
         assert all(c in "0123456789abcdef" for c in hash_value)

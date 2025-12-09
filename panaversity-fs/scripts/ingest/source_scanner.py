@@ -55,20 +55,34 @@ class ScanResult:
     errors: list[dict]
 
 
-def compute_hash(file_path: Path) -> str:
+def compute_hash(file_path: Path, content_type: ContentType) -> str:
     """Compute SHA256 hash of a file.
+
+    For text files (markdown, summary), normalizes content by stripping trailing whitespace
+    to match server behavior. For binary files (assets), uses raw bytes.
 
     Args:
         file_path: Path to the file
+        content_type: Type of content (MARKDOWN, SUMMARY, or ASSET)
 
     Returns:
         Hexadecimal SHA256 hash string
     """
     sha256 = hashlib.sha256()
-    with open(file_path, "rb") as f:
-        # Read in chunks to handle large files
-        for chunk in iter(lambda: f.read(8192), b""):
-            sha256.update(chunk)
+
+    if content_type in (ContentType.MARKDOWN, ContentType.SUMMARY):
+        # For text files, normalize content to match server behavior
+        # Server strips trailing newlines from end of file, but preserves everything else
+        content = file_path.read_text(encoding="utf-8")
+        # Strip only trailing newlines (not spaces or other whitespace)
+        normalized = content.rstrip("\n")
+        sha256.update(normalized.encode("utf-8"))
+    else:
+        # For binary files (assets), use raw bytes
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                sha256.update(chunk)
+
     return sha256.hexdigest()
 
 
@@ -155,9 +169,9 @@ def scan_directory(source_root: Path, verbose: bool = False) -> Iterator[SourceF
         # Map to storage path
         mapped = map_and_validate(relative_path)
 
-        # Compute hash
+        # Compute hash (normalized for text, raw for binary)
         try:
-            content_hash = compute_hash(path)
+            content_hash = compute_hash(path, mapped.content_type)
             size_bytes = path.stat().st_size
         except (OSError, IOError) as e:
             if verbose:
