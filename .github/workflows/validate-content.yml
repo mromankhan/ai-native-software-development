@@ -21,6 +21,8 @@ jobs:
   validate:
     name: Check Asset References
     runs-on: ubuntu-latest
+    # Skip for infrastructure PRs that don't modify content
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'infrastructure') }}
 
     steps:
       - name: Checkout repository
