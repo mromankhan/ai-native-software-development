@@ -7,7 +7,7 @@ import styles from './ContentGate.module.css';
 export type GateType = 'quiz' | 'summary' | 'exercise' | 'premium';
 
 interface ContentGateProps {
-  children: ReactNode;
+  children?: ReactNode;
   type: GateType;
   /** Preview content to show in blurred state (optional - defaults to children) */
   preview?: ReactNode;

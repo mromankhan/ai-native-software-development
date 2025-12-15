@@ -1,13 +1,14 @@
 # PanaversityFS Build Pipeline Makefile
 # Provides targets for incremental builds, hydration, and ingestion
 
-.PHONY: help hydrate ingest build test clean setup
+.PHONY: help hydrate ingest build sync test clean setup lint format
 
 # Default book ID (override with BOOK_ID=xxx)
 BOOK_ID ?= ai-native-python
 
 # Default directories (override as needed)
-SOURCE_DIR ?= ./book-source/docs
+# Path is relative to this Makefile (apps/panaversity-fs-py/)
+SOURCE_DIR ?= ../learn-app/docs
 OUTPUT_DIR ?= .docusaurus/content
 MANIFEST_FILE ?= .panaversity/manifest.json
 
@@ -23,12 +24,14 @@ help:
 	@echo "Usage: make <target> [BOOK_ID=xxx] [SOURCE_DIR=xxx]"
 	@echo ""
 	@echo "Targets:"
+	@echo "  build         - Build Python package (for CI/distribution)"
+	@echo "  lint          - Run ruff linter"
+	@echo "  test          - Run tests"
 	@echo "  hydrate       - Download content from PanaversityFS (incremental)"
 	@echo "  hydrate-full  - Force full download (ignore manifest)"
 	@echo "  ingest        - Upload source content to PanaversityFS (incremental)"
 	@echo "  ingest-dry    - Preview what would be uploaded"
-	@echo "  build         - Full build: ingest + hydrate"
-	@echo "  test          - Run tests"
+	@echo "  sync          - Full sync: ingest + hydrate (requires MCP server)"
 	@echo "  clean         - Remove build artifacts"
 	@echo "  setup         - Install dependencies"
 	@echo ""
@@ -96,14 +99,22 @@ ingest-verbose:
 		--verbose
 
 # ============================================================
-# Combined Build Pipeline
+# Package Build (for CI/distribution)
 # ============================================================
 
-build: ingest hydrate
-	@echo "Build complete."
+build:
+	@echo "Building Python package..."
+	uv build
 
-build-verbose:
-	@echo "Full build (verbose)..."
+# ============================================================
+# Content Sync Pipeline (requires MCP server)
+# ============================================================
+
+sync: ingest hydrate
+	@echo "Sync complete."
+
+sync-verbose:
+	@echo "Full sync (verbose)..."
 	PANAVERSITY_MCP_URL=$(PANAVERSITY_MCP_URL) \
 	$(PYTHON) scripts/ingest-book.py \
 		--book-id $(BOOK_ID) \
@@ -166,8 +177,8 @@ dev-server:
 
 lint:
 	@echo "Running linter..."
-	$(PYTHON) -m ruff check .
+	uv run ruff check .
 
 format:
 	@echo "Formatting code..."
-	$(PYTHON) -m ruff format .
+	uv run ruff format .
