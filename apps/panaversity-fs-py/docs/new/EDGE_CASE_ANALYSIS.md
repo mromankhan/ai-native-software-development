@@ -31,6 +31,7 @@
 **Location:** `scripts/ingest/path_mapper.py:103`
 
 **Code:**
+
 ```python
 parts = source_path.split("/")
 ```
@@ -38,6 +39,7 @@ parts = source_path.split("/")
 **Problem:** Uses hardcoded `/` separator, won't work on Windows.
 
 **Edge Cases:**
+
 - Windows paths: `Part-01\Chapter-01\01-intro.md`
 - Mixed separators: `Part-01/Chapter-01\01-intro.md`
 - UNC paths: `\\server\share\Part-01\Chapter-01\01-intro.md`
@@ -45,6 +47,7 @@ parts = source_path.split("/")
 **Impact:** Script will fail on Windows CI runners or local Windows development.
 
 **Fix:**
+
 ```python
 parts = source_path.replace("\\", "/").split("/")
 ```
@@ -60,11 +63,13 @@ parts = source_path.replace("\\", "/").split("/")
 **Problem:** Doesn't check for empty parts from double slashes.
 
 **Edge Cases:**
+
 - Double slashes: `Part-01//Chapter-01/01-intro.md`
 - Trailing slashes: `Part-01/Chapter-01/`
 - Leading slashes: `/Part-01/Chapter-01/01-intro.md`
 
 **Example:**
+
 ```python
 "Part-01//Chapter-01/01-intro.md".split("/")
 # Returns: ['Part-01', '', 'Chapter-01', '01-intro.md']
@@ -74,6 +79,7 @@ parts = source_path.replace("\\", "/").split("/")
 **Impact:** Could match incorrect patterns or create invalid storage paths.
 
 **Fix Needed:**
+
 ```python
 parts = [p for p in source_path.split("/") if p]  # Filter empty parts
 ```
@@ -89,12 +95,14 @@ parts = [p for p in source_path.split("/") if p]  # Filter empty parts
 **Problem:** Regex patterns don't account for Unicode characters.
 
 **Edge Cases:**
+
 - Accented characters: `Part-01/Chapter-01/01-introducción.md`
 - Emoji: `Part-01/Chapter-01/01-intro-🚀.md`
 - Spaces (URL encoded): `Part-01/Chapter-01/01-intro%20guide.md`
 - CJK characters: `Part-01/Chapter-01/01-介绍.md`
 
 **Current Pattern:**
+
 ```python
 LESSON_PATTERN = re.compile(r"^(\d{1,2})-([a-z0-9-]+)(\.summary)?\.md$")
 ```
@@ -102,6 +110,7 @@ LESSON_PATTERN = re.compile(r"^(\d{1,2})-([a-z0-9-]+)(\.summary)?\.md$")
 **Impact:** Non-ASCII filenames will be rejected.
 
 **Fix:**
+
 ```python
 LESSON_PATTERN = re.compile(r"^(\d{1,2})-([a-z0-9-\u0080-\uFFFF]+)(\.summary)?\.md$", re.UNICODE)
 ```
@@ -117,10 +126,12 @@ LESSON_PATTERN = re.compile(r"^(\d{1,2})-([a-z0-9-\u0080-\uFFFF]+)(\.summary)?\.
 **Problem:** Asset detection uses `lower()` but path construction doesn't.
 
 **Edge Cases:**
+
 - `Part-01/Chapter-01/IMG/test.png` (uppercase IMG)
 - `Part-01/Chapter-01/Img/test.png` (mixed case)
 
 **Current Code:**
+
 ```python
 lower_path = source_path.lower()  # Converts to lowercase
 for ext in ASSET_EXTENSIONS:
@@ -129,6 +140,7 @@ for ext in ASSET_EXTENSIONS:
 ```
 
 Then in `_map_asset_path`:
+
 ```python
 if part.lower() in asset_types:  # Compares lowercase
     asset_type = part.lower()     # Stores lowercase
@@ -147,12 +159,14 @@ if part.lower() in asset_types:  # Compares lowercase
 **Problem:** No validation of total path length.
 
 **Edge Cases:**
+
 - OS limit (Windows: 260 chars, Linux: 4096 chars)
 - Very long lesson names: `Part-01/Chapter-01/01-this-is-a-very-very-very-...-long-lesson-name.md`
 
 **Impact:** Could hit filesystem limits.
 
 **Fix Needed:**
+
 ```python
 MAX_PATH_LENGTH = 250  # Conservative limit
 
@@ -171,6 +185,7 @@ if len(storage_path) > MAX_PATH_LENGTH:
 **Problem:** No sanitization of path components.
 
 **Attack Vectors:**
+
 ```
 Part-01/../../../etc/passwd.md
 Part-01/Chapter-01/../../secrets.md
@@ -178,6 +193,7 @@ Part-01/Chapter-01/01-intro.md/../../../escape.md
 ```
 
 **Current Code:**
+
 ```python
 storage_path = f"content/{part_num}-Part/{chapter_num}-Chapter/{lesson_num}-{lesson_name}"
 ```
@@ -185,6 +201,7 @@ storage_path = f"content/{part_num}-Part/{chapter_num}-Chapter/{lesson_num}-{les
 **Impact:** If `lesson_name` contains `../`, attacker could write outside content directory.
 
 **Example:**
+
 ```
 Source: Part-01/Chapter-01/01-../../etc/passwd.md
 Lesson name extracted: "../../etc/passwd"
@@ -193,6 +210,7 @@ Actual write: content/01-Part/etc/passwd.md (OUTSIDE content dir!)
 ```
 
 **Fix Needed:**
+
 ```python
 # Sanitize lesson_name to prevent path traversal
 lesson_name = lesson_name.replace("..", "").replace("/", "").replace("\\", "")
@@ -217,6 +235,7 @@ if not final_path.resolve().is_relative_to(Path("content").resolve()):
 **Problem:** Both workflows can run simultaneously.
 
 **Scenario:**
+
 ```
 T0: Author pushes change to docs/lesson-1.md
 T1: sync-content.yml starts (syncs lesson-1.md)
@@ -229,21 +248,23 @@ T5: deploy.yml tries to hydrate (T4 sync in progress)
 **Impact:** Deploy might hydrate partially synced content.
 
 **Current Mitigation:**
+
 ```yaml
 # deploy.yml
 workflow_run:
   workflows: ["Sync Content to R2"]
-  types: [completed]  # ✓ Waits for sync to complete
+  types: [completed] # ✓ Waits for sync to complete
 ```
 
 **Remaining Issue:** If sync completes and new sync starts, deploy might run during second sync.
 
 **Fix Needed:**
+
 ```yaml
 # Add concurrency group
 concurrency:
   group: panaversity-sync-${{ github.ref }}
-  cancel-in-progress: false  # Queue, don't cancel
+  cancel-in-progress: false # Queue, don't cancel
 ```
 
 **Status:** ⚠️ PARTIALLY HANDLED - Add concurrency group
@@ -257,6 +278,7 @@ concurrency:
 **Problem:** Multiple concurrent builds could corrupt manifest cache.
 
 **Scenario:**
+
 ```
 Build A: Restores manifest (hash: abc123)
 Build B: Restores manifest (hash: abc123)
@@ -266,10 +288,11 @@ Result: Build B overwrites Build A's manifest!
 ```
 
 **Current Mitigation:**
+
 ```yaml
 concurrency:
   group: pages
-  cancel-in-progress: false  # ✓ Only one build at a time
+  cancel-in-progress: false # ✓ Only one build at a time
 ```
 
 **Status:** ✅ HANDLED (concurrency group prevents parallel builds)
@@ -283,6 +306,7 @@ concurrency:
 **Problem:** No retry logic for transient failures.
 
 **Edge Cases:**
+
 - Network timeout during upload
 - MCP server temporary unavailability
 - R2 rate limiting
@@ -290,6 +314,7 @@ concurrency:
 **Impact:** One-off network glitch causes entire sync to fail.
 
 **Fix Needed:**
+
 ```yaml
 - name: Sync content to PanaversityFS
   uses: nick-fields/retry@v2
@@ -312,6 +337,7 @@ concurrency:
 **Location:** `scripts/hydrate/manifest.py:18-28`
 
 **Code:**
+
 ```python
 def load_manifest(path: Path) -> Optional[ManifestFile]:
     if not path.exists():
@@ -324,6 +350,7 @@ def load_manifest(path: Path) -> Optional[ManifestFile]:
 ```
 
 **Edge Cases:**
+
 - File exists but empty: `manifest.json` with 0 bytes
 - Partial write: `{"manifest_hash": "abc` (truncated JSON)
 - Invalid JSON: `{manifest_hash": "abc"}` (syntax error)
@@ -333,11 +360,13 @@ def load_manifest(path: Path) -> Optional[ManifestFile]:
 **Impact:** Script crashes, fallback never triggers, build fails completely.
 
 **Example Crash:**
+
 ```
 json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 ```
 
 **Fix Needed:**
+
 ```python
 def load_manifest(path: Path) -> Optional[ManifestFile]:
     if not path.exists():
@@ -372,12 +401,14 @@ def load_manifest(path: Path) -> Optional[ManifestFile]:
 **Problem:** Cache key includes `github.sha` which is unique per commit.
 
 **Code:**
+
 ```yaml
 key: panaversity-manifest-${{ github.sha }}
 restore-keys: panaversity-manifest-
 ```
 
 **Edge Cases:**
+
 - Force push changes SHA, invalidates cache
 - Cherry-pick creates new SHA for same content
 - Rebase creates new SHAs
@@ -385,6 +416,7 @@ restore-keys: panaversity-manifest-
 **Impact:** Cache miss more often than necessary.
 
 **Behavior:**
+
 - Primary key: `panaversity-manifest-abc123` (exact commit)
 - Fallback: `panaversity-manifest-*` (most recent)
 
@@ -401,6 +433,7 @@ restore-keys: panaversity-manifest-
 **Problem:** Manifest size could grow unbounded with many files.
 
 **Calculation:**
+
 ```
 1000 files × ~100 bytes per entry = 100KB manifest
 10,000 files × ~100 bytes = 1MB manifest
@@ -422,28 +455,32 @@ restore-keys: panaversity-manifest-
 **Problem:** Fallback copies from `docs/` but docs/ might be outdated.
 
 **Code:**
+
 ```yaml
 - name: Fallback to local docs
   if: ${{ vars.PANAVERSITY_PLUGIN_ENABLED == 'true' && failure() }}
   run: |
     echo "⚠️ Hydration failed, using local docs/ as fallback"
     mkdir -p build-source
-    cp -r book-source/docs/* build-source/
+    cp -r apps/learn-app/docs/* build-source/
 ```
 
 **Edge Cases:**
+
 - MCP server is up but returns wrong content
 - Partial hydration (some files downloaded, then crash)
 - `docs/` directory doesn't exist (authors deleted it)
 - `docs/` is empty (new repo clone)
 
 **Impact:**
+
 - Case 1: Deploys wrong content (no error, silent corruption)
 - Case 2: Deploys mixed old/new content
 - Case 3: Build fails with empty directory
 - Case 4: Build fails
 
 **Fix Needed:**
+
 ```yaml
 - name: Fallback to local docs
   if: ${{ vars.PANAVERSITY_PLUGIN_ENABLED == 'true' && failure() }}
@@ -462,7 +499,7 @@ restore-keys: panaversity-manifest-
 
     # Copy from docs/
     mkdir -p build-source
-    cp -r book-source/docs/* build-source/
+    cp -r apps/learn-app/docs/* build-source/
 
     echo "⚠️ DEPLOYED FROM LOCAL DOCS (NOT PanaversityFS)" >> $GITHUB_STEP_SUMMARY
 ```
@@ -478,6 +515,7 @@ restore-keys: panaversity-manifest-
 **Problem:** If sync fails midway, some files uploaded, some not.
 
 **Scenario:**
+
 ```
 Sync plan: 10 files to upload
 Files 1-5: ✓ Uploaded
@@ -488,11 +526,13 @@ Files 7-10: ⚠️ Never attempted
 **Current Behavior:** Script exits with error.
 
 **Issues:**
+
 - PanaversityFS has 5/10 files (inconsistent state)
 - Next sync tries again, uploads same 5 files (wasted bandwidth)
 - No way to resume from file 6
 
 **Fix Needed:**
+
 - Track successful uploads in temp file
 - On retry, skip successfully uploaded files
 - OR use transactions (all-or-nothing)
@@ -508,6 +548,7 @@ Files 7-10: ⚠️ Never attempted
 **Problem:** No check for available disk space before downloading.
 
 **Edge Cases:**
+
 - Downloading 1GB of content with 500MB free space
 - Disk fills during download
 - Tmp directory on different partition with less space
@@ -515,6 +556,7 @@ Files 7-10: ⚠️ Never attempted
 **Impact:** Partial download, corrupted files, build failure.
 
 **Fix Needed:**
+
 ```python
 import shutil
 
@@ -549,6 +591,7 @@ def download_changed_files(...):
 **Problem:** No explicit handling of symbolic links.
 
 **Edge Cases:**
+
 - Symlink to file: `Part-01/Chapter-01/01-intro.md -> ../../shared/intro.md`
 - Symlink to directory: `Part-01/Chapter-01 -> ../templates/chapter`
 - Circular symlinks: `A -> B -> A`
@@ -557,6 +600,7 @@ def download_changed_files(...):
 **Impact:** Could cause infinite loops or upload wrong files.
 
 **Fix Needed:**
+
 ```python
 def scan_source_directory(source_dir: Path) -> ScanResult:
     ...
@@ -577,6 +621,7 @@ def scan_source_directory(source_dir: Path) -> ScanResult:
 **Problem:** No handling of permission denied errors.
 
 **Edge Cases:**
+
 - Read-only files in source
 - No write permission in output directory
 - File locked by another process (Windows)
@@ -584,6 +629,7 @@ def scan_source_directory(source_dir: Path) -> ScanResult:
 **Impact:** Script crashes with unclear error.
 
 **Fix Needed:**
+
 ```python
 try:
     with open(file_path, 'r') as f:
@@ -607,6 +653,7 @@ except IOError as e:
 **Problem:** macOS/Windows are case-insensitive, Linux is case-sensitive.
 
 **Edge Cases:**
+
 - Author creates `intro.md` locally (macOS, case-insensitive)
 - CI uploads as `content/.../intro.md`
 - Author renames to `Intro.md` locally (macOS sees no change)
@@ -617,6 +664,7 @@ except IOError as e:
 **Impact:** Inconsistent behavior across platforms.
 
 **Fix Needed:**
+
 - Normalize all paths to lowercase
 - OR reject mixed-case filenames
 - OR use case-sensitive comparison
@@ -644,6 +692,7 @@ except IOError as e:
 **Problem:** book-id passed directly to MCP without validation.
 
 **Attack Vectors:**
+
 ```bash
 python ingest-book.py --book-id "../../../etc/passwd"
 python ingest-book.py --book-id "../../admin-book"
@@ -653,6 +702,7 @@ python ingest-book.py --book-id "book; rm -rf /"
 **Impact:** Could access other books' content or execute commands.
 
 **Fix Needed:**
+
 ```python
 import re
 
@@ -680,11 +730,13 @@ def validate_book_id(book_id: str) -> str:
 **Problem:** API keys might appear in logs.
 
 **Edge Cases:**
+
 - `--verbose` mode logs HTTP headers
 - Error messages include URLs with API keys
 - Stack traces expose environment variables
 
 **Current Mitigation:**
+
 ```yaml
 env:
   PANAVERSITY_API_KEY: ${{ secrets.PANAVERSITY_API_KEY }}
@@ -693,6 +745,7 @@ env:
 **Remaining Issue:** Script might log the key in verbose mode.
 
 **Fix Needed:**
+
 ```python
 def sanitize_for_logging(text: str) -> str:
     """Remove sensitive data from log messages."""
@@ -716,6 +769,7 @@ logger.info(sanitize_for_logging(message))
 **Problem:** No protection against accidental DoS of MCP server.
 
 **Edge Cases:**
+
 - Script run in loop
 - Multiple CI jobs running simultaneously
 - Large number of files (1000+) uploaded rapidly
@@ -723,6 +777,7 @@ logger.info(sanitize_for_logging(message))
 **Impact:** Could overwhelm MCP server, affecting other users.
 
 **Fix Needed:**
+
 ```python
 import asyncio
 from asyncio import Semaphore
@@ -749,6 +804,7 @@ async def upload_with_limit(file):
 **Problem:** Network interruption during upload could leave partial file in R2.
 
 **Scenario:**
+
 ```
 1. Upload starts: lesson.md (10KB)
 2. Upload 5KB
@@ -760,6 +816,7 @@ async def upload_with_limit(file):
 **Impact:** Content corrupted, builds fail or show broken lessons.
 
 **Fix Needed:**
+
 ```python
 # Upload to temporary path first
 temp_path = f"{storage_path}.uploading"
@@ -797,6 +854,7 @@ else:
 **Problem:** No verification after upload.
 
 **Edge Cases:**
+
 - Content modified during upload
 - Network corruption (rare but possible)
 - R2 storage bit flip (extremely rare)
@@ -804,6 +862,7 @@ else:
 **Impact:** Uploaded content differs from source.
 
 **Fix Needed:**
+
 ```python
 # After upload
 uploaded_hash = compute_hash_of_uploaded_content()
@@ -826,6 +885,7 @@ if uploaded_hash != local_hash:
 **Problem:** Manifest could become out of sync with actual R2 content.
 
 **Scenarios:**
+
 - Manual upload to R2 bypasses manifest
 - Concurrent syncs from different sources
 - Manifest cache corrupted but not detected
@@ -834,6 +894,7 @@ if uploaded_hash != local_hash:
 **Impact:** Hydration skips files it should download.
 
 **Fix Needed:**
+
 - Add `--force-verify` flag to compare manifest with R2
 - Periodic full scan to detect drift
 - Checksum validation
@@ -851,6 +912,7 @@ if uploaded_hash != local_hash:
 **Problem:** No special handling for large files.
 
 **Edge Cases:**
+
 - 100MB video file
 - 500MB dataset
 - 1GB backup file accidentally in docs/
@@ -858,11 +920,13 @@ if uploaded_hash != local_hash:
 **Current Approach:** Load entire file into memory.
 
 **Impact:**
+
 - Memory exhaustion
 - Timeout during upload/download
 - Slow hash computation
 
 **Fix Needed:**
+
 ```python
 MAX_IN_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
@@ -889,6 +953,7 @@ else:
 **Problem:** Might make one API call per file to check if exists.
 
 **Scenario:**
+
 ```
 1000 files to check
 → 1000 API calls to get hashes
@@ -896,6 +961,7 @@ else:
 ```
 
 **Fix Needed:**
+
 - Batch API to get multiple hashes in one call
 - Use manifest from previous build
 - Cache hash responses
@@ -913,6 +979,7 @@ else:
 **Impact:** User doesn't know if script is stuck or working.
 
 **Fix Needed:**
+
 ```python
 from tqdm import tqdm
 
@@ -931,6 +998,7 @@ for file in tqdm(files, desc="Uploading"):
 **Location:** Workflow concurrency
 
 **Scenario:**
+
 ```
 T0: Author A pushes to main
 T1: sync-content.yml starts (Author A's changes)
@@ -944,11 +1012,12 @@ T4: Both syncs running in parallel
 **Impact:** Last write wins, earlier changes lost.
 
 **Fix Needed:**
+
 ```yaml
 # sync-content.yml
 concurrency:
   group: panaversity-sync
-  cancel-in-progress: false  # Queue, don't cancel
+  cancel-in-progress: false # Queue, don't cancel
 ```
 
 **Status:** ⚠️ NOT HANDLED - Need to add concurrency group
@@ -962,6 +1031,7 @@ concurrency:
 **Problem:** Build might hydrate while sync is uploading.
 
 **Scenario:**
+
 ```
 T0: Sync starts (uploads file 1, 2, 3...)
 T1: Sync completes, triggers deploy
@@ -973,14 +1043,16 @@ T4: Deploy hydration reads manifest (includes files 4,5,6 that aren't uploaded y
 **Impact:** Build might reference files that don't exist yet.
 
 **Current Mitigation:**
+
 ```yaml
 workflow_run:
-  types: [completed]  # Wait for sync to complete
+  types: [completed] # Wait for sync to complete
 ```
 
 **Remaining Issue:** If new sync starts AFTER deploy triggers but BEFORE hydration completes.
 
 **Fix Needed:**
+
 - Add concurrency group to prevent overlapping workflows
 - OR lock mechanism at MCP level
 
@@ -995,6 +1067,7 @@ workflow_run:
 **Scenario:** Build deployed with corrupted content.
 
 **Current Recovery:**
+
 1. Disable PANAVERSITY_PLUGIN_ENABLED
 2. Trigger new build (uses local docs/)
 3. Fix corruption
@@ -1003,6 +1076,7 @@ workflow_run:
 **Problem:** No automated corruption detection.
 
 **Improvement Needed:**
+
 - Post-build validation (smoke test)
 - Automatic rollback on validation failure
 - Health check endpoint
@@ -1020,6 +1094,7 @@ workflow_run:
 **Impact:** Slow but safe.
 
 **Improvement:**
+
 - Reconstruct manifest from last successful build
 - Store manifest in R2 as backup
 
@@ -1031,9 +1106,10 @@ workflow_run:
 
 **Scenario:** R2 bucket corrupted or accidentally deleted.
 
-**Current Backup:** Content exists in git (book-source/docs/).
+**Current Backup:** Content exists in git (apps/learn-app/docs/).
 
 **Recovery:**
+
 ```bash
 # Re-sync all content from git
 git clone book-content
@@ -1044,6 +1120,7 @@ python scripts/ingest-book.py --book-id ai-native-dev --source-dir . --full-sync
 **Problem:** No automated recovery, no monitoring for this scenario.
 
 **Improvement Needed:**
+
 - Daily backup of R2 bucket
 - Monitoring for empty/missing content
 - Automated recovery workflow
@@ -1057,11 +1134,13 @@ python scripts/ingest-book.py --book-id ai-native-dev --source-dir . --full-sync
 ### 🔴 CRITICAL (Must Fix Before Production)
 
 1. **Path Traversal Vulnerability (Issue 1.6)**
+
    - Attack: `Part-01/Chapter-01/01-../../etc/passwd.md`
    - Impact: Write files outside content directory
    - Fix: Sanitize lesson names, validate final paths
 
 2. **Corrupted Manifest Handling (Issue 3.1)**
+
    - Problem: Script crashes on corrupted JSON
    - Impact: Build fails completely instead of fallback
    - Fix: Try-catch with manifest deletion on error
@@ -1076,11 +1155,13 @@ python scripts/ingest-book.py --book-id ai-native-dev --source-dir . --full-sync
 ### ⚠️ HIGH (Should Fix Before Production)
 
 4. **Partial File Upload (Issue 7.1)**
+
    - Problem: Network error leaves partial file in R2
    - Impact: Corrupted content
    - Fix: Upload to temp path, verify, then rename
 
 5. **Concurrent Workflow Execution (Issue 9.1)**
+
    - Problem: Multiple syncs can run simultaneously
    - Impact: Race conditions, lost updates
    - Fix: Add concurrency groups to workflows
@@ -1118,6 +1199,7 @@ python scripts/ingest-book.py --book-id ai-native-dev --source-dir . --full-sync
 ### Immediate Actions (Before Production)
 
 1. **Fix Path Traversal (Issue 1.6)**
+
 ```python
 # In path_mapper.py
 lesson_name = lesson_name.replace("..", "").replace("/", "").replace("\\", "")
@@ -1129,6 +1211,7 @@ if not final_path.is_relative_to(Path("content").resolve()):
 ```
 
 2. **Fix Manifest Corruption Handling (Issue 3.1)**
+
 ```python
 # In manifest.py
 try:
@@ -1141,16 +1224,17 @@ except (JSONDecodeError, ValidationError) as e:
 ```
 
 3. **Add Concurrency Groups**
+
 ```yaml
 # In sync-content.yml
 concurrency:
   group: panaversity-sync
   cancel-in-progress: false
-
 # In deploy.yml (already has 'pages' group, verify it's correct)
 ```
 
 4. **Improve Fallback Logic**
+
 ```yaml
 # In deploy.yml
 - name: Fallback to local docs
@@ -1161,10 +1245,11 @@ concurrency:
       exit 1
     fi
     rm -rf build-source/*
-    cp -r book-source/docs/* build-source/
+    cp -r apps/learn-app/docs/* build-source/
 ```
 
 5. **Add Logging Sanitization**
+
 ```python
 # In all scripts
 import re
@@ -1189,6 +1274,7 @@ def sanitize_for_logging(msg):
 ### Monitoring & Alerting
 
 **Add these monitors:**
+
 - Sync success rate (<98% → alert)
 - Build time (>5min → warning)
 - Manifest cache hit rate (<70% → investigate)
@@ -1242,18 +1328,17 @@ async def test_concurrent_uploads():
 **Recommendation:** Fix 6 critical/high issues before production deployment.
 
 **Critical Issues (MUST FIX):**
+
 1. Path traversal vulnerability
 2. Corrupted manifest handling
 3. API key exposure in logs
 
-**High Priority (SHOULD FIX):**
-4. Partial file upload handling
-5. Concurrent workflow execution
-6. Fallback path validation
+**High Priority (SHOULD FIX):** 4. Partial file upload handling 5. Concurrent workflow execution 6. Fallback path validation
 
 **Time Estimate:** 4-6 hours to fix critical + high issues
 
 **Next Steps:**
+
 1. Review this analysis with team
 2. Prioritize fixes
 3. Implement critical fixes

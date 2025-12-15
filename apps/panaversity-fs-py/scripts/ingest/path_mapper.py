@@ -73,7 +73,7 @@ def map_source_to_storage(source_path: str) -> MappedPath:
     """Map a source path to PanaversityFS storage path.
 
     Args:
-        source_path: Path relative to book-source/docs/ (e.g., "Part-01/Chapter-02/03-lesson.md")
+        source_path: Path relative to apps/learn-app/docs/ (e.g., "Part-01/Chapter-02/03-lesson.md")
 
     Returns:
         MappedPath with storage_path and validity information

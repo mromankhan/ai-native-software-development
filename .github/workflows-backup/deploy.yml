@@ -17,7 +17,7 @@ on:
       - "book-source/**"
       - ".github/workflows/deploy.yml"
       # Exclude docs/ since those trigger via sync-content workflow
-      - "!book-source/docs/**"
+      - "!apps/learn-app/docs/**"
   workflow_dispatch:
     inputs:
       full_rebuild:
@@ -122,14 +122,14 @@ jobs:
 
           # Validate that local docs/ exists and has content
           if [ ! -d "book-source/docs" ]; then
-            echo "❌ FATAL: Hydration failed AND book-source/docs/ does not exist"
+            echo "❌ FATAL: Hydration failed AND apps/learn-app/docs/ does not exist"
             echo "Cannot proceed without content directory"
             exit 1
           fi
 
           # Check if docs/ has any content files
           if [ -z "$(find book-source/docs -type f -name '*.md' 2>/dev/null)" ]; then
-            echo "❌ FATAL: Hydration failed AND book-source/docs/ is empty (no .md files)"
+            echo "❌ FATAL: Hydration failed AND apps/learn-app/docs/ is empty (no .md files)"
             echo "Cannot proceed with empty content directory"
             exit 1
           fi
@@ -139,7 +139,7 @@ jobs:
 
           # Copy from local docs/
           mkdir -p build-source
-          cp -r book-source/docs/* build-source/
+          cp -r apps/learn-app/docs/* build-source/
 
           # Add warning to build summary
           echo "## ⚠️ Warning: Build Used Local Content" >> $GITHUB_STEP_SUMMARY

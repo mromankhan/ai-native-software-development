@@ -21,6 +21,7 @@ All 6 critical and high priority security and reliability issues identified in t
 **Risk:** Attacker could write files outside content directory
 
 **Attack Vector (Before Fix):**
+
 ```
 Source: Part-01/Chapter-01/01-../../etc/passwd.md
 Lesson name: "../../etc/passwd"
@@ -29,12 +30,15 @@ Result: Writes to content/01-Part/etc/passwd.md (OUTSIDE content dir!)
 ```
 
 **Fix Applied:**
+
 1. Added `_sanitize_path_component()` function to remove dangerous characters:
+
    - Removes `..` (path traversal)
    - Removes `/` and `\` (directory separators)
    - Removes null bytes (`\0`)
 
 2. Added path validation in `_map_content_path()`:
+
    ```python
    # Validate that resolved path stays within content directory
    try:
@@ -48,6 +52,7 @@ Result: Writes to content/01-Part/etc/passwd.md (OUTSIDE content dir!)
 3. Applied same sanitization to asset paths in `_map_asset_path()`
 
 **Tests Added:**
+
 - 6 new security tests in `test_path_mapper.py`
 - Test path traversal attempts
 - Test double dots, slashes, backslashes, null bytes
@@ -62,7 +67,9 @@ Result: Writes to content/01-Part/etc/passwd.md (OUTSIDE content dir!)
 **Risk:** Script crashes instead of falling back to full rebuild
 
 **Fix Applied:**
+
 1. Added comprehensive error handling with logging:
+
    ```python
    except json.JSONDecodeError as e:
        logger.warning(f"Corrupt manifest (invalid JSON): {path}: {e}")
@@ -85,6 +92,7 @@ Result: Writes to content/01-Part/etc/passwd.md (OUTSIDE content dir!)
 4. Logs warnings for debugging
 
 **Edge Cases Handled:**
+
 - Empty file (0 bytes)
 - Truncated JSON
 - Invalid JSON syntax
@@ -101,13 +109,16 @@ Result: Writes to content/01-Part/etc/passwd.md (OUTSIDE content dir!)
 **Risk:** API keys appear in verbose logs or error messages
 
 **Fix Applied:**
+
 1. Created `scripts/common/log_sanitizer.py` with sanitization utilities:
+
    - `sanitize_message()` - Redacts sensitive data from strings
    - `sanitize_dict()` - Redacts sensitive dict values
    - `SanitizingFormatter` - Logging formatter
    - `get_sanitizing_logger()` - Pre-configured logger
 
 2. Patterns redacted:
+
    - `api_key=...` → `api_key=***REDACTED***`
    - `Bearer ...` → `Bearer ***REDACTED***`
    - `Authorization: ...` → `Authorization: ***REDACTED***`
@@ -117,6 +128,7 @@ Result: Writes to content/01-Part/etc/passwd.md (OUTSIDE content dir!)
    - `secret_key=...` → `secret_key=***REDACTED***`
 
 3. Applied sanitization in MCP client error messages:
+
    ```python
    # Sanitize error messages
    error_detail = sanitize_message(str(error_detail))
@@ -156,6 +168,7 @@ Added upload verification in `sync_file()` function:
 ```
 
 **Code:**
+
 ```python
 # Verify upload by reading back and comparing hash
 try:
@@ -186,10 +199,11 @@ Added concurrency group to sync-content.yml:
 # Prevent concurrent syncs to avoid race conditions
 concurrency:
   group: panaversity-sync
-  cancel-in-progress: false  # Queue syncs, don't cancel
+  cancel-in-progress: false # Queue syncs, don't cancel
 ```
 
 **Behavior:**
+
 - **Before:** Multiple authors pushing → multiple syncs running in parallel → race conditions, lost updates
 - **After:** Multiple pushes → syncs queued, run sequentially → no race conditions
 
@@ -214,13 +228,13 @@ Enhanced fallback step with validation:
 
     # Validate that local docs/ exists and has content
     if [ ! -d "book-source/docs" ]; then
-      echo "❌ FATAL: Hydration failed AND book-source/docs/ does not exist"
+      echo "❌ FATAL: Hydration failed AND apps/learn-app/docs/ does not exist"
       exit 1
     fi
 
     # Check if docs/ has any content files
     if [ -z "$(find book-source/docs -type f -name '*.md' 2>/dev/null)" ]; then
-      echo "❌ FATAL: Hydration failed AND book-source/docs/ is empty"
+      echo "❌ FATAL: Hydration failed AND apps/learn-app/docs/ is empty"
       exit 1
     fi
 
@@ -228,7 +242,7 @@ Enhanced fallback step with validation:
     rm -rf build-source/*
 
     # Copy from local docs/
-    cp -r book-source/docs/* build-source/
+    cp -r apps/learn-app/docs/* build-source/
 
     # Add warning to build summary
     echo "## ⚠️ Warning: Build Used Local Content" >> $GITHUB_STEP_SUMMARY
@@ -236,6 +250,7 @@ Enhanced fallback step with validation:
 ```
 
 **Edge Cases Handled:**
+
 - Missing docs/ directory → FAIL with clear error
 - Empty docs/ directory → FAIL with clear error
 - Partial hydration in build-source/ → CLEAR before copying
@@ -267,16 +282,16 @@ TOTAL:                  60 passed
 
 ## Files Modified
 
-| File | Changes | Lines Changed |
-|------|---------|---------------|
-| `scripts/ingest/path_mapper.py` | Added sanitization + validation | +50 |
-| `scripts/hydrate/manifest.py` | Enhanced error handling | +30 |
-| `scripts/common/log_sanitizer.py` | **NEW FILE** - Logging utilities | +125 |
-| `scripts/common/mcp_client.py` | Added log sanitization | +10 |
-| `scripts/ingest/sync_engine.py` | Added upload verification | +25 |
-| `.github/workflows/sync-content.yml` | Added concurrency group | +4 |
-| `.github/workflows/deploy.yml` | Enhanced fallback validation | +18 |
-| `tests/scripts/test_path_mapper.py` | Added 6 security tests | +65 |
+| File                                 | Changes                          | Lines Changed |
+| ------------------------------------ | -------------------------------- | ------------- |
+| `scripts/ingest/path_mapper.py`      | Added sanitization + validation  | +50           |
+| `scripts/hydrate/manifest.py`        | Enhanced error handling          | +30           |
+| `scripts/common/log_sanitizer.py`    | **NEW FILE** - Logging utilities | +125          |
+| `scripts/common/mcp_client.py`       | Added log sanitization           | +10           |
+| `scripts/ingest/sync_engine.py`      | Added upload verification        | +25           |
+| `.github/workflows/sync-content.yml` | Added concurrency group          | +4            |
+| `.github/workflows/deploy.yml`       | Enhanced fallback validation     | +18           |
+| `tests/scripts/test_path_mapper.py`  | Added 6 security tests           | +65           |
 
 **Total:** 7 files modified, 1 new file, ~327 lines added
 
@@ -286,14 +301,14 @@ TOTAL:                  60 passed
 
 ### Security Improvements
 
-| Issue | Before | After |
-|-------|--------|-------|
-| **Path Traversal** | ❌ Exploitable | ✅ Blocked and sanitized |
-| **Manifest Corruption** | ❌ Crashes | ✅ Deletes and rebuilds |
-| **API Key Leakage** | ⚠️ Possible | ✅ Auto-sanitized |
-| **Partial Uploads** | ❌ Corrupted data | ✅ Verified and rejected |
-| **Race Conditions** | ❌ Possible | ✅ Prevented with queuing |
-| **Fallback Failures** | ❌ Silent failure | ✅ Validated with errors |
+| Issue                   | Before            | After                     |
+| ----------------------- | ----------------- | ------------------------- |
+| **Path Traversal**      | ❌ Exploitable    | ✅ Blocked and sanitized  |
+| **Manifest Corruption** | ❌ Crashes        | ✅ Deletes and rebuilds   |
+| **API Key Leakage**     | ⚠️ Possible       | ✅ Auto-sanitized         |
+| **Partial Uploads**     | ❌ Corrupted data | ✅ Verified and rejected  |
+| **Race Conditions**     | ❌ Possible       | ✅ Prevented with queuing |
+| **Fallback Failures**   | ❌ Silent failure | ✅ Validated with errors  |
 
 ### Reliability Improvements
 

@@ -9,14 +9,14 @@
 
 ## Files Changed
 
-| File | Change |
-|------|--------|
-| `.github/workflows/deploy.yml` | Added hydration step with fallback |
-| `.github/workflows/sync-content.yml` | Already uses ingest-book.py ✓ |
-| `book-source/docusaurus.config.ts` | Updated to use ../build-source |
-| `.gitignore` | Added build-source/ and .panaversity/ |
-| `panaversity-fs/scripts/*` | Created in previous session ✓ |
-| `ARCHITECTURE.md` | Documentation ✓ |
+| File                                 | Change                                |
+| ------------------------------------ | ------------------------------------- |
+| `.github/workflows/deploy.yml`       | Added hydration step with fallback    |
+| `.github/workflows/sync-content.yml` | Already uses ingest-book.py ✓         |
+| `book-source/docusaurus.config.ts`   | Updated to use ../build-source        |
+| `.gitignore`                         | Added build-source/ and .panaversity/ |
+| `panaversity-fs/scripts/*`           | Created in previous session ✓         |
+| `ARCHITECTURE.md`                    | Documentation ✓                       |
 
 ## Pre-Deployment Checklist
 
@@ -131,8 +131,8 @@ open https://your-github-username.github.io/tutorsgpt
 ### Test Incremental Sync
 
 ```bash
-# 1. Edit a lesson in book-source/docs/
-echo "\nTest update" >> book-source/docs/Part-01/Chapter-01/01-introduction.md
+# 1. Edit a lesson in apps/learn-app/docs/
+echo "\nTest update" >> apps/learn-app/docs/Part-01/Chapter-01/01-introduction.md
 
 # 2. Commit and push
 git add .
@@ -173,7 +173,7 @@ gh secret set PANAVERSITY_SERVER_URL --body "https://panaversity-fs-XXXXX.run.ap
 # Revert to local docs/ immediately
 gh variable set PANAVERSITY_PLUGIN_ENABLED --body "false"
 
-# Next build will use book-source/docs/ directly
+# Next build will use apps/learn-app/docs/ directly
 # No code changes needed
 ```
 
@@ -258,6 +258,7 @@ After 1-2 weeks of stable operation:
 
 **Cause:** Sync failed or manual upload
 **Fix:**
+
 ```bash
 # Force full re-sync
 gh workflow run sync-content.yml -f full_sync=true

@@ -39,7 +39,7 @@ storage/
 ### For Authors (No Change)
 
 ```
-1. Edit files in book-source/docs/
+1. Edit files in apps/learn-app/docs/
 2. git commit && git push
 3. Open PR, get review, merge
 4. Done! Site rebuilds automatically
@@ -48,7 +48,7 @@ storage/
 ### Behind The Scenes (Automatic)
 
 ```
-Author pushes to book-source/docs/
+Author pushes to apps/learn-app/docs/
          │
          ▼
     ┌─────────────────────────────────────┐
@@ -84,13 +84,13 @@ Author pushes to book-source/docs/
 
 ## Key Benefits
 
-| Aspect | Before | After |
-|--------|--------|-------|
-| **Upload** | All 1000+ files | Only changed files (~3-5) |
-| **Download** | All 1000+ files (timeout) | Only delta (~500KB) |
-| **Build Time** | 8-10 minutes | ~2 minutes |
-| **CI Cost** | High | 50% lower |
-| **Authors** | Same workflow | **No change** |
+| Aspect         | Before                    | After                     |
+| -------------- | ------------------------- | ------------------------- |
+| **Upload**     | All 1000+ files           | Only changed files (~3-5) |
+| **Download**   | All 1000+ files (timeout) | Only delta (~500KB)       |
+| **Build Time** | 8-10 minutes              | ~2 minutes                |
+| **CI Cost**    | High                      | 50% lower                 |
+| **Authors**    | Same workflow             | **No change**             |
 
 ## How It Works
 
@@ -98,7 +98,7 @@ Author pushes to book-source/docs/
 
 ```bash
 # What it does:
-# - Scans book-source/docs/
+# - Scans apps/learn-app/docs/
 # - Computes SHA256 hash for each file
 # - Compares with PanaversityFS hashes
 # - Uploads ONLY files where hash differs
@@ -110,6 +110,7 @@ python panaversity-fs/scripts/ingest-book.py \
 ```
 
 **Example:**
+
 - Author changes 3 files
 - Sync uploads only those 3 files
 - Takes ~5 seconds
@@ -131,6 +132,7 @@ python panaversity-fs/scripts/hydrate-book.py \
 ```
 
 **Example:**
+
 - Last build had 1000 files
 - 5 files changed since then
 - Hydrate downloads only 5 files
@@ -153,12 +155,12 @@ If PanaversityFS fails:
 ```yaml
 # In deploy.yml:
 - name: Hydrate content
-  continue-on-error: true  # Don't fail build if hydration fails
+  continue-on-error: true # Don't fail build if hydration fails
   run: python hydrate-book.py ...
 
 - name: Fallback to local docs
   if: failure()
-  run: cp -r book-source/docs/* build-source/
+  run: cp -r apps/learn-app/docs/* build-source/
 ```
 
 **Result:** Builds never break, worst case uses slightly stale content.
@@ -171,7 +173,7 @@ If PanaversityFS fails:
 cd book-source
 PANAVERSITY_PLUGIN_ENABLED=false npm start
 
-# Reads from book-source/docs/
+# Reads from apps/learn-app/docs/
 # No PanaversityFS needed
 ```
 
@@ -217,6 +219,7 @@ Repo 2: book-interface/            # UI only
 ```
 
 **Migration path:**
+
 - Phase 1: ✅ Working now (incremental builds in monolith)
 - Phase 2: Enable sync workflow (dual-write)
 - Phase 3: Create content repo (parallel operation)
@@ -255,6 +258,7 @@ Target: >70% cache hit rate
 **Check:** Manifest cache might be stale
 
 **Fix:**
+
 ```bash
 # Trigger full rebuild via GitHub Actions UI
 # Workflow dispatch → deploy.yml → Enable "full_rebuild"
@@ -263,20 +267,23 @@ Target: >70% cache hit rate
 ### Problem: Sync not triggering
 
 **Check:**
-1. Did you push to `book-source/docs/`?
+
+1. Did you push to `apps/learn-app/docs/`?
 2. Is `PANAVERSITY_PLUGIN_ENABLED=true` in repo variables?
 3. Check sync-content.yml logs
 
 ## Contributing
 
-Authors: Keep working as usual in `book-source/docs/`
+Authors: Keep working as usual in `apps/learn-app/docs/`
 
 Developers:
+
 - `book-source/src/` - UI components
 - `panaversity-fs/` - MCP server and build scripts
 - `.github/workflows/` - CI/CD pipelines
 
 **Never edit:**
+
 - `build-source/` (generated)
 - `.panaversity/` (cache)
 

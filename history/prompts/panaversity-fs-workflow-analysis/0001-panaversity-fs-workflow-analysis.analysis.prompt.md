@@ -14,23 +14,27 @@ Analyze the panaversity-fs Python project for all CI/CD and access patterns that
 ### Your Task:
 
 1. **GitHub Workflows Analysis**:
+
    - Read ALL files in `.github/workflows/`
    - Identify which workflows touch `panaversity-fs/`
    - Document current triggers (push, PR, paths filters)
    - Analyze what path changes are needed
 
 2. **Python Project Access Patterns**:
+
    - How is panaversity-fs currently installed/accessed?
    - Check for any symlinks or path dependencies
    - Analyze pyproject.toml for package references
    - Check if MCP server registration depends on paths
 
 3. **Cross-Project Dependencies**:
+
    - Does book-source/ reference panaversity-fs?
    - Any shared utilities between projects?
    - Import paths that assume current structure
 
 4. **CI/CD Migration Requirements**:
+
    - Current workflow: What runs on panaversity-fs changes?
    - Target workflow: How to use `nx affected` for Python
    - Secret management: Any path-dependent secrets?
@@ -51,23 +55,27 @@ Completed comprehensive analysis of panaversity-fs GitHub workflows and Python p
 ### Key Findings
 
 **Workflow Touch Points** (4 total workflows):
+
 - `pr-check.yml`: NO direct touch (book-source only)
 - `sync-content.yml`: YES - calls `scripts/ingest-book.py`
 - `deploy.yml`: YES - calls `scripts/hydrate-book.py`
 - `validate-content.yml`: NO direct touch (content validation only)
 
 **Path Structure** (GOOD NEWS):
+
 - All paths are already relative and monorepo-safe
 - No hardcoded absolute paths found
 - `panaversity-fs/src/` and `panaversity-fs/tests/` work in monorepo
 - Scripts use `sys.path.insert()` but can be improved
 
 **Cross-Project Dependencies**:
+
 - book-source → panaversity-fs: Docusaurus plugin + hydration script
-- panaversity-fs → book-source: Reads from `../book-source/docs/`, outputs to `../build-source/`
+- panaversity-fs → book-source: Reads from `../apps/learn-app/docs/`, outputs to `../build-source/`
 - No npm/Python package dependencies
 
 **Python Import Pattern**:
+
 ```python
 from panaversity_fs.database import FileJournal  # Works fine
 from panaversity_fs.tools.content import read_content  # Standard imports
@@ -78,15 +86,18 @@ from panaversity_fs.tools.content import read_content  # Standard imports
 ### Risk Assessment
 
 **High Risk**:
+
 - Hardcoded pip install list in workflows (should use pyproject.toml)
 - sys.path manipulation in scripts (brittle)
 - Manifest cache key doesn't hash content (always invalidates)
 
 **Medium Risk**:
+
 - Python version specified in workflow (should reference .python-version)
 - Dependency drift between workflow and pyproject.toml
 
 **Low Risk**:
+
 - Node.js build independent of Python project
 - Secrets management already robust
 - Relative paths already monorepo-safe
@@ -94,16 +105,19 @@ from panaversity_fs.tools.content import read_content  # Standard imports
 ### Implementation Phases
 
 **Phase 1 (Week 1 - Minimal)**:
+
 - Update pip install to use full pyproject.toml
 - Add manifest cache content hashing
 - Document path conventions
 
 **Phase 2 (Week 2 - Nx Integration)**:
+
 - Update workflows to use `nx run panaversity-fs:hydrate` commands
 - Register panaversity-fs in `.mcp.json`
 - Create MCP server entry point
 
 **Phase 3 (Week 3 - Optimization)**:
+
 - Implement affected-only testing
 - Add cross-project dependency tracking
 - Profile and cache Python builds

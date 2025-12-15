@@ -4,7 +4,7 @@
 # Only uploads files that have changed since last sync.
 #
 # Workflow:
-# 1. Author/Agent pushes content to book-source/docs/
+# 1. Author/Agent pushes content to apps/learn-app/docs/
 # 2. This workflow detects changed files via git diff
 # 3. ingest-book.py uploads ONLY changed files to PanaversityFS
 # 4. deploy.yml is triggered to rebuild site

@@ -40,12 +40,14 @@ uv run python scripts/migrate_book_source.py --resume-from "chapter-14" --rewrit
 Configure via `.env` or environment variables:
 
 #### Local Filesystem
+
 ```bash
 export PANAVERSITY_STORAGE_BACKEND=fs
 export PANAVERSITY_STORAGE_ROOT=/tmp/panaversity-data
 ```
 
 #### Supabase Storage
+
 ```bash
 export PANAVERSITY_STORAGE_BACKEND=supabase
 export PANAVERSITY_SUPABASE_URL=https://xxx.supabase.co
@@ -56,6 +58,7 @@ export PANAVERSITY_SUPABASE_BUCKET=panaversity-books
 **Note**: Toggle bucket to **Public** in Supabase Dashboard for CDN URLs to work.
 
 #### Cloudflare R2 / AWS S3
+
 ```bash
 export PANAVERSITY_STORAGE_BACKEND=s3
 export PANAVERSITY_S3_BUCKET=your-bucket
@@ -70,18 +73,18 @@ export PANAVERSITY_CDN_BASE_URL=https://your-bucket.r2.dev  # or custom domain
 
 With `--rewrite-urls`, the script transforms local asset paths to CDN URLs:
 
-| Pattern | Before | After |
-|---------|--------|-------|
-| Markdown images | `![alt](/img/foo.png)` | `![alt]({cdn}/books/{book}/static/images/foo.png)` |
-| Markdown slides | `![alt](/slides/x.pdf)` | `![alt]({cdn}/books/{book}/static/slides/x.pdf)` |
+| Pattern            | Before                   | After                                              |
+| ------------------ | ------------------------ | -------------------------------------------------- |
+| Markdown images    | `![alt](/img/foo.png)`   | `![alt]({cdn}/books/{book}/static/images/foo.png)` |
+| Markdown slides    | `![alt](/slides/x.pdf)`  | `![alt]({cdn}/books/{book}/static/slides/x.pdf)`   |
 | Frontmatter slides | `source: "slides/x.pdf"` | `source: "{cdn}/books/{book}/static/slides/x.pdf"` |
 
 ### Directory Mapping (ADR-0018)
 
-| Source | Target |
-|--------|--------|
-| `book-source/docs/` | `books/{book-id}/content/` |
-| `book-source/static/img/` | `books/{book-id}/static/images/` |
+| Source                       | Target                           |
+| ---------------------------- | -------------------------------- |
+| `apps/learn-app/docs/`       | `books/{book-id}/content/`       |
+| `book-source/static/img/`    | `books/{book-id}/static/images/` |
 | `book-source/static/slides/` | `books/{book-id}/static/slides/` |
 
 ### Example Output

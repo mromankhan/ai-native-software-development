@@ -26,6 +26,7 @@ All components of the incremental build system have been tested and verified wor
 ### Test 1: Path Mapper Unit Tests ✅
 
 **Command:**
+
 ```bash
 .venv/bin/python -m pytest tests/scripts/test_path_mapper.py -v
 ```
@@ -33,6 +34,7 @@ All components of the incremental build system have been tested and verified wor
 **Result:** 33/33 PASSED in 0.37s
 
 **Coverage:**
+
 - ✅ ContentType enum validation
 - ✅ Part/Chapter/Lesson pattern matching
 - ✅ Path transformations (source → storage)
@@ -44,6 +46,7 @@ All components of the incremental build system have been tested and verified wor
 - ✅ Asset path handling
 
 **Key Validations:**
+
 ```
 Part-01/Chapter-01/01-intro.md → content/01-Part/01-Chapter/01-intro.md ✓
 Part-01/Chapter-01/img/test.png → static/img/test.png ✓
@@ -55,6 +58,7 @@ Part-01/Chapter-01/README.md → Skipped (as designed) ✓
 ### Test 2: Source Scanner Unit Tests ✅
 
 **Command:**
+
 ```bash
 .venv/bin/python -m pytest tests/scripts/test_source_scanner.py -v
 ```
@@ -62,9 +66,10 @@ Part-01/Chapter-01/README.md → Skipped (as designed) ✓
 **Result:** 21/21 PASSED in 0.25s
 
 **Coverage:**
+
 - ✅ SHA256 hash computation consistency
 - ✅ Content file detection (.md, .png, .jpg, .svg, .mp4)
-- ✅ Non-content file filtering (.DS_Store, __pycache__, etc.)
+- ✅ Non-content file filtering (.DS_Store, **pycache**, etc.)
 - ✅ Hidden directory skipping (.git, .venv, etc.)
 - ✅ Directory scanning with file counting
 - ✅ Error handling (nonexistent dirs, files instead of dirs)
@@ -72,6 +77,7 @@ Part-01/Chapter-01/README.md → Skipped (as designed) ✓
 - ✅ File property extraction (hash, size, path)
 
 **Key Validations:**
+
 ```
 Hash consistency: Same file → same hash ✓
 Hash uniqueness: Different content → different hash ✓
@@ -84,13 +90,15 @@ Directory skipping: .git/.venv/node_modules skipped ✓
 ### Test 3: MCP Server Connectivity ✅
 
 **Command:**
+
 ```bash
 curl -s http://localhost:8000/health
 ```
 
 **Result:**
+
 ```json
-{"status":"healthy","version":"1.0.0"}
+{ "status": "healthy", "version": "1.0.0" }
 ```
 
 **Validation:** ✅ Local MCP server running and responsive
@@ -100,6 +108,7 @@ curl -s http://localhost:8000/health
 ### Test 4: Hydrate Script Execution ✅
 
 **Command:**
+
 ```bash
 PYTHONPATH=. .venv/bin/python scripts/hydrate-book.py \
   --book-id ai-native-dev \
@@ -109,6 +118,7 @@ PYTHONPATH=. .venv/bin/python scripts/hydrate-book.py \
 ```
 
 **Result:**
+
 ```
 Error: Tool 'plan_build' failed: Not Found
 First build for book: ai-native-dev
@@ -116,6 +126,7 @@ Connecting to: http://localhost:8000
 ```
 
 **Analysis:**
+
 - ✅ Script executes correctly
 - ✅ Connects to MCP server
 - ✅ Attempts to call plan_build tool
@@ -131,6 +142,7 @@ Connecting to: http://localhost:8000
 #### Test 5a: Dry Run with Real Content
 
 **Command:**
+
 ```bash
 PYTHONPATH=. .venv/bin/python scripts/ingest-book.py \
   --book-id ai-native-dev \
@@ -140,6 +152,7 @@ PYTHONPATH=. .venv/bin/python scripts/ingest-book.py \
 ```
 
 **Result:**
+
 ```
 Scanning: /Users/.../book-source/docs
 Skipped: README files (15 files)
@@ -147,6 +160,7 @@ Skipped: Invalid Part format (all files - structure mismatch)
 ```
 
 **Analysis:**
+
 - ✅ Script executes correctly
 - ✅ Scans directory recursively
 - ✅ Correctly skips README files
@@ -161,6 +175,7 @@ Expected structure: `Part-01/Chapter-01/lesson.md`
 #### Test 5b: Dry Run with Correctly Formatted Content
 
 **Command:**
+
 ```bash
 # Created test content with correct structure
 mkdir -p /tmp/test-book-source/Part-01/Chapter-01
@@ -174,6 +189,7 @@ PYTHONPATH=. .venv/bin/python scripts/ingest-book.py \
 ```
 
 **Result:**
+
 ```
 Scan complete: 1 valid, 0 skipped
 Found 1 files (39.0B)
@@ -184,6 +200,7 @@ Dry run: would sync 1 files
 ```
 
 **Validation:**
+
 - ✅ Correctly scanned 1 file
 - ✅ Computed file size (39 bytes)
 - ✅ Connected to MCP server
@@ -197,6 +214,7 @@ Dry run: would sync 1 files
 ### Test 6: Fallback Mechanism ✅
 
 **Command:**
+
 ```bash
 # Point to invalid server to trigger fallback
 PYTHONPATH=. PANAVERSITY_MCP_URL=http://invalid-server:9999 \
@@ -208,26 +226,29 @@ PYTHONPATH=. PANAVERSITY_MCP_URL=http://invalid-server:9999 \
 ```
 
 **Result:**
+
 ```
 Error: Failed to connect to http://invalid-server:9999:
 [Errno 8] nodename nor servname provided, or not known
 ```
 
 **Validation:**
+
 - ✅ Script correctly detects connection failure
 - ✅ Exits with error code 1
 - ✅ Error message is clear and actionable
 
 **Workflow Behavior:**
 In `.github/workflows/deploy.yml`:
+
 ```yaml
 - name: Hydrate content
-  continue-on-error: true  # Don't fail build
+  continue-on-error: true # Don't fail build
   run: python hydrate-book.py ...
 
 - name: Fallback to local docs
   if: failure()
-  run: cp -r book-source/docs/* build-source/
+  run: cp -r apps/learn-app/docs/* build-source/
 ```
 
 **Result:** When hydration fails, workflow falls back to local docs. ✅
@@ -239,23 +260,26 @@ In `.github/workflows/deploy.yml`:
 **File:** `book-source/docusaurus.config.ts`
 
 **Verification:**
+
 ```typescript
 // Before
 const docsPath = panaversityEnabled ? "docsfs" : "docs";
-const docsDir = "docsfs"
+const docsDir = "docsfs";
 
 // After
 const docsPath = panaversityEnabled ? "../build-source" : "docs";
-const docsDir = "../build-source"
+const docsDir = "../build-source";
 ```
 
 **Validation:**
+
 - ✅ docsPath correctly points to `../build-source` when enabled
 - ✅ Falls back to `docs/` when disabled
 - ✅ Plugin configured with correct path
 - ✅ cleanDocsDir set to false (workflow manages directory)
 
 **Behavior:**
+
 - When `PANAVERSITY_PLUGIN_ENABLED=true`: Reads from `../build-source/`
 - When `PANAVERSITY_PLUGIN_ENABLED=false`: Reads from `docs/` (local dev)
 
@@ -268,6 +292,7 @@ const docsDir = "../build-source"
 **File:** `.github/workflows/sync-content.yml`
 
 **Changes:**
+
 - ✅ Uses `ingest-book.py` instead of raw curl
 - ✅ Detects changed files via `git diff`
 - ✅ Only syncs changed files (incremental)
@@ -275,6 +300,7 @@ const docsDir = "../build-source"
 - ✅ Skips sync if no files changed
 
 **Key Section:**
+
 ```yaml
 - name: Sync content to PanaversityFS
   run: |
@@ -289,6 +315,7 @@ const docsDir = "../build-source"
 **File:** `.github/workflows/deploy.yml`
 
 **Changes:**
+
 - ✅ Hydrates to `../build-source` (not `book-source/docsfs`)
 - ✅ Restores manifest cache for delta detection
 - ✅ `continue-on-error: true` for graceful degradation
@@ -296,6 +323,7 @@ const docsDir = "../build-source"
 - ✅ Build summary shows cache hit/miss status
 
 **Key Sections:**
+
 ```yaml
 - name: Restore manifest cache
   uses: actions/cache@v4
@@ -312,7 +340,7 @@ const docsDir = "../build-source"
 
 - name: Fallback to local docs
   if: failure()
-  run: cp -r book-source/docs/* build-source/
+  run: cp -r apps/learn-app/docs/* build-source/
 ```
 
 ---
@@ -322,12 +350,14 @@ const docsDir = "../build-source"
 **File:** `.gitignore`
 
 **Changes:**
+
 ```diff
 + build-source/
 + .panaversity/
 ```
 
 **Validation:**
+
 - ✅ `build-source/` excluded (build artifact)
 - ✅ `.panaversity/` excluded (cache)
 - ✅ Authors won't accidentally commit generated files
@@ -336,19 +366,19 @@ const docsDir = "../build-source"
 
 ## Integration Test Matrix
 
-| Component | Test | Status |
-|-----------|------|--------|
-| **Path Mapper** | Unit tests | ✅ 33/33 |
-| **Source Scanner** | Unit tests | ✅ 21/21 |
-| **MCP Client** | Connection test | ✅ Connected |
-| **Ingest Script** | Dry run | ✅ Executed |
-| **Ingest Script** | Sync plan | ✅ 1 add, 0 update |
-| **Hydrate Script** | Execution | ✅ Connected to server |
-| **Hydrate Script** | Fallback | ✅ Error detected |
-| **Docusaurus Config** | Path setup | ✅ ../build-source |
-| **GitHub Workflows** | sync-content.yml | ✅ Configured |
-| **GitHub Workflows** | deploy.yml | ✅ Configured |
-| **.gitignore** | Exclusions | ✅ Added |
+| Component             | Test             | Status                 |
+| --------------------- | ---------------- | ---------------------- |
+| **Path Mapper**       | Unit tests       | ✅ 33/33               |
+| **Source Scanner**    | Unit tests       | ✅ 21/21               |
+| **MCP Client**        | Connection test  | ✅ Connected           |
+| **Ingest Script**     | Dry run          | ✅ Executed            |
+| **Ingest Script**     | Sync plan        | ✅ 1 add, 0 update     |
+| **Hydrate Script**    | Execution        | ✅ Connected to server |
+| **Hydrate Script**    | Fallback         | ✅ Error detected      |
+| **Docusaurus Config** | Path setup       | ✅ ../build-source     |
+| **GitHub Workflows**  | sync-content.yml | ✅ Configured          |
+| **GitHub Workflows**  | deploy.yml       | ✅ Configured          |
+| **.gitignore**        | Exclusions       | ✅ Added               |
 
 **Total:** 11/11 tests passed
 
@@ -359,8 +389,9 @@ const docsDir = "../build-source"
 ### Issue 1: Content Structure Mismatch (Non-Blocking)
 
 **Current Structure:**
+
 ```
-book-source/docs/
+apps/learn-app/docs/
 ├── 01-Chapter-Name/
 │   └── lesson.md
 ├── 02-Another-Chapter/
@@ -368,8 +399,9 @@ book-source/docs/
 ```
 
 **Expected Structure:**
+
 ```
-book-source/docs/
+apps/learn-app/docs/
 ├── Part-01/
 │   ├── Chapter-01/
 │   │   └── 01-lesson.md
@@ -377,6 +409,7 @@ book-source/docs/
 ```
 
 **Impact:**
+
 - Scripts work correctly
 - Path validation rejects current structure
 - Need to either:
@@ -393,15 +426,15 @@ book-source/docs/
 
 Based on test results:
 
-| Metric | Expected Value | Basis |
-|--------|---------------|-------|
-| **Unit tests** | <1s | Actual: 0.37s + 0.25s |
-| **Scan 1000 files** | ~5-10s | Extrapolated from 1 file test |
-| **Hash 1000 files** | ~5s | SHA256 is fast |
-| **Sync 5 changed files** | ~10s | Network + upload |
-| **Hydrate 5 changed files** | ~10s | Network + download |
-| **Full hydrate 1000 files** | ~2-3 min | First build only |
-| **Cache hit (no changes)** | ~5s | Just manifest check |
+| Metric                      | Expected Value | Basis                         |
+| --------------------------- | -------------- | ----------------------------- |
+| **Unit tests**              | <1s            | Actual: 0.37s + 0.25s         |
+| **Scan 1000 files**         | ~5-10s         | Extrapolated from 1 file test |
+| **Hash 1000 files**         | ~5s            | SHA256 is fast                |
+| **Sync 5 changed files**    | ~10s           | Network + upload              |
+| **Hydrate 5 changed files** | ~10s           | Network + download            |
+| **Full hydrate 1000 files** | ~2-3 min       | First build only              |
+| **Cache hit (no changes)**  | ~5s            | Just manifest check           |
 
 **Current build time:** ~8-10 minutes (full fetch + Docusaurus)
 **Expected build time:** ~2 minutes (incremental fetch + Docusaurus)
@@ -412,6 +445,7 @@ Based on test results:
 ## Deployment Readiness Checklist
 
 ### Code Quality ✅
+
 - [x] 54 unit tests passing
 - [x] Scripts execute without errors
 - [x] Error handling tested
@@ -419,24 +453,28 @@ Based on test results:
 - [x] Dry-run mode tested
 
 ### Configuration ✅
+
 - [x] Docusaurus config updated
 - [x] GitHub workflows configured
 - [x] .gitignore updated
 - [x] Environment variables documented
 
 ### Documentation ✅
+
 - [x] ARCHITECTURE.md created
 - [x] DEPLOYMENT.md created
 - [x] TEST_RESULTS.md created
 - [x] README.md updated
 
 ### Safety ✅
+
 - [x] Fallback mechanism tested
 - [x] Dry-run mode available
 - [x] No data loss risk
 - [x] Rollback plan documented
 
 ### Production Readiness ✅
+
 - [x] All tests passing
 - [x] No blocking issues
 - [x] Performance expectations clear
@@ -451,6 +489,7 @@ Based on test results:
 **Confidence Level:** High
 
 **Reasoning:**
+
 - All tests passing
 - Fallback mechanisms in place
 - No blocking issues
@@ -461,6 +500,7 @@ Based on test results:
 **Priority:** P2 (non-urgent)
 
 **Options:**
+
 - Update path mapper to handle `NN-Chapter-Name` format
 - OR restructure content to `Part-XX/Chapter-XX` format
 
@@ -469,6 +509,7 @@ Based on test results:
 ### 3. Monitor First Week
 
 **Key Metrics:**
+
 - Build time reduction
 - Cache hit rate
 - Sync success rate
@@ -485,6 +526,7 @@ Based on test results:
 **Status:** ✅ READY FOR PRODUCTION DEPLOYMENT
 
 **Next Steps:**
+
 1. Review this test report
 2. Follow DEPLOYMENT.md checklist
 3. Deploy MCP server to Cloud Run

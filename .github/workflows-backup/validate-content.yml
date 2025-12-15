@@ -15,7 +15,7 @@ name: Validate Content
 on:
   pull_request:
     paths:
-      - "book-source/docs/**"
+      - "apps/learn-app/docs/**"
 
 jobs:
   validate:
@@ -26,16 +26,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for diff
+          fetch-depth: 0 # Full history for diff
 
       - name: Get changed files
         id: changed
         run: |
           # Get list of changed markdown files in docs/
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'book-source/docs/**/*.md' 2>/dev/null || echo "")
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'apps/learn-app/docs/**/*.md' 2>/dev/null || echo "")
 
           if [ -z "$CHANGED_FILES" ]; then
-            echo "No markdown files changed in book-source/docs/"
+            echo "No markdown files changed in apps/learn-app/docs/"
             echo "files=" >> $GITHUB_OUTPUT
           else
             echo "Changed files:"
@@ -103,4 +103,4 @@ jobs:
       - name: Skip check (no changed files)
         if: steps.changed.outputs.files == ''
         run: |
-          echo "✓ No markdown files changed in book-source/docs/ - skipping validation"
+          echo "✓ No markdown files changed in apps/learn-app/docs/ - skipping validation"

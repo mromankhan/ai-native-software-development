@@ -198,7 +198,7 @@ def scan_source_directory(
     computes hashes for change detection.
 
     Args:
-        source_root: Root directory to scan (e.g., book-source/docs/)
+        source_root: Root directory to scan (e.g., apps/learn-app/docs/)
         verbose: Print verbose output
 
     Returns:

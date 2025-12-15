@@ -18,6 +18,7 @@
 ## Overview
 
 ### Current State
+
 ```
 ai-native-software-development/
 ├── book-source/              # Docusaurus site (299 markdown files)
@@ -27,6 +28,7 @@ ai-native-software-development/
 ```
 
 ### Target State
+
 ```
 panaversity-fs/               # Standalone MCP server
 └── data/                     # OR cloud storage (R2/Supabase)
@@ -37,6 +39,7 @@ panaversity-fs/               # Standalone MCP server
 ```
 
 ### Migration Statistics
+
 - **Content files**: 299 markdown files
 - **Static assets**: 202 files (images, slides)
 - **Total size**: ~50MB estimated
@@ -56,6 +59,7 @@ uv run python scripts/migrate_book_source.py --dry-run --verbose
 ```
 
 Expected output:
+
 ```
 ============================================================
 PanaversityFS Migration (ADR-0018)
@@ -187,6 +191,7 @@ rclone ls cloudflare-r2:panaversity-books/
 #### A5. Configure R2 Public Access (Optional)
 
 For CDN URLs to work:
+
 1. R2 Dashboard → Bucket → Settings → Public Access
 2. Enable and configure custom domain
 
@@ -290,7 +295,7 @@ CMD ["uv", "run", "python", "-m", "panaversity_fs.server"]
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 services:
   panaversity-fs:
     build: .
@@ -419,7 +424,7 @@ curl -X POST https://panaversityfs.example.com/mcp \
 
 # Extract to Docusaurus
 unzip -o book.zip -d book-source/
-mv book-source/content/* book-source/docs/
+mv book-source/content/* apps/learn-app/docs/
 mv book-source/static/* book-source/static/
 
 # Build Docusaurus
@@ -526,6 +531,7 @@ uv publish
 ## Checklist
 
 ### Phase 1: Local Testing
+
 - [ ] Run migration dry-run
 - [ ] Execute migration
 - [ ] Start MCP server locally
@@ -533,6 +539,7 @@ uv publish
 - [ ] Run all 45 tests
 
 ### Phase 2: Cloud Storage
+
 - [ ] Choose backend (R2 or Supabase)
 - [ ] Create bucket/storage
 - [ ] Configure credentials
@@ -540,6 +547,7 @@ uv publish
 - [ ] Verify via MCP tools
 
 ### Phase 3: Production
+
 - [ ] Build Docker image
 - [ ] Deploy to platform (Fly.io/Railway)
 - [ ] Configure secrets
@@ -547,11 +555,13 @@ uv publish
 - [ ] Set up monitoring
 
 ### Development Workflow
+
 - [ ] Configure Docusaurus sync
 - [ ] Test end-to-end content editing
 - [ ] Document for team
 
 ### Separate Repository
+
 - [ ] Create new repo
 - [ ] Set up CI/CD
 - [ ] Update documentation links

@@ -49,6 +49,7 @@ storage/
 ### Where to Edit Content
 
 All book content lives in:
+
 ```
 apps/learn-app/docs/
 ├── 01-Part-Name/
@@ -68,6 +69,7 @@ apps/learn-app/docs/
 ### Key Files for Context
 
 When working on chapters, Claude Code reads:
+
 - `apps/learn-app/docs/chapter-index.md` - Chapter metadata
 - `apps/learn-app/docs/[part]/[chapter]/README.md` - Chapter structure
 
@@ -106,6 +108,7 @@ panaversity-fs-py (standalone - no JS dependencies)
 ```
 
 **What this means:**
+
 - Change a plugin → learn-app automatically rebuilds
 - Change Python code → only panaversity-fs-py tests run
 - Change docs only → minimal rebuild
@@ -195,14 +198,14 @@ nx build learn-app --skip-nx-cache
 
 ### Old Path → New Path
 
-| Old | New |
-|-----|-----|
-| `book-source/` | `apps/learn-app/` |
-| `book-source/docs/` | `apps/learn-app/docs/` |
-| `book-source/plugins/` | `libs/docusaurus/` |
-| `panaversity-fs/` | `apps/panaversity-fs-py/` |
-| `npm install` | `pnpm install` |
-| `npm run build` | `nx build learn-app` |
+| Old                    | New                       |
+| ---------------------- | ------------------------- |
+| `book-source/`         | `apps/learn-app/`         |
+| `apps/learn-app/docs/` | `apps/learn-app/docs/`    |
+| `book-source/plugins/` | `libs/docusaurus/`        |
+| `panaversity-fs/`      | `apps/panaversity-fs-py/` |
+| `npm install`          | `pnpm install`            |
+| `npm run build`        | `nx build learn-app`      |
 
 ### npm → pnpm
 

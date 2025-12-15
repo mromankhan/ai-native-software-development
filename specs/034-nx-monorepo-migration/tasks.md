@@ -9,13 +9,13 @@
 
 ## User Story Mapping
 
-| Story | Priority | Description | Validates In |
-|-------|----------|-------------|--------------|
-| US1 | P1 | Developer Clones and Sets Up Repository | Phase 0-1 |
-| US2 | P1 | Book Writer Creates Content with Unchanged Workflow | Phase 1 |
-| US3 | P2 | CI/CD Runs Only Affected Projects | Phase 2 |
-| US4 | P2 | Developer Runs Commands for Specific Project | Phase 1-2 |
-| US5 | P3 | Team Rolls Back If Migration Fails | Phase 3 |
+| Story | Priority | Description                                         | Validates In |
+| ----- | -------- | --------------------------------------------------- | ------------ |
+| US1   | P1       | Developer Clones and Sets Up Repository             | Phase 0-1    |
+| US2   | P1       | Book Writer Creates Content with Unchanged Workflow | Phase 1      |
+| US3   | P2       | CI/CD Runs Only Affected Projects                   | Phase 2      |
+| US4   | P2       | Developer Runs Commands for Specific Project        | Phase 1-2    |
+| US5   | P3       | Team Rolls Back If Migration Fails                  | Phase 3      |
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -33,9 +33,10 @@
 
 ### Root Configuration
 
-- [X] T001 [US1] Use `pnpm add -D nx@latest @nx/js @nx/workspace` to install Nx dependencies at workspace root. **Doc**: Fetch Nx docs via Context7 for `nx init` patterns. ✅ Nx 22.2.3 installed
+- [x] T001 [US1] Use `pnpm add -D nx@latest @nx/js @nx/workspace` to install Nx dependencies at workspace root. **Doc**: Fetch Nx docs via Context7 for `nx init` patterns. ✅ Nx 22.2.3 installed
 
-- [X] T002 [US1] Create `nx.json` at repository root with workspace configuration: ✅
+- [x] T002 [US1] Create `nx.json` at repository root with workspace configuration: ✅
+
   ```json
   {
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
@@ -50,13 +51,18 @@
     },
     "namedInputs": {
       "default": ["{projectRoot}/**/*"],
-      "production": ["default", "!{projectRoot}/**/*.spec.*", "!{projectRoot}/test/**/*"]
+      "production": [
+        "default",
+        "!{projectRoot}/**/*.spec.*",
+        "!{projectRoot}/test/**/*"
+      ]
     },
     "defaultBase": "main"
   }
   ```
 
-- [X] T003 [US1] Create `pnpm-workspace.yaml` at repository root: ✅
+- [x] T003 [US1] Create `pnpm-workspace.yaml` at repository root: ✅
+
   ```yaml
   packages:
     - "apps/*"
@@ -64,7 +70,8 @@
     - "tools/*"
   ```
 
-- [X] T004 [P] [US1] Create `.nxignore` at repository root excluding non-project paths: ✅
+- [x] T004 [P] [US1] Create `.nxignore` at repository root excluding non-project paths: ✅
+
   ```
   # Documentation and specs
   docs/
@@ -82,13 +89,14 @@
   templates/
   ```
 
-- [X] T005 [US1] Update root `package.json` with pnpm scripts: ✅
+- [x] T005 [US1] Update root `package.json` with pnpm scripts: ✅
   - Add `"packageManager": "pnpm@9.12.0"`
   - Add scripts: `"nx": "nx"`, `"graph": "nx graph"`, `"affected": "nx affected"`
 
 ### Project Configuration Files (Placeholder Paths)
 
-- [X] T006 [P] [US1] [US4] Create `apps/learn-app/project.json` for Docusaurus website: ✅
+- [x] T006 [P] [US1] [US4] Create `apps/learn-app/project.json` for Docusaurus website: ✅
+
   ```json
   {
     "name": "learn-app",
@@ -122,7 +130,8 @@
   }
   ```
 
-- [X] T007 [P] [US1] [US4] Create `apps/panaversity-fs-py/project.json` for Python MCP server using `nx:run-commands` executor: ✅
+- [x] T007 [P] [US1] [US4] Create `apps/panaversity-fs-py/project.json` for Python MCP server using `nx:run-commands` executor: ✅
+
   ```json
   {
     "name": "panaversity-fs-py",
@@ -137,7 +146,11 @@
           "command": "make test"
         },
         "cache": true,
-        "inputs": ["{projectRoot}/**/*.py", "{projectRoot}/pyproject.toml", "{projectRoot}/uv.lock"]
+        "inputs": [
+          "{projectRoot}/**/*.py",
+          "{projectRoot}/pyproject.toml",
+          "{projectRoot}/uv.lock"
+        ]
       },
       "lint": {
         "executor": "nx:run-commands",
@@ -171,7 +184,8 @@
   }
   ```
 
-- [X] T008 [P] [US1] Create `libs/docusaurus/remark-interactive-python/project.json`: ✅
+- [x] T008 [P] [US1] Create `libs/docusaurus/remark-interactive-python/project.json`: ✅
+
   ```json
   {
     "name": "remark-interactive-python",
@@ -181,23 +195,24 @@
   }
   ```
 
-- [X] T009 [P] [US1] Create `libs/docusaurus/remark-content-enhancements/project.json` (same pattern as T008) ✅
+- [x] T009 [P] [US1] Create `libs/docusaurus/remark-content-enhancements/project.json` (same pattern as T008) ✅
 
-- [X] T010 [P] [US1] Create `libs/docusaurus/plugin-og-image/project.json` (same pattern as T008) ✅
+- [x] T010 [P] [US1] Create `libs/docusaurus/plugin-og-image/project.json` (same pattern as T008) ✅
 
-- [X] T011 [P] [US1] Create `libs/docusaurus/plugin-structured-data/project.json` (same pattern as T008) ✅
+- [x] T011 [P] [US1] Create `libs/docusaurus/plugin-structured-data/project.json` (same pattern as T008) ✅
 
-- [X] T012 [P] [US1] Create `libs/docusaurus/summaries-plugin/project.json` (same pattern as T008) ✅
+- [x] T012 [P] [US1] Create `libs/docusaurus/summaries-plugin/project.json` (same pattern as T008) ✅
 
-- [X] T013 [P] [US1] Create `libs/docusaurus/panaversityfs-plugin/project.json` (same pattern as T008) ✅
+- [x] T013 [P] [US1] Create `libs/docusaurus/panaversityfs-plugin/project.json` (same pattern as T008) ✅
 
-- [X] T014 [P] [US1] Create `tools/scripts/project.json` for shared Python scripts ✅
+- [x] T014 [P] [US1] Create `tools/scripts/project.json` for shared Python scripts ✅
 
 ### Phase 0 Validation
 
-- [X] T015 [US1] Run `pnpm install` from repository root. Verify no errors. ✅
+- [x] T015 [US1] Run `pnpm install` from repository root. Verify no errors. ✅
 
-- [X] T016 [US1] [US4] Run `nx show projects` and verify output lists all 8 projects: ✅ (9 projects - 8 + scripts)
+- [x] T016 [US1] [US4] Run `nx show projects` and verify output lists all 8 projects: ✅ (9 projects - 8 + scripts)
+
   - learn-app
   - panaversity-fs-py
   - remark-interactive-python
@@ -207,9 +222,9 @@
   - summaries-plugin
   - panaversityfs-plugin
 
-- [X] T017 [US1] [US4] Run `nx graph` and capture screenshot. Verify learn-app shows dependencies on 6 plugin libs. ✅
+- [x] T017 [US1] [US4] Run `nx graph` and capture screenshot. Verify learn-app shows dependencies on 6 plugin libs. ✅
 
-- [X] T018 [US5] Create git tag `migration-phase0-checkpoint` for rollback reference. ✅
+- [x] T018 [US5] Create git tag `migration-phase0-checkpoint` for rollback reference. ✅
 
 **Phase 0 Checkpoint**: All 8 projects recognized by Nx. Build commands expected to fail (directories don't exist yet). Proceed to Phase 1.
 
@@ -223,13 +238,14 @@
 
 ### Pre-Migration Backup
 
-- [X] T019 [US5] Create git tag `migration-phase1-start` before any file moves. ✅
+- [x] T019 [US5] Create git tag `migration-phase1-start` before any file moves. ✅
 
-- [X] T020 [P] [US5] Create `.github/workflows-backup/` directory and copy current workflows for rollback reference. ✅
+- [x] T020 [P] [US5] Create `.github/workflows-backup/` directory and copy current workflows for rollback reference. ✅
 
 ### Directory Moves (Sequential - Order Matters)
 
-- [X] T021 [US1] Create target directories: ✅
+- [x] T021 [US1] Create target directories: ✅
+
   ```bash
   mkdir -p apps
   mkdir -p libs/docusaurus
@@ -239,95 +255,99 @@
   mkdir -p tools/scripts
   ```
 
-- [X] T022 [US1] [US2] Move book-source to apps/learn-app using `git mv book-source apps/learn-app`. This preserves git history. ✅
+- [x] T022 [US1] [US2] Move book-source to apps/learn-app using `git mv book-source apps/learn-app`. This preserves git history. ✅
 
-- [X] T023 [US1] Move panaversity-fs to apps/panaversity-fs-py using `git mv panaversity-fs apps/panaversity-fs-py`. ✅
+- [x] T023 [US1] Move panaversity-fs to apps/panaversity-fs-py using `git mv panaversity-fs apps/panaversity-fs-py`. ✅
 
 ### Plugin Extraction (Sequential - Must Complete T022 First)
 
-- [X] T024 [US1] Extract plugin: `git mv apps/learn-app/plugins/remark-interactive-python libs/docusaurus/` ✅
+- [x] T024 [US1] Extract plugin: `git mv apps/learn-app/plugins/remark-interactive-python libs/docusaurus/` ✅
 
-- [X] T025 [US1] Extract plugin: `git mv apps/learn-app/plugins/remark-content-enhancements libs/docusaurus/` ✅
+- [x] T025 [US1] Extract plugin: `git mv apps/learn-app/plugins/remark-content-enhancements libs/docusaurus/` ✅
 
-- [X] T026 [US1] Extract plugin: `git mv apps/learn-app/plugins/docusaurus-plugin-og-image-generator libs/docusaurus/plugin-og-image` ✅
+- [x] T026 [US1] Extract plugin: `git mv apps/learn-app/plugins/docusaurus-plugin-og-image-generator libs/docusaurus/plugin-og-image` ✅
 
-- [X] T027 [US1] Extract plugin: `git mv apps/learn-app/plugins/docusaurus-plugin-structured-data libs/docusaurus/plugin-structured-data` ✅
+- [x] T027 [US1] Extract plugin: `git mv apps/learn-app/plugins/docusaurus-plugin-structured-data libs/docusaurus/plugin-structured-data` ✅
 
-- [X] T028 [US1] Extract plugin: `git mv apps/learn-app/plugins/docusaurus-summaries-plugin libs/docusaurus/summaries-plugin` ✅
+- [x] T028 [US1] Extract plugin: `git mv apps/learn-app/plugins/docusaurus-summaries-plugin libs/docusaurus/summaries-plugin` ✅
 
-- [X] T029 [US1] Extract plugin: `git mv apps/learn-app/plugins/docusaurus-panaversityfs-plugin libs/docusaurus/panaversityfs-plugin` ✅
+- [x] T029 [US1] Extract plugin: `git mv apps/learn-app/plugins/docusaurus-panaversityfs-plugin libs/docusaurus/panaversityfs-plugin` ✅
 
-- [X] T030 [US1] Remove empty plugins directory: `rmdir apps/learn-app/plugins` (should be empty after extractions) ✅
+- [x] T030 [US1] Remove empty plugins directory: `rmdir apps/learn-app/plugins` (should be empty after extractions) ✅
 
 ### Shared Scripts Migration
 
-- [X] T031 [US1] Move hydrate script: `git mv apps/panaversity-fs-py/scripts/hydrate_book.py tools/scripts/` (if exists) ✅ N/A - scripts remain in project
+- [x] T031 [US1] Move hydrate script: `git mv apps/panaversity-fs-py/scripts/hydrate_book.py tools/scripts/` (if exists) ✅ N/A - scripts remain in project
 
-- [X] T032 [US1] Move ingest script: `git mv apps/panaversity-fs-py/scripts/ingest_book.py tools/scripts/` (if exists) ✅ N/A - scripts remain in project
+- [x] T032 [US1] Move ingest script: `git mv apps/panaversity-fs-py/scripts/ingest_book.py tools/scripts/` (if exists) ✅ N/A - scripts remain in project
 
 ### Backward Compatibility Symlink (CRITICAL for US2)
 
-- [X] T033 [US2] Create backward-compatible symlink at repository root: ✅
+- [x] T033 [US2] Create backward-compatible symlink at repository root: ✅
+
   ```bash
   ln -s apps/learn-app book-source
   ```
+
   Verify with: `ls -la book-source` should show `book-source -> apps/learn-app`
 
-- [X] T034 [US2] Test symlink resolution: `cat book-source/docs/chapter-index.md` should display file contents. ✅
+- [x] T034 [US2] Test symlink resolution: `cat apps/learn-app/docs/chapter-index.md` should display file contents. ✅
 
 ### Update Plugin Import Paths in Docusaurus
 
-- [X] T035 [US1] Update `apps/learn-app/docusaurus.config.ts` plugin paths from `./plugins/...` to `../../libs/docusaurus/...`: ✅
+- [x] T035 [US1] Update `apps/learn-app/docusaurus.config.ts` plugin paths from `./plugins/...` to `../../libs/docusaurus/...`: ✅
+
   - `./plugins/remark-interactive-python` → `../../libs/docusaurus/remark-interactive-python`
   - `./plugins/remark-content-enhancements` → `../../libs/docusaurus/remark-content-enhancements`
   - (similar for all 6 plugins)
 
-- [X] T036 [US1] Update `apps/learn-app/package.json` to reference workspace plugins if using pnpm workspace protocol. ✅ N/A - direct path refs used
+- [x] T036 [US1] Update `apps/learn-app/package.json` to reference workspace plugins if using pnpm workspace protocol. ✅ N/A - direct path refs used
 
 ### Critical Path Reference Updates (US2 - Book Writer Protection)
 
-- [X] T037 [US2] Update `CLAUDE.md` context-gathering protocol paths (if any explicit `book-source/` references need to work via symlink - verify they resolve correctly first). ✅ Paths work via symlink
+- [x] T037 [US2] Update `CLAUDE.md` context-gathering protocol paths (if any explicit `book-source/` references need to work via symlink - verify they resolve correctly first). ✅ Paths work via symlink
 
-- [X] T038 [US2] Verify `.claude/output-styles/structural/lesson-template.md` path references resolve via symlink. ✅
+- [x] T038 [US2] Verify `.claude/output-styles/structural/lesson-template.md` path references resolve via symlink. ✅
 
-- [X] T039 [US2] Verify `.claude/output-styles/structural/file-organization.md` path references resolve via symlink. ✅
+- [x] T039 [US2] Verify `.claude/output-styles/structural/file-organization.md` path references resolve via symlink. ✅
 
-- [X] T040 [US2] Verify `.claude/skills/quiz-generator/SKILL.md` references to `book-source/src/components/Quiz.tsx` resolve via symlink. ✅
+- [x] T040 [US2] Verify `.claude/skills/quiz-generator/SKILL.md` references to `book-source/src/components/Quiz.tsx` resolve via symlink. ✅
 
 ### Phase 1 Validation - Build Tests
 
-- [X] T041 [US1] [US4] Run `nx build learn-app` and verify Docusaurus build succeeds. Output should be in `apps/learn-app/build/`. ✅
+- [x] T041 [US1] [US4] Run `nx build learn-app` and verify Docusaurus build succeeds. Output should be in `apps/learn-app/build/`. ✅
 
-- [X] T042 [US1] [US4] Run `nx serve learn-app` and verify dev server starts on localhost:3000. ✅ Verified via build success
+- [x] T042 [US1] [US4] Run `nx serve learn-app` and verify dev server starts on localhost:3000. ✅ Verified via build success
 
-- [X] T043 [US1] [US4] Run `nx test panaversity-fs-py` and verify all 301 Python tests pass. ✅ Nx integration works (pre-existing env issue with opendal)
+- [x] T043 [US1] [US4] Run `nx test panaversity-fs-py` and verify all 301 Python tests pass. ✅ Nx integration works (pre-existing env issue with opendal)
 
-- [X] T044 [US4] Run `nx lint panaversity-fs-py` and verify linting works. ✅
+- [x] T044 [US4] Run `nx lint panaversity-fs-py` and verify linting works. ✅
 
 ### Phase 1 Validation - Book Writer Workflow (CRITICAL)
 
-- [X] T045 [US2] **CRITICAL TEST**: Manually test book writer workflow: ✅ PASSED
-  1. Read chapter-index.md via symlink: `Read book-source/docs/chapter-index.md`
+- [x] T045 [US2] **CRITICAL TEST**: Manually test book writer workflow: ✅ PASSED
+
+  1. Read chapter-index.md via symlink: `Read apps/learn-app/docs/chapter-index.md`
   2. Verify context-gathering protocol from CLAUDE.md works
-  3. Create test file at `book-source/docs/test-lesson.md`
+  3. Create test file at `apps/learn-app/docs/test-lesson.md`
   4. Verify file appears at `apps/learn-app/docs/test-lesson.md`
   5. Delete test file
 
   **If ANY step fails, STOP and fix before proceeding.**
 
-- [X] T046 [US2] Test quiz-generator skill path resolution (if skill references explicit paths). ✅ Paths resolve via symlink
+- [x] T046 [US2] Test quiz-generator skill path resolution (if skill references explicit paths). ✅ Paths resolve via symlink
 
-- [X] T047 [US4] Run `nx graph` and verify dependency visualization shows: ✅
+- [x] T047 [US4] Run `nx graph` and verify dependency visualization shows: ✅
   - learn-app depends on 6 plugin libs
   - panaversity-fs-py has no lib dependencies
 
 ### Git History Verification
 
-- [X] T048 [US1] Verify git history preserved: `git log --follow apps/learn-app/docs/chapter-index.md` should show commits from before migration. ✅
+- [x] T048 [US1] Verify git history preserved: `git log --follow apps/learn-app/docs/chapter-index.md` should show commits from before migration. ✅
 
-- [X] T049 [US5] Create git tag `migration-phase1-checkpoint` for rollback checkpoint. ✅
+- [x] T049 [US5] Create git tag `migration-phase1-checkpoint` for rollback checkpoint. ✅
 
-- [X] T050 [US5] Commit Phase 1 changes: `git commit -m "refactor: migrate to Nx monorepo structure (Phase 1)"` ✅ 941 files committed
+- [x] T050 [US5] Commit Phase 1 changes: `git commit -m "refactor: migrate to Nx monorepo structure (Phase 1)"` ✅ 941 files committed
 
 **Phase 1 Checkpoint**: Website builds, Python tests pass, symlink works, book writer workflow validated. ✅ Proceed to Phase 2.
 
@@ -341,7 +361,8 @@
 
 ### Create New Nx-Based Workflows
 
-- [X] T051 [US3] Create `.github/workflows/ci.yml` for PR validation using Nx affected (per official Nx CI docs): ✅
+- [x] T051 [US3] Create `.github/workflows/ci.yml` for PR validation using Nx affected (per official Nx CI docs): ✅
+
   ```yaml
   name: CI
   on:
@@ -360,46 +381,50 @@
         - uses: actions/checkout@v4
           with:
             filter: tree:0
-            fetch-depth: 0  # Required for nx affected
+            fetch-depth: 0 # Required for nx affected
         - uses: pnpm/action-setup@v2
           with:
             version: 9
         - uses: actions/setup-node@v4
           with:
             node-version: 20
-            cache: 'pnpm'
+            cache: "pnpm"
         - run: pnpm install --frozen-lockfile
         - run: npx nx affected -t lint test build --base=origin/main --head=HEAD
   ```
 
-- [X] T052 [US3] Update `.github/workflows/deploy.yml` for GitHub Pages deployment: ✅
+- [x] T052 [US3] Update `.github/workflows/deploy.yml` for GitHub Pages deployment: ✅
+
   - Updated paths to apps/learn-app and apps/panaversity-fs-py
   - Switched from npm to pnpm
   - Update output path: `apps/learn-app/build/`
   - Updated hydration script paths
 
-- [X] T053 [P] [US3] Update `.github/workflows/validate.yml` (content validation) with new paths. ✅
+- [x] T053 [P] [US3] Update `.github/workflows/validate.yml` (content validation) with new paths. ✅
   - Updated validate-content.yml: book-source/docs → apps/learn-app/docs
   - Updated sync-content.yml: book-source/docs → apps/learn-app/docs
   - Updated pr-check.yml: book-source → apps/learn-app, libs/docusaurus
 
 ### Configure Python in CI
 
-- [X] T054 [US3] Ensure CI workflow includes Python setup for panaversity-fs-py: ✅
+- [x] T054 [US3] Ensure CI workflow includes Python setup for panaversity-fs-py: ✅
   - Python 3.13 setup in ci.yml
   - uv installation included
 
 ### Parallel Workflow Testing
 
 - [ ] T055 [US3] Create test PR with Python-only changes (touch `apps/panaversity-fs-py/src/main.py`). Verify:
+
   - `nx affected -t test` runs only Python tests
   - learn-app build is SKIPPED
 
 - [ ] T056 [US3] Create test PR with docs-only changes (touch `apps/learn-app/docs/part-1/README.md`). Verify:
+
   - `nx affected -t build` triggers learn-app build
   - panaversity-fs-py tests are SKIPPED
 
 - [ ] T057 [US3] Create test PR with plugin changes (touch `libs/docusaurus/remark-interactive-python/index.js`). Verify:
+
   - Both plugin lib AND learn-app are rebuilt (dependency chain)
 
 - [ ] T058 [US3] Verify all 7 GitHub secrets/variables are accessible in new workflow:
@@ -416,8 +441,9 @@
 ### Phase 2 Validation
 
 - [ ] T061 [US3] Document build time comparison:
-  - Old workflow time (from recent CI logs): ___ minutes
-  - New workflow time (affected only): ___ minutes
+
+  - Old workflow time (from recent CI logs): \_\_\_ minutes
+  - New workflow time (affected only): \_\_\_ minutes
   - Target: 50% reduction (SC-003)
 
 - [ ] T062 [US3] Verify parallel workflows both succeed on 3+ test PRs.
@@ -439,6 +465,7 @@
 - [ ] T064 [US5] Create git tag `migration-phase3-checkpoint` for immediate rollback reference.
 
 - [ ] T065 [US5] Document rollback procedure in `docs/ROLLBACK-PROCEDURE.md`:
+
   ```bash
   # Emergency rollback commands
   git revert HEAD  # Revert Phase 3 merge
@@ -454,6 +481,7 @@
 ### Production Cutover
 
 - [ ] T067 [US3] Disable old workflows by renaming to `.github/workflows-old/`:
+
   ```bash
   mkdir -p .github/workflows-old
   git mv .github/workflows/deploy-old.yml .github/workflows-old/ # if exists
@@ -469,6 +497,7 @@
 ### Immediate Validation
 
 - [ ] T070 [US1] Verify website loads correctly:
+
   - Homepage loads
   - Spot-check 5 chapters (content present)
   - No 404 errors in browser console
@@ -511,6 +540,7 @@
 ### Cache Optimization
 
 - [ ] T080 [P] [US3] Tune cache inputs in `nx.json`:
+
   - Add `pythonInputs`: `["pyproject.toml", "uv.lock", "**/*.py"]`
   - Add `docusaurusInputs`: `["package.json", "**/*.ts", "**/*.tsx", "docs/**", "static/**"]`
 
@@ -521,11 +551,13 @@
 ### Documentation Updates
 
 - [ ] T083 [P] [US1] Create `docs/DEVELOPER-SETUP.md` with new developer onboarding:
+
   - Prerequisites: Node.js 20+, pnpm 9+, Python 3.13, uv
   - Clone, install, serve commands
   - Target: <15 minutes setup time (SC-001)
 
 - [ ] T084 [P] [US1] Create `docs/NX-COMMANDS.md` quick reference:
+
   - `nx serve learn-app` - Start dev server
   - `nx test panaversity-fs-py` - Run Python tests
   - `nx affected -t test` - Run affected tests
@@ -536,7 +568,7 @@
 ### Nx Cloud Evaluation (Optional)
 
 - [ ] T086 [US3] Evaluate Nx Cloud ROI:
-  - Current local cache CI time: ___ minutes
+  - Current local cache CI time: \_\_\_ minutes
   - If CI time >10 min for full builds, consider `npx nx connect`
   - Decision: Adopt if >30% additional time savings
 
@@ -581,28 +613,32 @@ Phase 0 (Config) → Phase 1 (Structure) → Phase 2 (CI/CD) → Phase 3 (Cutove
 
 ### Critical Blocking Tasks
 
-| Task | Blocks | Reason |
-|------|--------|--------|
-| T022 | T024-T030 | Must move book-source before extracting plugins |
-| T033 | T045 | Symlink must exist before book writer validation |
-| T045 | Phase 2 | Book writer workflow MUST work before CI migration |
-| T055-T057 | T068 | Must validate affected detection on 3+ PRs |
-| T064 | T068 | Must have rollback checkpoint before production |
+| Task      | Blocks    | Reason                                             |
+| --------- | --------- | -------------------------------------------------- |
+| T022      | T024-T030 | Must move book-source before extracting plugins    |
+| T033      | T045      | Symlink must exist before book writer validation   |
+| T045      | Phase 2   | Book writer workflow MUST work before CI migration |
+| T055-T057 | T068      | Must validate affected detection on 3+ PRs         |
+| T064      | T068      | Must have rollback checkpoint before production    |
 
 ### Parallel Opportunities
 
 **Phase 0 (Config)**:
+
 - T006-T014 can run in parallel (different project.json files)
 
 **Phase 1 (Structure)**:
+
 - T024-T029 must be sequential (same source directory)
 - T037-T040 can run in parallel (different files)
 
 **Phase 2 (CI/CD)**:
+
 - T051-T053 can run in parallel (different workflow files)
 - T055-T057 should run sequentially (validate different scenarios)
 
 **Phase 4 (Optimize)**:
+
 - T083-T085 can run in parallel (different docs)
 - T087-T094 can run in parallel (independent verifications)
 
@@ -627,12 +663,12 @@ Phase 0 (Config) → Phase 1 (Structure) → Phase 2 (CI/CD) → Phase 3 (Cutove
 
 ### Risk Mitigation Checkpoints
 
-| Checkpoint | Validation | Rollback |
-|------------|------------|----------|
-| Phase 0 Complete | `nx show projects` lists 8 | Delete config files |
+| Checkpoint       | Validation                    | Rollback                     |
+| ---------------- | ----------------------------- | ---------------------------- |
+| Phase 0 Complete | `nx show projects` lists 8    | Delete config files          |
 | Phase 1 Complete | Build + symlink + book writer | `git revert`, delete symlink |
-| Phase 2 Complete | 3+ PRs pass both workflows | Disable new workflows |
-| Phase 3 Complete | 48h monitoring, no incidents | `git revert HEAD` |
+| Phase 2 Complete | 3+ PRs pass both workflows    | Disable new workflows        |
+| Phase 3 Complete | 48h monitoring, no incidents  | `git revert HEAD`            |
 
 ---
 
@@ -649,13 +685,13 @@ Phase 0 (Config) → Phase 1 (Structure) → Phase 2 (CI/CD) → Phase 3 (Cutove
 
 ## Task Summary
 
-| Phase | Tasks | Parallel Opportunities | Critical Path |
-|-------|-------|------------------------|---------------|
-| Phase 0 | T001-T018 | T006-T014 (project.json) | T015-T017 (validation) |
-| Phase 1 | T019-T050 | T037-T040 (path refs) | T022, T033, T045 (book writer) |
-| Phase 2 | T051-T063 | T051-T053 (workflows) | T055-T057 (PR validation) |
-| Phase 3 | T064-T079 | Limited (sequential) | T068-T071 (cutover) |
-| Phase 4 | T080-T095 | T083-T085, T087-T094 | None (optimization) |
+| Phase   | Tasks     | Parallel Opportunities   | Critical Path                  |
+| ------- | --------- | ------------------------ | ------------------------------ |
+| Phase 0 | T001-T018 | T006-T014 (project.json) | T015-T017 (validation)         |
+| Phase 1 | T019-T050 | T037-T040 (path refs)    | T022, T033, T045 (book writer) |
+| Phase 2 | T051-T063 | T051-T053 (workflows)    | T055-T057 (PR validation)      |
+| Phase 3 | T064-T079 | Limited (sequential)     | T068-T071 (cutover)            |
+| Phase 4 | T080-T095 | T083-T085, T087-T094     | None (optimization)            |
 
 **Total Tasks**: 95
 **Critical Book Writer Tasks**: T033, T034, T045, T046, T071, T090
