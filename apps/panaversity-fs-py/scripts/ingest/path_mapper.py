@@ -2,9 +2,9 @@
 
 Maps source directory structure to the PanaversityFS content schema:
 - Source: 01-PartName/02-ChapterName/03-lesson.md
-- Target: content/01-Part/02-Chapter/03-lesson.md
+- Target: content/01-PartName/02-ChapterName/03-lesson.md
 
-The mapper validates paths against FR-007 (content) and FR-008 (assets) patterns.
+The mapper preserves the original directory names to match existing R2 storage.
 """
 
 import re
@@ -119,7 +119,10 @@ def map_source_to_storage(source_path: str) -> MappedPath:
 
 
 def _map_content_path(source_path: str) -> MappedPath:
-    """Map a markdown content path."""
+    """Map a markdown content path.
+
+    Preserves original directory names to match existing R2 storage structure.
+    """
     parts = source_path.split("/")
 
     # Need at least Part/Chapter/file.md
@@ -132,29 +135,29 @@ def _map_content_path(source_path: str) -> MappedPath:
             error=f"Path too short, expected Part/Chapter/file.md structure: {source_path}"
         )
 
-    # Extract Part number
-    part_match = PART_PATTERN.match(parts[0])
+    # Validate Part format (must start with NN-)
+    part_dir = parts[0]
+    part_match = PART_PATTERN.match(part_dir)
     if not part_match:
         return MappedPath(
             source_path=source_path,
             storage_path=None,
             content_type=ContentType.MARKDOWN,
             valid=False,
-            error=f"Invalid Part format, expected 'NN-PartName': {parts[0]}"
+            error=f"Invalid Part format, expected 'NN-PartName': {part_dir}"
         )
-    part_num = part_match.group(1).zfill(2)
 
-    # Extract Chapter number
-    chapter_match = CHAPTER_PATTERN.match(parts[1])
+    # Validate Chapter format (must start with NN-)
+    chapter_dir = parts[1]
+    chapter_match = CHAPTER_PATTERN.match(chapter_dir)
     if not chapter_match:
         return MappedPath(
             source_path=source_path,
             storage_path=None,
             content_type=ContentType.MARKDOWN,
             valid=False,
-            error=f"Invalid Chapter format, expected 'NN-ChapterName': {parts[1]}"
+            error=f"Invalid Chapter format, expected 'NN-ChapterName': {chapter_dir}"
         )
-    chapter_num = chapter_match.group(1).zfill(2)
 
     # Extract filename
     filename = parts[-1]
@@ -169,18 +172,15 @@ def _map_content_path(source_path: str) -> MappedPath:
             error=f"Invalid filename format, expected 'NN-name.md' or 'NN-name.summary.md': {filename}"
         )
 
-    lesson_num = lesson_match.group(1).zfill(2)
-    lesson_name = lesson_match.group(2)
     is_summary = lesson_match.group(3) is not None
 
-    # Sanitize lesson_name to prevent path traversal
-    lesson_name = _sanitize_path_component(lesson_name)
+    # Sanitize directory components to prevent path traversal
+    part_dir = _sanitize_path_component(part_dir)
+    chapter_dir = _sanitize_path_component(chapter_dir)
+    filename = _sanitize_path_component(filename)
 
-    # Build storage path
-    storage_path = f"content/{part_num}-Part/{chapter_num}-Chapter/{lesson_num}-{lesson_name}"
-    if is_summary:
-        storage_path += ".summary"
-    storage_path += ".md"
+    # Build storage path preserving original directory names
+    storage_path = f"content/{part_dir}/{chapter_dir}/{filename}"
 
     # Validate that resolved path stays within content directory
     try:
@@ -275,8 +275,9 @@ def validate_storage_path(storage_path: str) -> tuple[bool, Optional[str]]:
         Tuple of (is_valid, error_message)
     """
     # Content path pattern (FR-007)
+    # Accepts: content/NN-PartName/NN-ChapterName/NN-lesson-name[.summary].md
     content_pattern = re.compile(
-        r"^content/\d{2}-[A-Za-z0-9-]+/\d{2}-[A-Za-z0-9-]+/\d{2}-[a-z0-9-]+(\.summary)?\.md$"
+        r"^content/\d{2}-[A-Za-z0-9_-]+/\d{2}-[A-Za-z0-9_-]+/\d{2}-[a-zA-Z0-9_-]+(\.summary)?\.md$"
     )
 
     # Asset path pattern (FR-008)

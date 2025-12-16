@@ -83,12 +83,16 @@ class TestMapSourceToStorage:
     """Tests for map_source_to_storage function."""
 
     def test_valid_markdown_path(self):
-        """Test mapping a valid markdown path."""
+        """Test mapping a valid markdown path.
+
+        Path mapping preserves original directory names to match R2 storage.
+        """
         # New format: NN-PartName/NN-ChapterName/NN-lesson.md
         result = map_source_to_storage("01-Intro/02-Chapter/03-lesson.md")
 
         assert result.valid is True
-        assert result.storage_path == "content/01-Part/02-Chapter/03-lesson.md"
+        # Preserves original directory names
+        assert result.storage_path == "content/01-Intro/02-Chapter/03-lesson.md"
         assert result.content_type == ContentType.MARKDOWN
         assert result.error is None
 
@@ -97,7 +101,8 @@ class TestMapSourceToStorage:
         result = map_source_to_storage("01-Intro/01-Chapter/02-intro.summary.md")
 
         assert result.valid is True
-        assert result.storage_path == "content/01-Part/01-Chapter/02-intro.summary.md"
+        # Preserves original directory names
+        assert result.storage_path == "content/01-Intro/01-Chapter/02-intro.summary.md"
         assert result.content_type == ContentType.SUMMARY
         assert result.error is None
 
@@ -157,13 +162,14 @@ class TestMapSourceToStorage:
         assert result.valid is False
         assert result.content_type == ContentType.UNKNOWN
 
-    def test_number_padding(self):
-        """Test numbers are zero-padded."""
+    def test_original_names_preserved(self):
+        """Test original directory names are preserved (no transformation)."""
         result = map_source_to_storage("1-Part/2-Chapter/3-lesson.md")
         assert result.valid is True
-        assert "01-Part" in result.storage_path
-        assert "02-Chapter" in result.storage_path
-        assert "03-lesson" in result.storage_path
+        # Original names preserved, not transformed to NN-Part/NN-Chapter
+        assert "1-Part" in result.storage_path
+        assert "2-Chapter" in result.storage_path
+        assert "3-lesson" in result.storage_path
 
     def test_windows_path_separators(self):
         """Test Windows path separators are handled."""
@@ -233,10 +239,10 @@ class TestParametrized:
     """Parametrized tests for comprehensive path mapping."""
 
     @pytest.mark.parametrize("source,expected_storage,valid", [
-        # Valid paths (new format: NN-Name/NN-Name/NN-name.md)
-        ("01-Intro/01-Chapter/01-intro.md", "content/01-Part/01-Chapter/01-intro.md", True),
-        ("02-Advanced/03-Complex/05-advanced.md", "content/02-Part/03-Chapter/05-advanced.md", True),
-        ("01-Intro/01-Chapter/01-intro.summary.md", "content/01-Part/01-Chapter/01-intro.summary.md", True),
+        # Valid paths - original directory names are preserved
+        ("01-Intro/01-Chapter/01-intro.md", "content/01-Intro/01-Chapter/01-intro.md", True),
+        ("02-Advanced/03-Complex/05-advanced.md", "content/02-Advanced/03-Complex/05-advanced.md", True),
+        ("01-Intro/01-Chapter/01-intro.summary.md", "content/01-Intro/01-Chapter/01-intro.summary.md", True),
         ("01-Part/01-Chapter/img/test.png", "static/images/test.png", True),
         # Invalid paths
         ("01-Part/01-Chapter/README.md", None, False),  # README skipped
