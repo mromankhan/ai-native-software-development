@@ -62,7 +62,7 @@ version: "1.0.0"
 
 # Why Markdown Matters for AI Communication?
 
-Imagine you want to build an app. You write a long email to an AI agent:
+Imagine you want to build a mobile app. You write a long email to an AI agent:
 
 > "Hey, I need an app for tracking tasks. Users should be able to add tasks and see them and delete them. When they open the app there should be a menu. The menu should let them pick what to do. It should have options for adding, viewing, and deleting. Also it should save tasks so they don't lose them when they close the app."
 
