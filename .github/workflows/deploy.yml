@@ -1,7 +1,21 @@
+# Deploy to GitHub Pages
+#
+# Builds Docusaurus site and deploys to GitHub Pages.
+#
+# Content Source:
+# - Default: Reads directly from apps/learn-app/docs/ (Git is source of truth)
+# - With R2_HYDRATE_ENABLED=true: Hydrates from R2 to apps/build-source/ first
+#   (Use this when content is authored outside this repo)
+#
+# Triggers:
+# - After sync-content workflow completes (when R2_SYNC_ENABLED=true)
+# - On push to apps/learn-app/** (excluding docs/ which triggers via sync-content)
+# - Manual workflow_dispatch
+
 name: Deploy to GitHub Pages
 
 on:
-  # Trigger after sync-content completes (when PanaversityFS is enabled)
+  # Trigger after sync-content completes (when R2 sync is enabled)
   workflow_run:
     workflows: ["Sync Content to R2"]
     types:
@@ -22,7 +36,7 @@ on:
   workflow_dispatch:
     inputs:
       full_rebuild:
-        description: "Force full content download (ignore manifest cache)"
+        description: "Force full content download from R2 (only if R2_HYDRATE_ENABLED)"
         type: boolean
         default: false
 
@@ -42,7 +56,7 @@ jobs:
     # Run if:
     # - NOT triggered by workflow_run (direct push or workflow_dispatch), OR
     # - Triggered by workflow_run AND sync completed successfully, OR
-    # - Triggered by workflow_run AND sync was skipped (PanaversityFS disabled)
+    # - Triggered by workflow_run AND sync was skipped (R2 sync disabled)
     if: |
       github.event_name != 'workflow_run' ||
       github.event.workflow_run.conclusion == 'success' ||
@@ -51,30 +65,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        if: ${{ vars.PANAVERSITY_PLUGIN_ENABLED == 'true' }}
+      # === R2 HYDRATION (DORMANT - Enable with R2_HYDRATE_ENABLED=true) ===
+      # Use this when content is authored outside this repo and R2 is the source
+      - name: Setup Python (for hydration)
+        if: ${{ vars.R2_HYDRATE_ENABLED == 'true' }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install Python dependencies
-        if: ${{ vars.PANAVERSITY_PLUGIN_ENABLED == 'true' }}
+      - name: Install Python dependencies (for hydration)
+        if: ${{ vars.R2_HYDRATE_ENABLED == 'true' }}
         working-directory: apps/panaversity-fs-py
         run: |
           pip install click httpx pydantic python-dotenv
 
       - name: Restore manifest cache
-        if: ${{ vars.PANAVERSITY_PLUGIN_ENABLED == 'true' }}
+        if: ${{ vars.R2_HYDRATE_ENABLED == 'true' }}
         id: manifest-cache
         uses: actions/cache@v4
         with:
-          path: .panaversity/manifest.json
+          path: apps/.panaversity/manifest.json
           key: panaversity-manifest-${{ github.sha }}
           restore-keys: |
             panaversity-manifest-
 
-      - name: Hydrate content from PanaversityFS
-        if: ${{ vars.PANAVERSITY_PLUGIN_ENABLED == 'true' }}
+      - name: Hydrate content from R2
+        if: ${{ vars.R2_HYDRATE_ENABLED == 'true' }}
         continue-on-error: true
         env:
           PANAVERSITY_MCP_URL: ${{ secrets.PANAVERSITY_SERVER_URL }}
@@ -83,14 +99,14 @@ jobs:
           cd apps/panaversity-fs-py
 
           BOOK_ID="ai-native-dev"
-          OUTPUT_DIR="../../build-source"
-          MANIFEST_FILE="../../.panaversity/manifest.json"
+          OUTPUT_DIR="../build-source"
+          MANIFEST_FILE="../.panaversity/manifest.json"
 
           # Create directories
-          mkdir -p ../../.panaversity
+          mkdir -p ../.panaversity
           mkdir -p "$OUTPUT_DIR"
 
-          echo "=== Hydrating content from PanaversityFS ==="
+          echo "=== Hydrating content from R2 ==="
 
           if [ "${{ github.event.inputs.full_rebuild }}" = "true" ]; then
             echo "Full rebuild requested - ignoring manifest"
@@ -116,8 +132,8 @@ jobs:
               --verbose
           fi
 
-      - name: Fallback to local docs
-        if: ${{ vars.PANAVERSITY_PLUGIN_ENABLED == 'true' && failure() }}
+      - name: Fallback to local docs (if hydration fails)
+        if: ${{ vars.R2_HYDRATE_ENABLED == 'true' && failure() }}
         run: |
           echo "⚠️ Hydration failed, using local docs/ as fallback"
 
@@ -136,17 +152,17 @@ jobs:
           fi
 
           # Clear any partial hydration from build-source/
-          rm -rf build-source/*
+          rm -rf apps/build-source/*
 
           # Copy from local docs/
-          mkdir -p build-source
-          cp -r apps/learn-app/docs/* build-source/
+          mkdir -p apps/build-source
+          cp -r apps/learn-app/docs/* apps/build-source/
 
           # Add warning to build summary
           echo "## ⚠️ Warning: Build Used Local Content" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Hydration from PanaversityFS failed. Build deployed using local \`docs/\` directory." >> $GITHUB_STEP_SUMMARY
-          echo "This may result in slightly stale content if recent changes were not synced." >> $GITHUB_STEP_SUMMARY
+          echo "Hydration from R2 failed. Build deployed using local \`docs/\` directory." >> $GITHUB_STEP_SUMMARY
+      # === END R2 HYDRATION ===
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -178,9 +194,8 @@ jobs:
         working-directory: apps/learn-app
         env:
           GA4_MEASUREMENT_ID: ${{ secrets.GA4_MEASUREMENT_ID }}
-          # Use hydrated docsfs/ when PanaversityFS is enabled
-          # The plugin will see docsfs/ already populated and skip fetching
-          PANAVERSITY_PLUGIN_ENABLED: ${{ vars.PANAVERSITY_PLUGIN_ENABLED || 'false' }}
+          # R2_HYDRATE_ENABLED controls whether Docusaurus reads from build-source/ or docs/
+          R2_HYDRATE_ENABLED: ${{ vars.R2_HYDRATE_ENABLED || 'false' }}
           PANAVERSITY_SERVER_URL: ${{ secrets.PANAVERSITY_SERVER_URL }}
           AUTH_URL: ${{ secrets.AUTH_URL }}
           OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
@@ -197,15 +212,15 @@ jobs:
         run: |
           echo "## Build Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ vars.PANAVERSITY_PLUGIN_ENABLED }}" = "true" ]; then
-            echo "**Content Source:** PanaversityFS (hydrated)" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ vars.R2_HYDRATE_ENABLED }}" = "true" ]; then
+            echo "**Content Source:** R2 (hydrated to build-source/)" >> $GITHUB_STEP_SUMMARY
             if [ "${{ steps.manifest-cache.outputs.cache-hit }}" = "true" ]; then
               echo "**Mode:** Incremental (manifest cache hit)" >> $GITHUB_STEP_SUMMARY
             else
               echo "**Mode:** Full download (no manifest cache)" >> $GITHUB_STEP_SUMMARY
             fi
           else
-            echo "**Content Source:** Local docs/" >> $GITHUB_STEP_SUMMARY
+            echo "**Content Source:** Local docs/ (Git)" >> $GITHUB_STEP_SUMMARY
           fi
 
   deploy:

@@ -16,11 +16,12 @@ const OAUTH_CLIENT_ID = process.env.OAUTH_CLIENT_ID || "ai-native-public-client"
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-// PanaversityFS: Determine docs path based on plugin mode
-// - When plugin enabled: Read from build-source/ (hydrated by CI workflow)
-// - When plugin disabled: Read from docs/ (local sample content where authors write)
-const panaversityEnabled = process.env.PANAVERSITY_PLUGIN_ENABLED === "true";
-const docsPath = panaversityEnabled ? "../build-source" : "docs";
+// Content Source:
+// - Default: Read from docs/ (Git is source of truth, authors write here)
+// - With R2_HYDRATE_ENABLED=true: Read from build-source/ (hydrated from R2 by CI)
+//   Use this when content is authored outside this repo
+const hydrateEnabled = process.env.R2_HYDRATE_ENABLED === "true";
+const docsPath = hydrateEnabled ? "../build-source" : "docs";
 
 const config: Config = {
   title: "AI Native Software Development",
@@ -231,21 +232,6 @@ const config: Config = {
       "../../libs/docusaurus/summaries-plugin",
       {
         docsPath: docsPath, // Use same docs path as content-docs
-      },
-    ],
-    // PanaversityFS Plugin - Fetch content from MCP server and write to build-source/
-    // Enable via: PANAVERSITY_PLUGIN_ENABLED=true
-    // Server URL: PANAVERSITY_SERVER_URL or http://localhost:8000/mcp
-    // When enabled: Uses build-source/ (hydrated by CI workflow before Docusaurus build)
-    // When disabled: Docusaurus reads from docs/ (local sample content where authors write)
-    [
-      "../../libs/docusaurus/panaversityfs-plugin",
-      {
-        bookId: "ai-native-dev",
-        enabled: panaversityEnabled,
-        serverUrl: process.env.PANAVERSITY_SERVER_URL || "http://localhost:8000/mcp",
-        docsDir: "../build-source",  // Hydrated content from CI workflow (separate from docs/ where authors write)
-        cleanDocsDir: false, // Don't clean - workflow manages this directory
       },
     ],
     function (context, options) {

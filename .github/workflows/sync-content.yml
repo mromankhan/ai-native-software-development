@@ -1,13 +1,17 @@
-# Sync Content to PanaversityFS (R2 Storage)
+# Sync Content to R2 Storage
 #
 # INCREMENTAL sync using ingest-book.py script.
 # Only uploads files that have changed since last sync.
 #
+# Purpose: Sync content to R2 for OTHER consumers (mobile app, API, AI agents).
+# The Docusaurus build reads directly from local docs/ - no hydration needed.
+#
 # Workflow:
 # 1. Author/Agent pushes content to apps/learn-app/docs/
 # 2. This workflow detects changed files via git diff
-# 3. ingest-book.py uploads ONLY changed files to PanaversityFS
-# 4. deploy.yml is triggered to rebuild site
+# 3. ingest-book.py uploads ONLY changed files to R2
+#
+# Enable via: R2_SYNC_ENABLED=true (repository variable)
 
 name: Sync Content to R2
 
@@ -31,10 +35,10 @@ concurrency:
 
 jobs:
   sync:
-    name: Upload Content to PanaversityFS
+    name: Upload Content to R2
     runs-on: ubuntu-latest
-    # Only run if PanaversityFS is configured
-    if: ${{ vars.PANAVERSITY_PLUGIN_ENABLED == 'true' }}
+    # Only run if R2 sync is enabled
+    if: ${{ vars.R2_SYNC_ENABLED == 'true' }}
 
     steps:
       - name: Checkout repository
