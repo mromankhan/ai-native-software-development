@@ -47,6 +47,7 @@ class MCPToolError(MCPError):
 class MCPConfig:
     """Configuration for MCP client."""
     base_url: str
+    api_key: str | None = None
     timeout_seconds: float = 120.0
     max_retries: int = 3
     retry_delay_seconds: float = 1.0
@@ -59,7 +60,8 @@ class MCPConfig:
         if not base_url.endswith("/mcp"):
             base_url = base_url.rstrip("/") + "/mcp"
         timeout = float(os.environ.get("PANAVERSITY_MCP_TIMEOUT", "120"))
-        return cls(base_url=base_url, timeout_seconds=timeout)
+        api_key = os.environ.get("PANAVERSITY_API_KEY")
+        return cls(base_url=base_url, api_key=api_key, timeout_seconds=timeout)
 
 
 class MCPClient:
@@ -87,9 +89,15 @@ class MCPClient:
     async def __aenter__(self) -> "MCPClient":
         """Enter async context manager."""
         try:
+            # Build headers with optional API key authentication
+            headers: dict[str, str] = {}
+            if self.config.api_key:
+                headers["Authorization"] = f"Bearer {self.config.api_key}"
+
             # Create streamable HTTP client
             self._streams_context = streamablehttp_client(
                 url=self.config.base_url,
+                headers=headers if headers else None,
                 timeout=self.config.timeout_seconds,
                 sse_read_timeout=self.config.timeout_seconds + 180  # Extra time for SSE
             )

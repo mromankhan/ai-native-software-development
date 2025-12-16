@@ -66,7 +66,7 @@ Imagine you want to build a mobile app. You write a long email to an AI agent:
 
 > "Hey, I need an app for tracking tasks. Users should be able to add tasks and see them and delete them. When they open the app there should be a menu. The menu should let them pick what to do. It should have options for adding, viewing, and deleting. Also it should save tasks so they don't lose them when they close the app."
 
-This describes what you want, but it's messy. The AI has to guess:
+This describes what you want, but it's messy. AI has to guess:
 - What are the main features?
 - What should the menu look like?
 - What order should things appear in?
