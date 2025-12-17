@@ -75,6 +75,10 @@ prerequisites:
 
 **All features work identically**: Subagents, skills, MCP servers, hooks, and all other capabilities covered in Lessons 04-12 function the same way with this free setup. The only difference is the backend AI model (Gemini instead of Claude) and the setup process (router configuration instead of direct authentication).
 
+:::tip Free Ongoing Usage
+By using **Gemini's free tier** or **OpenRouter's free models**, you get ongoing free consumption—no subscription required. This setup isn't just for learning; many developers use it as their daily driver. The free tiers are generous enough for real development work.
+:::
+
 ---
 
 ## Reality Check: It's Just Copy-Paste
@@ -131,7 +135,7 @@ cat > ~/.claude-code-router/config.json << 'EOF'
       "api_base_url": "https://generativelanguage.googleapis.com/v1beta/models/",
       "api_key": "$GOOGLE_API_KEY",
       "models": [
-        "gemini-2.5-flash",
+        "gemini-2.5-flash-lite",
         "gemini-2.0-flash"
       ],
       "transformer": {
@@ -140,10 +144,10 @@ cat > ~/.claude-code-router/config.json << 'EOF'
     }
   ],
   "Router": {
-    "default": "gemini,gemini-2.5-flash",
-    "background": "gemini,gemini-2.5-flash",
-    "think": "gemini,gemini-2.5-flash",
-    "longContext": "gemini,gemini-2.5-flash",
+    "default": "gemini,gemini-2.5-flash-lite",
+    "background": "gemini,gemini-2.5-flash-lite",
+    "think": "gemini,gemini-2.5-flash-lite",
+    "longContext": "gemini,gemini-2.5-flash-lite",
     "longContextThreshold": 60000
   }
 }

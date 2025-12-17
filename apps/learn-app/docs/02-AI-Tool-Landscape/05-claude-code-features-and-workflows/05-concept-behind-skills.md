@@ -1,5 +1,5 @@
 ---
-title: "The Architecture of Agent Expertise"
+title: "The Concept Behind Skills"
 sidebar_position: 5
 chapter: 5
 lesson: 5
@@ -48,7 +48,7 @@ cognitive_load:
 # Differentiation guidance
 differentiation:
   extension_for_advanced: "Analyze how skills would evolve with explicit dependencies, versioning, and cross-skill composition"
-  remedial_for_struggling: "Focus on Dr. Claude analogy and stack analogy as primary mental models"
+  remedial_for_struggling: "Focus on tax professional analogy and stack analogy as primary mental models"
 
 # Generation metadata
 generated_by: "content-implementer v1.0.0 (044-lesson-05-concept-behind-skills)"
@@ -65,11 +65,15 @@ prerequisites:
   - "Understanding of personal procedures worth encoding"
 ---
 
-# The Architecture of Agent Expertise
+# The Concept Behind Skills
 
-You might assume that making AI useful for YOUR domain requires building a specialized agent with custom tools and scaffolding. Finance needs a finance agent. Legal needs a legal agent. Each domain demands its own infrastructure.
+"Stop building agents. Build skills instead."
 
-Here's what actually happened when Anthropic built Claude Code: they discovered that customization is important, but the agent underneath is far more universal than anyone expected. Code isn't just a use case—it's the universal interface to the digital world. A coding agent can pull data from APIs, organize files, analyze with Python, and synthesize reports. The scaffolding can be as thin as Bash and a file system.
+That's not advice from a random blog post. It's the conclusion Anthropic reached after building Claude Code and watching how people actually extended it. The talk that introduced Agent Skills challenged a fundamental assumption about AI customization.
+
+**The assumption**: Making AI useful for YOUR domain requires building a specialized agent. Finance needs a finance agent. Legal needs a legal agent. Each domain demands its own infrastructure.
+
+**The discovery**: The agent underneath is far more universal than anyone expected. Code isn't just a use case—it's the universal interface to the digital world. A coding agent can pull data from APIs, organize files, analyze with Python, synthesize reports. The scaffolding can be as thin as Bash and a file system.
 
 The agent already exists. What's missing is your expertise in a format it can access.
 
@@ -95,21 +99,15 @@ That's the gap skills fill. Not more intelligence. Not more execution capability
 
 ## The Real Bottleneck Isn't Intelligence
 
-Meet Dr. Claude—a brilliant doctor who graduated top of their class. They've read every medical textbook. They understand anatomy, pharmacology, surgical principles. Their knowledge is comprehensive.
+Who do you want doing your taxes? The 300-IQ mathematical genius who figures out tax code from first principles? Or the experienced tax professional who knows the patterns, the edge cases, the specific procedures that work?
 
-A patient needs brain surgery.
-
-Dr. Claude has never actually performed one. They don't know where THIS hospital keeps the specialized tools. They don't know THIS hospital's specific procedures. They understand brain surgery in theory. They lack the practical expertise to execute it here.
-
-**Dr. Claude is intelligent but lacks specialized, practical knowledge.**
+You want the professional. Not because they're smarter—because they have encoded expertise.
 
 This is exactly the gap with AI agents today. Claude is brilliant—it can do amazing things when you invest effort in guidance. But it often lacks the context you've built up over years. It can't absorb your organizational expertise efficiently. And it doesn't learn from your feedback over time.
 
 The solution isn't making the model smarter. The solution is giving it access to expertise it doesn't have.
 
-Who do you want doing your taxes? The 300-IQ mathematical genius who figures out tax code from first principles? Or the experienced tax professional who knows the patterns, the edge cases, the specific procedures that work?
-
-You want the professional. Not because they're smarter—because they have encoded expertise. The question becomes: how do you give Claude that same advantage?
+The question becomes: how do you give Claude that same advantage?
 
 ---
 

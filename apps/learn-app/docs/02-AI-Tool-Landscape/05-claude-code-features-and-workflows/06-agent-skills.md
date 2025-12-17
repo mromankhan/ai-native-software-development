@@ -62,7 +62,7 @@ version: "2.0.0"
 # Legacy compatibility
 prerequisites:
   - "Lesson 04: Teach Claude Your Way of Working"
-  - "Lesson 05: The Architecture of Agent Expertise"
+  - "Lesson 05: The Concept Behind Skills"
   - "A procedure mapped and ready for encoding"
   - "Chapter 10: Markdown basics (headings, lists, code blocks, YAML frontmatter)"
 ---
@@ -556,30 +556,10 @@ Here's the process to follow for each new skill:
 
 ---
 
-## What's Ahead
+## Reflection
 
-You now know how to create skills. The next lessons explore other Claude Code features:
+You've gone from understanding skills (Lesson 04) to understanding their architecture (Lesson 05) to building them yourself.
 
-- **Lesson 07**: CLAUDE.md context files (project-level intelligence)
-- **Lesson 08**: MCP integration (external connectivity)
-- **Lesson 09**: Subagents (complex isolated tasks)
+The skills you create now will compound. Each one makes Claude more useful for YOUR specific work. Share them with teammates, and the whole team benefits from encoded expertise.
 
-Each feature complements skills. CLAUDE.md provides project context. MCP provides external data. Subagents handle complex workflows. Skills encode your procedures.
-
-Together, they transform Claude from a general-purpose assistant into a specialized expert for YOUR work.
-
----
-
-## Watch the Anthropic Talk
-
-For deeper context on why skills exist and where they're heading, watch the talk that inspired Lesson 05:
-
-<iframe
-  width="100%"
-  height="450"
-  src="https://www.youtube.com/embed/CEvIs9y1uog"
-  title="Don't Build Agents, Build Skills Instead - Barry Zhang & Mahesh Murag (Anthropic)"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  allowfullscreen>
-</iframe>
+The next lessons explore features that complement skills: project context files, external connectivity, and complex task handling. Skills are just the beginning.
