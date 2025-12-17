@@ -113,13 +113,28 @@ The question becomes: how do you give Claude that same advantage?
 
 ---
 
-## Why "Just Folders" Is a Feature
+## Won't Many Skills Overload Context? No.
 
-Skills are organized collections of files that package composable procedural knowledge for agents.
+You might worry: "If I have 50 skills, won't Claude run out of memory loading them all?"
 
-In simpler terms: they're folders.
+This is exactly the problem skills are designed to solve.
 
-This simplicity is deliberate. The design principle: anything that anyone—human OR agent—can create and use, as long as they have a computer.
+**Skills are organized collections of files**—in simpler terms, they're folders. This simplicity is deliberate. The design principle: anything that anyone—human OR agent—can create and use, as long as they have a computer.
+
+**The folder structure:**
+
+```
+.claude/skills/
+├── meeting-notes/           # Each skill is a folder
+│   ├── SKILL.md             # Main instructions (loaded on-demand)
+│   └── templates/           # Supporting files (loaded if needed)
+│       └── standup.md
+├── code-review/
+│   ├── SKILL.md
+│   └── checklist.md
+└── blog-planner/
+    └── SKILL.md
+```
 
 Skills work with what you already have. Version them in Git. Throw them in Google Drive. Zip them up and share with your team. Files have been a primitive for decades. Why change now?
 

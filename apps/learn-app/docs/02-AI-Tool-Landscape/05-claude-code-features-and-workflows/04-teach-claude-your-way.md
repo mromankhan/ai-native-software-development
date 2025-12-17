@@ -75,15 +75,15 @@ That instinct is 10% of the answer—and missing 90% of the opportunity.
 
 ---
 
-## The Repetition Tax
+## The One-Time Investment
 
-Every time you re-explain your preferences, you pay a tax. Not just in typing—in context.
+You've refined your approach over months or years. You know exactly how you want meeting notes structured. You have a system for code reviews that catches real issues. Your blog posts follow a pattern that works.
 
-Claude Code starts each session fresh. It doesn't remember that you prefer TypeScript over JavaScript, or that your meeting notes always have action items at the top. Within a session, conversation history helps. Across sessions? You're starting over.
+That expertise lives in your head. Every time you use Claude, you transfer a piece of it through conversation—then it's gone when the session ends.
 
-The real cost isn't typing. It's explaining HOW you think—not just WHAT you want—every single time.
+What if you could capture that expertise once and have it apply automatically, forever?
 
-What if you could explain once and have it apply forever?
+That's what skills do. Not saving keystrokes—**preserving quality**. You invest once in documenting how you work, and Claude applies that standard consistently across every future session.
 
 ---
 
@@ -169,26 +169,59 @@ This reveals the skill discovery mechanism in action.
 
 Skills work for any repeated task—not just documents or code.
 
-A developer had a problem: out of the 1001 personal learning topics, build ideas, and reading lists they'd been wanting to tackle—what had they actually achieved? They'd lost track. Time kept slipping by.
+**The problem:** A developer had a list of personal projects they wanted to complete—learning topics, app ideas, books to read. But weeks passed and nothing got done. They'd tried task trackers before; none stuck.
 
-Their first thought: "Not another task tracker. Not the 999th app I've tried and given up on within a week."
+**The solution:** Instead of another app, they created a skill that turns Claude into an accountability partner.
 
-So they built a Claude Code skill instead. No app. No new tool. Just a skill that turns Claude into an accountability partner.
+Here's what the skill does:
 
-**The insight:** The file structure stays universal—only the content adapts.
+```
+When user says "check in" or "daily standup":
 
-| Challenge Type | What the Skill Asks |
-|----------------|---------------------|
-| **Learning** | "Any aha moments? Progress on milestones?" |
-| **Building** | "What did you ship? Any blockers?" |
-| **Fitness** | "What exercises? How did your body feel?" |
-| **Habit** | "Did you complete it? How did it feel?" |
+1. Ask about today's focus (what they planned to work on)
+2. Ask what they actually accomplished
+3. Ask about blockers or distractions
+4. Help set tomorrow's single most important task
+5. Log the check-in to a markdown file: logs/YYYY-MM-DD.md
+```
 
-Asking "what did you ship?" to someone tracking meditation is useless. Asking "how did it feel?" makes sense. The skill captures this distinction upfront.
+**A typical interaction:**
 
-**Results after two weeks:** 10+ micro-apps shipped. Topics that had been sitting on their "someday" list for months finally got attention.
+```
+User: check in
 
-"Bite-sized daily progress adds up fast."
+Claude: Good evening! Let's do your daily check-in.
+
+What was your main focus today?
+
+User: Working on the Python API tutorial
+
+Claude: Got it. What did you accomplish on the Python API tutorial?
+
+User: Finished the authentication section, about 2 hours of work
+
+Claude: Nice progress! Any blockers or distractions?
+
+User: Got sidetracked by email for an hour
+
+Claude: Noted. What's the single most important thing for tomorrow?
+
+User: Complete the database section
+
+Claude: ✅ Check-in logged to logs/2025-12-17.md
+
+Summary:
+- Focus: Python API tutorial
+- Done: Authentication section (2 hrs)
+- Blocker: Email distraction (1 hr)
+- Tomorrow: Database section
+```
+
+**Why it works:** The skill encodes a specific check-in format that the developer refined over time. The questions are deliberate—"single most important thing" forces prioritization. The log format is consistent, making it easy to review progress over weeks.
+
+**Results:** After two weeks, they'd shipped 10+ micro-projects that had been sitting on their "someday" list for months.
+
+The skill cost 30 minutes to create. It runs automatically whenever they say "check in." The quality is consistent because the procedure is encoded, not improvised each time.
 
 ---
 
